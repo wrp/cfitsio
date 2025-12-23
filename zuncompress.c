@@ -110,10 +110,10 @@ static unsigned insize;     /* valid bytes in inbuf */
 static unsigned inptr;      /* index of next byte to be processed in inbuf */
 
 /* prototype for the following functions */
-int zuncompress2mem(char *filename, 
-             FILE *diskfile, 
-             char **buffptr, 
-             size_t *buffsize, 
+int zuncompress2mem(char *filename,
+             FILE *diskfile,
+             char **buffptr,
+             size_t *buffsize,
              void *(*mem_realloc)(void *p, size_t newsize),
              size_t *filesize,
              int *status);
@@ -192,22 +192,22 @@ typedef unsigned short	count_short;
 typedef unsigned long 	cmp_code_int;
 
 #define MAXCODE(n)	(1L << (n))
-    
+
 #ifndef	REGISTERS
 #	define	REGISTERS	2
 #endif
-#define	REG1	
-#define	REG2	
-#define	REG3	
-#define	REG4	
-#define	REG5	
-#define	REG6	
-#define	REG7	
-#define	REG8	
-#define	REG9	
+#define	REG1
+#define	REG2
+#define	REG3
+#define	REG4
+#define	REG5
+#define	REG6
+#define	REG7
+#define	REG8
+#define	REG9
 #define	REG10
-#define	REG11	
-#define	REG12	
+#define	REG11
+#define	REG12
 #define	REG13
 #define	REG14
 #define	REG15
@@ -276,11 +276,11 @@ typedef unsigned long 	cmp_code_int;
 #	undef	REG16
 #	define	REG16	register
 #endif
-    
+
 #ifndef	BYTEORDER
 #	define	BYTEORDER	0000
 #endif
-	
+
 #ifndef	NOALLIGN
 #	define	NOALLIGN	0
 #endif
@@ -349,7 +349,7 @@ int block_mode = BLOCK_MODE; /* block compress mode -C compatible with 2.0 */
  *   The magic header has already been checked and skipped.
  *   bytes_in and bytes_out have been initialized.
  */
-local int unlzw(FILE *in, FILE *out) 
+local int unlzw(FILE *in, FILE *out)
     /* input and output file descriptors */
 {
     REG2   char_type  *stackp;
@@ -367,7 +367,7 @@ local int unlzw(FILE *in, FILE *out)
     REG14  code_int   maxmaxcode;
     REG15  int        n_bits;
     REG16  int        rsize;
-    
+
     ofd = out;
 
 #ifdef MAXSEG_64K
@@ -381,7 +381,7 @@ local int unlzw(FILE *in, FILE *out)
     }
     maxbits &= BIT_MASK;
     maxmaxcode = MAXCODE(maxbits);
-    
+
     if (maxbits > BITS) {
 	error("compressed with too many bits; cannot handle file");
 	exit_code = ERROR;
@@ -396,9 +396,9 @@ local int unlzw(FILE *in, FILE *out)
     posbits = inptr<<3;
 
     free_ent = ((block_mode) ? FIRST : 256);
-    
+
     clear_tab_prefixof(); /* Initialize the first 256 entries in the table. */
-    
+
     for (code = 255 ; code >= 0 ; --code) {
 	tab_suffixof(code) = (char_type)code;
     }
@@ -406,16 +406,16 @@ local int unlzw(FILE *in, FILE *out)
 	REG1 int i;
 	int  e;
 	int  o;
-	
+
     resetbuf:
 	e = insize-(o = (posbits>>3));
-	
+
 	for (i = 0 ; i < e ; ++i) {
 	    inbuf[i] = inbuf[i+o];
 	}
 	insize = e;
 	posbits = 0;
-	
+
 	if (insize < INBUF_EXTRA) {
 /*  modified to use fread instead of read - WDP 10/22/97  */
 /*	    if ((rsize = read(in, (char*)inbuf+insize, INBUFSIZ)) == EOF) { */
@@ -428,9 +428,9 @@ local int unlzw(FILE *in, FILE *out)
 	    insize += rsize;
 	    bytes_in += (ulg)rsize;
 	}
-	inbits = ((rsize != 0) ? ((long)insize - insize%n_bits)<<3 : 
+	inbits = ((rsize != 0) ? ((long)insize - insize%n_bits)<<3 :
 		  ((long)insize<<3)-(n_bits-1));
-	
+
 	while (inbits > posbits) {
 	    if (free_ent > maxcode) {
 		posbits = ((posbits-1) +
@@ -468,7 +468,7 @@ local int unlzw(FILE *in, FILE *out)
 	    }
 	    incode = code;
 	    stackp = de_stack;
-	    
+
 	    if (code >= free_ent) { /* Special case for KwKwK string. */
 		if (code > free_ent) {
 		    if (outpos > 0) {
@@ -490,11 +490,11 @@ local int unlzw(FILE *in, FILE *out)
 		code = tab_prefixof(code);
 	    }
 	    *--stackp =	(char_type)(finchar = tab_suffixof(code));
-	    
+
 	    /* And put them out in forward order */
 	    {
 	/*	REG1 int	i;   already defined above (WDP) */
-	    
+
 		if (outpos+(i = (de_stack-stackp)) >= OUTBUFSIZ) {
 		    do {
 			if (i > OUTBUFSIZ-outpos) i = OUTBUFSIZ-outpos;
@@ -521,11 +521,11 @@ local int unlzw(FILE *in, FILE *out)
 		tab_prefixof(code) = (unsigned short)oldcode;
 		tab_suffixof(code) = (char_type)finchar;
 		free_ent = code+1;
-	    } 
+	    }
 	    oldcode = incode;	/* Remember previous code.	*/
 	}
     } while (rsize != 0);
-    
+
     if (outpos > 0) {
 	write_buf((char*)outbuf, outpos);
 	bytes_out += (ulg)outpos;
@@ -588,7 +588,7 @@ local void write_buf(voidp buf, unsigned cnt)
             error("malloc failed while uncompressing (write_buf)");
             exit_code = ERROR;
             return;
-        }  
+        }
       }
       /* copy  into memory buffer */
       memcpy((char *) *memptr + bytes_out, (char *) buf, cnt);

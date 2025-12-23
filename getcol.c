@@ -36,7 +36,7 @@ int ffgpxv( fitsfile *fptr,   /* I - FITS file pointer                       */
 
     /* get the size of the image */
     ffgidm(fptr, &naxis, status);
-    
+
     for (ii=0; ii < naxis; ii++)
        tfirstpix[ii] = firstpix[ii];
 
@@ -734,37 +734,37 @@ int ffgpf(  fitsfile *fptr,   /* I - FITS file pointer                       */
 
     if (datatype == TBYTE)
     {
-        ffgpfb(fptr, 1, firstelem, nelem, 
+        ffgpfb(fptr, 1, firstelem, nelem,
                (unsigned char *) array, nullarray, anynul, status);
     }
     else if (datatype == TSBYTE)
     {
-        ffgpfsb(fptr, 1, firstelem, nelem, 
+        ffgpfsb(fptr, 1, firstelem, nelem,
                (signed char *) array, nullarray, anynul, status);
     }
     else if (datatype == TUSHORT)
     {
-        ffgpfui(fptr, 1, firstelem, nelem, 
+        ffgpfui(fptr, 1, firstelem, nelem,
                (unsigned short *) array, nullarray, anynul, status);
     }
     else if (datatype == TSHORT)
     {
-        ffgpfi(fptr, 1, firstelem, nelem, 
+        ffgpfi(fptr, 1, firstelem, nelem,
                (short *) array, nullarray, anynul, status);
     }
     else if (datatype == TUINT)
     {
-        ffgpfuk(fptr, 1, firstelem, nelem, 
+        ffgpfuk(fptr, 1, firstelem, nelem,
                (unsigned int *) array, nullarray, anynul, status);
     }
     else if (datatype == TINT)
     {
-        ffgpfk(fptr, 1, firstelem, nelem, 
+        ffgpfk(fptr, 1, firstelem, nelem,
                (int *) array, nullarray, anynul, status);
     }
     else if (datatype == TULONG)
     {
-        ffgpfuj(fptr, 1, firstelem, nelem, 
+        ffgpfuj(fptr, 1, firstelem, nelem,
                (unsigned long *) array, nullarray, anynul, status);
     }
     else if (datatype == TLONG)
@@ -784,7 +784,7 @@ int ffgpf(  fitsfile *fptr,   /* I - FITS file pointer                       */
     }
     else if (datatype == TFLOAT)
     {
-        ffgpfe(fptr, 1, firstelem, nelem, 
+        ffgpfe(fptr, 1, firstelem, nelem,
                (float *) array, nullarray, anynul, status);
     }
     else if (datatype == TDOUBLE)
@@ -890,7 +890,7 @@ int ffgcv(  fitsfile *fptr,   /* I - FITS file pointer                       */
                (unsigned long *) array, cdummy, anynul, status);
       else
         ffgcluj(fptr, colnum, firstrow, firstelem, nelem, 1, 1,
-               *(unsigned long *) nulval, 
+               *(unsigned long *) nulval,
                (unsigned long *) array, cdummy, anynul, status);
     }
     else if (datatype == TLONG)
@@ -950,10 +950,10 @@ int ffgcv(  fitsfile *fptr,   /* I - FITS file pointer                       */
     else if (datatype == TDBLCOMPLEX)
     {
       if (nulval == 0)
-        ffgcld(fptr, colnum, firstrow, (firstelem - 1) * 2 + 1, nelem * 2, 
+        ffgcld(fptr, colnum, firstrow, (firstelem - 1) * 2 + 1, nelem * 2,
          1, 1, 0., (double *) array, cdummy, anynul, status);
       else
-        ffgcld(fptr, colnum, firstrow, (firstelem - 1) * 2 + 1, nelem * 2, 
+        ffgcld(fptr, colnum, firstrow, (firstelem - 1) * 2 + 1, nelem * 2,
          1, 1, *(double *) nulval, (double *) array, cdummy, anynul, status);
     }
 
@@ -971,7 +971,7 @@ int ffgcv(  fitsfile *fptr,   /* I - FITS file pointer                       */
       if (nulval == 0)
       {
         cdummy[0] = '\0';
-        ffgcls(fptr, colnum, firstrow, firstelem, nelem, 1, 
+        ffgcls(fptr, colnum, firstrow, firstelem, nelem, 1,
              cdummy, (char **) array, cdummy, anynul, status);
       }
       else
@@ -1036,7 +1036,7 @@ int ffgcvn( fitsfile *fptr,   /* I - FITS file pointer                       */
     for (icol = 0; (icol < ncols) && (icol < 1000); icol++) {
       int typecode;
       LONGLONG repeat, width;
-      fits_get_coltypell(fptr, colnum[icol], &typecode, 
+      fits_get_coltypell(fptr, colnum[icol], &typecode,
 			 &repeat, &width, status);
       repeats[icol] = repeat;
 
@@ -1060,7 +1060,7 @@ int ffgcvn( fitsfile *fptr,   /* I - FITS file pointer                       */
     /* Optimize for 1 column */
     if (ncols == 1) {
       fits_read_col(fptr, datatype[0], colnum[0], firstrow, 1,
-		    nrows*repeats[0], nulval[0], 
+		    nrows*repeats[0], nulval[0],
 		    array[0], anynul ? &(anynul[0]) : 0, status);
       free(repeats);
       return *status;
@@ -1078,12 +1078,12 @@ int ffgcvn( fitsfile *fptr,   /* I - FITS file pointer                       */
 	LONGLONG nelem1 = (nread*repeats[icol]);
 	char *array1 = (char *) array[icol] + repeats[icol]*ndone*sizes[datatype[icol]];
 
-	fits_read_col(fptr, datatype[icol], colnum[icol], currow, 1, 
-		      nelem1, nulval[icol], array1, 
+	fits_read_col(fptr, datatype[icol], colnum[icol], currow, 1,
+		      nelem1, nulval[icol], array1,
 		      (anynul ? &(anynul[icol]) : 0), status);
 	if (*status) {
 	  char errmsg[100];
-	  sprintf(errmsg, 
+	  sprintf(errmsg,
 		  "Failed to read column %d data rows %lld-%lld (ffgcvn)",
 		  colnum[icol], currow, currow+nread-1);
 	  ffpmsg(errmsg);
@@ -1164,7 +1164,7 @@ int ffgcf(  fitsfile *fptr,   /* I - FITS file pointer                       */
     else if (datatype == TULONG)
     {
         ffgcluj(fptr, colnum, firstrow, firstelem, nelem, 1, 2,
-               (unsigned long ) nulval, 
+               (unsigned long ) nulval,
                (unsigned long *) array, nullarray, anynul, status);
     }
     else if (datatype == TLONG)
@@ -1189,7 +1189,7 @@ int ffgcf(  fitsfile *fptr,   /* I - FITS file pointer                       */
     }
     else if (datatype == TDOUBLE)
     {
-        ffgcld(fptr, colnum, firstrow, firstelem, nelem, 1, 2, 
+        ffgcld(fptr, colnum, firstrow, firstelem, nelem, 1, 2,
               nulval, (double *) array, nullarray, anynul, status);
     }
     else if (datatype == TCOMPLEX)
@@ -1199,7 +1199,7 @@ int ffgcf(  fitsfile *fptr,   /* I - FITS file pointer                       */
     }
     else if (datatype == TDBLCOMPLEX)
     {
-        ffgcfm(fptr, colnum, firstrow, firstelem, nelem, 
+        ffgcfm(fptr, colnum, firstrow, firstelem, nelem,
            (double *) array, nullarray, anynul, status);
     }
 
@@ -1210,7 +1210,7 @@ int ffgcf(  fitsfile *fptr,   /* I - FITS file pointer                       */
     }
     else if (datatype == TSTRING)
     {
-        ffgcls(fptr, colnum, firstrow, firstelem, nelem, 2, 
+        ffgcls(fptr, colnum, firstrow, firstelem, nelem, 2,
              cnulval, (char **) array, nullarray, anynul, status);
     }
     else

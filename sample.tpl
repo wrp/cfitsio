@@ -34,7 +34,7 @@ simple	t
  naxis		1
  naxis1		10
 COMMENT
- comment  
+ comment
  sdsdf / keyword without value (null type)
         if line begins with 8+ spaces everything is a comment
 
@@ -61,7 +61,7 @@ xtension image
  naxis1		10
 
 \group
- 
+
  xtension image
   bitpix	16
   naxis		1
@@ -89,7 +89,7 @@ xtension image
   xtension asciitable
 
  \end
- 
+
 \end
 
 # one do not have to specify all NAXISn keywords. If not specified

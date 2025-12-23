@@ -19,7 +19,7 @@ int ffcopy(fitsfile *infptr,    /* I - FITS file pointer to input file  */
 */
 {
     int nspace;
-    
+
     if (*status > 0)
         return(*status);
 
@@ -38,7 +38,7 @@ int ffcopy(fitsfile *infptr,    /* I - FITS file pointer to input file  */
 
         if (nspace > 0) {
             ffhdef(outfptr, nspace, status); /* preserve same amount of space */
-            if (nspace >= 35) {  
+            if (nspace >= 35) {
 
 	        /* There is at least 1 full empty FITS block in the header. */
 	        /* Physically write the END keyword at the beginning of the */
@@ -91,7 +91,7 @@ int ffcpfl(fitsfile *infptr,    /* I - FITS file pointer to input file  */
     if (following && (*status <= 0) ) { /* copy any remaining HDUs */
         ii = hdunum + 1;
         while (1)
-        { 
+        {
             if (ffmahd(infptr, ii, NULL, status) ) {
                  /* reset expected end of file status */
                  if (*status == END_OF_FILE)
@@ -159,7 +159,7 @@ int ffcphd(fitsfile *infptr,    /* I - FITS file pointer to input file  */
     /* check if output header is empty; if not create new empty HDU */
     if ((outfptr->Fptr)->headend !=
         (outfptr->Fptr)->headstart[(outfptr->Fptr)->curhdu] )
-           ffcrhd(outfptr, status);   
+           ffcrhd(outfptr, status);
 
     if (outfptr->HDUposition == 0)
     {
@@ -197,7 +197,7 @@ int ffcphd(fitsfile *infptr,    /* I - FITS file pointer to input file  */
 
         strcpy(comm, "number of random group parameters");
         ffpkyj(outfptr, "PCOUNT", 0, comm, status);
-  
+
         strcpy(comm, "number of random groups");
         ffpkyj(outfptr, "GCOUNT", 1, comm, status);
 
@@ -207,7 +207,7 @@ int ffcphd(fitsfile *infptr,    /* I - FITS file pointer to input file  */
         {
             card = tmpbuff+(ii * FLEN_CARD);
             if (FSTRNCMP(card, "EXTEND  ", 8) &&
-                FSTRNCMP(card, "COMMENT   FITS (Flexible Image Transport System) format is", 58) && 
+                FSTRNCMP(card, "COMMENT   FITS (Flexible Image Transport System) format is", 58) &&
                 FSTRNCMP(card, "COMMENT   and Astrophysics', volume 376, page 3", 47) )
             {
                  ffprec(outfptr, card, status);
@@ -269,11 +269,11 @@ int ffcpht(fitsfile *infptr,    /* I - FITS file pointer to input file  */
 	   LONGLONG nrows,      /* I - number of rows to copy  */
 	   int *status)         /* IO - error status     */
 
-/* 
+/*
    Copy the table structure from an existing table HDU, but only
    copy a limited row range.  All header keywords from the input
    table are copied directly, but NAXSI2 and PCOUNT are set to their
-   correct values. 
+   correct values.
 */
 {
   if (*status > 0)
@@ -298,7 +298,7 @@ int ffcpht(fitsfile *infptr,    /* I - FITS file pointer to input file  */
   if (! *status && nrows > 0) {
     ffcprw(infptr, outfptr, firstrow, nrows, status);
   }
- 
+
   return (*status);
 }
 
@@ -309,7 +309,7 @@ int ffcpdt(fitsfile *infptr,    /* I - FITS file pointer to input file  */
            int *status)         /* IO - error status     */
 {
 /*
-  copy the data unit from the CHDU of infptr to the CHDU of outfptr. 
+  copy the data unit from the CHDU of infptr to the CHDU of outfptr.
   This will overwrite any data already in the outfptr CHDU.
 */
     long nb, ii;
@@ -401,12 +401,12 @@ int ffiimg(fitsfile *fptr,      /* I - FITS file pointer           */
            long *naxes,         /* I - size of each axis           */
            int *status)         /* IO - error status               */
 /*
-  insert an IMAGE extension following the current HDU 
+  insert an IMAGE extension following the current HDU
 */
 {
     LONGLONG tnaxes[99];
     int ii;
-    
+
     if (*status > 0)
         return(*status);
 
@@ -417,7 +417,7 @@ int ffiimg(fitsfile *fptr,      /* I - FITS file pointer           */
 
     for (ii = 0; (ii < naxis); ii++)
        tnaxes[ii] = naxes[ii];
-       
+
     ffiimgll(fptr, bitpix, naxis, tnaxes, status);
 
     return(*status);
@@ -429,7 +429,7 @@ int ffiimgll(fitsfile *fptr,    /* I - FITS file pointer           */
            LONGLONG *naxes,     /* I - size of each axis           */
            int *status)         /* IO - error status               */
 /*
-  insert an IMAGE extension following the current HDU 
+  insert an IMAGE extension following the current HDU
 */
 {
     int bytlen, nexthdu, maxhdu, ii, onaxis;
@@ -496,7 +496,7 @@ int ffiimgll(fitsfile *fptr,    /* I - FITS file pointer           */
     /* calculate number of pixels in the image */
     if (naxis == 0)
         npixels = 0;
-    else 
+    else
         npixels = naxes[0];
 
     for (ii = 1; ii < naxis; ii++)
@@ -518,7 +518,7 @@ int ffiimgll(fitsfile *fptr,    /* I - FITS file pointer           */
         /* inserting a new primary array; the current primary */
         /* array must be transformed into an image extension. */
 
-        *status = 0;   
+        *status = 0;
         ffmahd(fptr, 1, NULL, status);  /* move to the primary array */
 
         ffgidm(fptr, &onaxis, status);
@@ -528,7 +528,7 @@ int ffiimgll(fitsfile *fptr,    /* I - FITS file pointer           */
             strcpy(naxiskey, "NAXIS");
 
         ffgcrd(fptr, naxiskey, card, status);  /* read last NAXIS keyword */
-        
+
         ffikyj(fptr, "PCOUNT", 0, "required keyword", status); /* add PCOUNT and */
         ffikyj(fptr, "GCOUNT", 1, "required keyword", status); /* GCOUNT keywords */
 
@@ -572,7 +572,7 @@ int ffiimgll(fitsfile *fptr,    /* I - FITS file pointer           */
     /* set default parameters for this new empty HDU */
     (fptr->Fptr)->curhdu = nexthdu;   /* we are now located at the next HDU */
     fptr->HDUposition = nexthdu;      /* we are now located at the next HDU */
-    (fptr->Fptr)->nextkey = (fptr->Fptr)->headstart[nexthdu];  
+    (fptr->Fptr)->nextkey = (fptr->Fptr)->headstart[nexthdu];
     (fptr->Fptr)->headend = (fptr->Fptr)->headstart[nexthdu];
     (fptr->Fptr)->datastart = ((fptr->Fptr)->headstart[nexthdu]) + 2880;
     (fptr->Fptr)->hdutype = IMAGE_HDU;  /* might need to be reset... */
@@ -596,7 +596,7 @@ int ffitab(fitsfile *fptr,  /* I - FITS file pointer                        */
            const char *extnmx,   /* I - value of EXTNAME keyword, if any         */
            int *status)     /* IO - error status                            */
 /*
-  insert an ASCII table extension following the current HDU 
+  insert an ASCII table extension following the current HDU
 */
 {
     int nexthdu, maxhdu, ii, nunit, nhead, ncols, gotmem = 0;
@@ -690,7 +690,7 @@ int ffitab(fitsfile *fptr,  /* I - FITS file pointer                        */
     if (ffiblk(fptr, nblocks, 1, status) > 0)  /* insert the blocks */
     {
         if (gotmem)
-            free(tbcol); 
+            free(tbcol);
         return(*status);
     }
 
@@ -703,7 +703,7 @@ int ffitab(fitsfile *fptr,  /* I - FITS file pointer                        */
     /* set default parameters for this new empty HDU */
     (fptr->Fptr)->curhdu = nexthdu;   /* we are now located at the next HDU */
     fptr->HDUposition = nexthdu;      /* we are now located at the next HDU */
-    (fptr->Fptr)->nextkey = (fptr->Fptr)->headstart[nexthdu];  
+    (fptr->Fptr)->nextkey = (fptr->Fptr)->headstart[nexthdu];
     (fptr->Fptr)->headend = (fptr->Fptr)->headstart[nexthdu];
     (fptr->Fptr)->datastart = ((fptr->Fptr)->headstart[nexthdu]) + (nhead * 2880);
     (fptr->Fptr)->hdutype = ASCII_TBL;  /* might need to be reset... */
@@ -714,7 +714,7 @@ int ffitab(fitsfile *fptr,  /* I - FITS file pointer                        */
            extnm, status);
 
     if (gotmem)
-        free(tbcol); 
+        free(tbcol);
 
     /* redefine internal structure for this HDU */
 
@@ -732,7 +732,7 @@ int ffibin(fitsfile *fptr,  /* I - FITS file pointer                        */
            LONGLONG pcount, /* I - size of special data area (heap)         */
            int *status)     /* IO - error status                            */
 /*
-  insert a Binary table extension following the current HDU 
+  insert a Binary table extension following the current HDU
 */
 {
     int nexthdu, maxhdu, ii, nunit, nhead, datacode;
@@ -830,7 +830,7 @@ int ffibin(fitsfile *fptr,  /* I - FITS file pointer                        */
     /* set default parameters for this new empty HDU */
     (fptr->Fptr)->curhdu = nexthdu;   /* we are now located at the next HDU */
     fptr->HDUposition = nexthdu;      /* we are now located at the next HDU */
-    (fptr->Fptr)->nextkey = (fptr->Fptr)->headstart[nexthdu];  
+    (fptr->Fptr)->nextkey = (fptr->Fptr)->headstart[nexthdu];
     (fptr->Fptr)->headend = (fptr->Fptr)->headstart[nexthdu];
     (fptr->Fptr)->datastart = ((fptr->Fptr)->headstart[nexthdu]) + (nhead * 2880);
     (fptr->Fptr)->hdutype = BINARY_TBL;  /* might need to be reset... */
@@ -874,7 +874,7 @@ int ffdhdu(fitsfile *fptr,      /* I - FITS file pointer                   */
         ffphpr(fptr,1,8,0,naxes,0,1,1,status);
 
         /* calc number of blocks to delete (leave just 1 block) */
-        nblocks = (long) (( (fptr->Fptr)->headstart[(fptr->Fptr)->curhdu + 1] - 
+        nblocks = (long) (( (fptr->Fptr)->headstart[(fptr->Fptr)->curhdu + 1] -
                 2880 ) / 2880);
 
         /* ffdblk also updates the starting address of all following HDUs */
@@ -893,7 +893,7 @@ int ffdhdu(fitsfile *fptr,      /* I - FITS file pointer                   */
     {
 
         /* calc number of blocks to delete */
-        nblocks = (long) (( (fptr->Fptr)->headstart[(fptr->Fptr)->curhdu + 1] - 
+        nblocks = (long) (( (fptr->Fptr)->headstart[(fptr->Fptr)->curhdu + 1] -
                 (fptr->Fptr)->headstart[(fptr->Fptr)->curhdu] ) / 2880);
 
         /* ffdblk also updates the starting address of all following HDUs */

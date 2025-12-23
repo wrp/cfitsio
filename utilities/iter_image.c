@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 }
 /*--------------------------------------------------------------------------*/
 int div_image(long totalrows, long offset, long firstrow, long nrows,
-             int ncols, iteratorCol *cols, void *user_strct ) 
+             int ncols, iteratorCol *cols, void *user_strct )
 
 /*
    Sample iterator function that takes all pixel values of the image

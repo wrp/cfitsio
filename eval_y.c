@@ -208,10 +208,10 @@ static int  New_Offset( ParseData *, int ColNum, int offset );
 static int  New_Unary ( ParseData *, int returnType, int Op, int Node1 );
 static int  New_BinOp ( ParseData *, int returnType, int Node1, int Op, int Node2 );
 static int  New_Func  ( ParseData *, int returnType, funcOp Op, int nNodes,
-			int Node1, int Node2, int Node3, int Node4, 
+			int Node1, int Node2, int Node3, int Node4,
 			int Node5, int Node6, int Node7 );
 static int  New_FuncSize( ParseData *, int returnType, funcOp Op, int nNodes,
-			int Node1, int Node2, int Node3, int Node4, 
+			int Node1, int Node2, int Node3, int Node4,
 			  int Node5, int Node6, int Node7, int Size);
 static int  New_Deref ( ParseData *, int Var,  int nDim,
 			int Dim1, int Dim2, int Dim3, int Dim4, int Dim5 );
@@ -1844,7 +1844,7 @@ yyreduce:
 #line 284 "eval.y"
                 { if( (yyvsp[-1].Node)<0 ) {
 		     yyerror(scanner, lParse, "Couldn't build node structure: out of memory?");
-		     YYERROR;  } 
+		     YYERROR;  }
                   lParse->resultNode = (yyvsp[-1].Node);
 		}
 #line 1851 "eval_y.c"
@@ -1996,13 +1996,13 @@ yyreduce:
 
   case 23: /* bits: bits '+' bits  */
 #line 383 "eval.y"
-                { 
+                {
 		  if (SIZE((yyvsp[-2].Node))+SIZE((yyvsp[0].Node)) >= MAX_STRLEN) {
 		    yyerror(scanner, lParse, "Combined bit string size exceeds " MAX_STRLEN_S " bits");
 		    YYERROR;
 		  }
 		  (yyval.Node) = New_BinOp(lParse,  BITSTR, (yyvsp[-2].Node), '+', (yyvsp[0].Node) ); TEST((yyval.Node));
-                  SIZE((yyval.Node)) = SIZE((yyvsp[-2].Node)) + SIZE((yyvsp[0].Node)); 
+                  SIZE((yyval.Node)) = SIZE((yyvsp[-2].Node)) + SIZE((yyvsp[0].Node));
 		}
 #line 2008 "eval_y.c"
     break;
@@ -2108,28 +2108,28 @@ yyreduce:
 
   case 39: /* expr: expr '-' expr  */
 #line 434 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '-', (yyvsp[0].Node) ); 
+                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '-', (yyvsp[0].Node) );
 		  TEST((yyval.Node));                                                }
 #line 2114 "eval_y.c"
     break;
 
   case 40: /* expr: expr '*' expr  */
 #line 437 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '*', (yyvsp[0].Node) ); 
+                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '*', (yyvsp[0].Node) );
 		  TEST((yyval.Node));                                                }
 #line 2121 "eval_y.c"
     break;
 
   case 41: /* expr: expr '/' expr  */
 #line 440 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '/', (yyvsp[0].Node) ); 
+                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '/', (yyvsp[0].Node) );
 		  TEST((yyval.Node));                                                }
 #line 2128 "eval_y.c"
     break;
 
   case 42: /* expr: expr '&' expr  */
 #line 443 "eval.y"
-                { 
+                {
                    if (TYPE((yyvsp[-2].Node)) != LONG ||
 		       TYPE((yyvsp[0].Node)) != LONG) {
                      yyerror(scanner, lParse, "Bitwise operations with incompatible types; only (bit OP bit) and (int OP int) are allowed");
@@ -2142,7 +2142,7 @@ yyreduce:
 
   case 43: /* expr: expr '|' expr  */
 #line 452 "eval.y"
-                { 
+                {
                    if (TYPE((yyvsp[-2].Node)) != LONG ||
 		       TYPE((yyvsp[0].Node)) != LONG) {
                      yyerror(scanner, lParse, "Bitwise operations with incompatible types; only (bit OP bit) and (int OP int) are allowed");
@@ -2155,7 +2155,7 @@ yyreduce:
 
   case 44: /* expr: expr XOR expr  */
 #line 461 "eval.y"
-                { 
+                {
                    if (TYPE((yyvsp[-2].Node)) != LONG ||
 		       TYPE((yyvsp[0].Node)) != LONG) {
                      yyerror(scanner, lParse, "Bitwise operations with incompatible types; only (bit OP bit) and (int OP int) are allowed");
@@ -2194,7 +2194,7 @@ yyreduce:
   case 49: /* expr: expr '*' bexpr  */
 #line 479 "eval.y"
                 { (yyvsp[0].Node) = New_Unary(lParse,  TYPE((yyvsp[-2].Node)), 0, (yyvsp[0].Node) );
-                  (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '*', (yyvsp[0].Node) ); 
+                  (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '*', (yyvsp[0].Node) );
 		  TEST((yyval.Node));                                }
 #line 2200 "eval_y.c"
     break;
@@ -2286,7 +2286,7 @@ yyreduce:
                      yyerror(scanner, lParse, "Function() not supported");
 		     YYERROR;
 		  }
-                  TEST((yyval.Node)); 
+                  TEST((yyval.Node));
                 }
 #line 2292 "eval_y.c"
     break;
@@ -2304,7 +2304,7 @@ yyreduce:
                      yyerror(scanner, lParse, "Function(bool) not supported");
 		     YYERROR;
 		  }
-                  TEST((yyval.Node)); 
+                  TEST((yyval.Node));
 		}
 #line 2310 "eval_y.c"
     break;
@@ -2357,7 +2357,7 @@ yyreduce:
                      yyerror(scanner, lParse, "Function(bool,expr) not supported");
 		     YYERROR;
 		  }
-                  TEST((yyval.Node)); 
+                  TEST((yyval.Node));
 		}
 #line 2363 "eval_y.c"
     break;
@@ -2373,7 +2373,7 @@ yyreduce:
                      yyerror(scanner, lParse, "Function(str) not supported");
 		     YYERROR;
 		  }
-                  TEST((yyval.Node)); 
+                  TEST((yyval.Node));
 		}
 #line 2379 "eval_y.c"
     break;
@@ -2408,7 +2408,7 @@ yyreduce:
                      yyerror(scanner, lParse, "Function(bits) not supported");
 		     YYERROR;
 		  }
-                  TEST((yyval.Node)); 
+                  TEST((yyval.Node));
 		}
 #line 2414 "eval_y.c"
     break;
@@ -2479,7 +2479,7 @@ yyreduce:
 		       (yyval.Node) = New_Const(lParse,  LONG, &naxis, sizeof(naxis) );
 		       TEST((yyval.Node));
 		     }
-                  } 
+                  }
   		  else {  /*  These all take DOUBLE arguments  */
 		     if( TYPE((yyvsp[-1].Node)) != DOUBLE ) (yyvsp[-1].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-1].Node) );
                      if (FSTRCMP((yyvsp[-2].str),"SIN(") == 0)
@@ -2518,7 +2518,7 @@ yyreduce:
 		     else if (FSTRCMP((yyvsp[-2].str),"CEIL(") == 0)
 			(yyval.Node) = New_Func(lParse,  0, ceil_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
 		     else if (FSTRCMP((yyvsp[-2].str),"RANDOMP(") == 0) {
-		       (yyval.Node) = New_Func(lParse,  0, poirnd_fct, 1, (yyvsp[-1].Node), 
+		       (yyval.Node) = New_Func(lParse,  0, poirnd_fct, 1, (yyvsp[-1].Node),
 				      0, 0, 0, 0, 0, 0 );
 		       TYPE((yyval.Node)) = LONG;
 		     } else {
@@ -2526,16 +2526,16 @@ yyreduce:
 			YYERROR;
 		     }
 		  }
-                  TEST((yyval.Node)); 
+                  TEST((yyval.Node));
                 }
 #line 2532 "eval_y.c"
     break;
 
   case 60: /* expr: IFUNCTION sexpr ',' sexpr ')'  */
 #line 775 "eval.y"
-                { 
+                {
 		  if (FSTRCMP((yyvsp[-4].str),"STRSTR(") == 0) {
-		    (yyval.Node) = New_Func(lParse,  LONG, strpos_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0, 
+		    (yyval.Node) = New_Func(lParse,  LONG, strpos_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0,
 				   0, 0, 0, 0 );
 		    TEST((yyval.Node));
 		  }
@@ -2545,13 +2545,13 @@ yyreduce:
 
   case 61: /* expr: FUNCTION expr ',' expr ')'  */
 #line 783 "eval.y"
-                { 
+                {
 		   if (FSTRCMP((yyvsp[-4].str),"DEFNULL(") == 0) {
 		      if( SIZE((yyvsp[-3].Node))>=SIZE((yyvsp[-1].Node)) && Test_Dims( lParse,  (yyvsp[-3].Node), (yyvsp[-1].Node) ) ) {
 			 PROMOTE((yyvsp[-3].Node),(yyvsp[-1].Node));
 			 (yyval.Node) = New_Func(lParse,  0, defnull_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0,
 					0, 0, 0, 0 );
-			 TEST((yyval.Node)); 
+			 TEST((yyval.Node));
 		      } else {
 			 yyerror(scanner, lParse, "Dimensions of DEFNULL arguments "
 				 "are not compatible");
@@ -2562,7 +2562,7 @@ yyreduce:
 		     if( TYPE((yyvsp[-1].Node)) != DOUBLE ) (yyvsp[-1].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-1].Node) );
 		     if( Test_Dims( lParse,  (yyvsp[-3].Node), (yyvsp[-1].Node) ) ) {
 			(yyval.Node) = New_Func(lParse,  0, atan2_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0, 0, 0, 0, 0 );
-			TEST((yyval.Node)); 
+			TEST((yyval.Node));
 			if( SIZE((yyvsp[-3].Node))<SIZE((yyvsp[-1].Node)) ) Copy_Dims( lParse,(yyval.Node), (yyvsp[-1].Node));
 		     } else {
 			yyerror(scanner, lParse, "Dimensions of arctan2 arguments "
@@ -2652,16 +2652,16 @@ yyreduce:
 
   case 62: /* expr: FUNCTION expr ',' expr ',' expr ',' expr ')'  */
 #line 886 "eval.y"
-                { 
+                {
 		  if (FSTRCMP((yyvsp[-8].str),"ANGSEP(") == 0) {
 		    if( TYPE((yyvsp[-7].Node)) != DOUBLE ) (yyvsp[-7].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-7].Node) );
 		    if( TYPE((yyvsp[-5].Node)) != DOUBLE ) (yyvsp[-5].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-5].Node) );
 		    if( TYPE((yyvsp[-3].Node)) != DOUBLE ) (yyvsp[-3].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-3].Node) );
 		    if( TYPE((yyvsp[-1].Node)) != DOUBLE ) (yyvsp[-1].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-1].Node) );
-		    if( Test_Dims( lParse,  (yyvsp[-7].Node), (yyvsp[-5].Node) ) && Test_Dims( lParse,  (yyvsp[-5].Node), (yyvsp[-3].Node) ) && 
+		    if( Test_Dims( lParse,  (yyvsp[-7].Node), (yyvsp[-5].Node) ) && Test_Dims( lParse,  (yyvsp[-5].Node), (yyvsp[-3].Node) ) &&
 			Test_Dims( lParse,  (yyvsp[-3].Node), (yyvsp[-1].Node) ) ) {
 		      (yyval.Node) = New_Func(lParse,  0, angsep_fct, 4, (yyvsp[-7].Node), (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].Node),0,0,0 );
-		      TEST((yyval.Node)); 
+		      TEST((yyval.Node));
 		      if( SIZE((yyvsp[-7].Node))<SIZE((yyvsp[-5].Node)) ) Copy_Dims( lParse,(yyval.Node), (yyvsp[-5].Node));
 		      if( SIZE((yyvsp[-5].Node))<SIZE((yyvsp[-3].Node)) ) Copy_Dims( lParse,(yyval.Node), (yyvsp[-3].Node));
 		      if( SIZE((yyvsp[-3].Node))<SIZE((yyvsp[-1].Node)) ) Copy_Dims( lParse,(yyval.Node), (yyvsp[-1].Node));
@@ -2780,35 +2780,35 @@ yyreduce:
 
   case 78: /* bexpr: bits NE bits  */
 #line 955 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), NE,  (yyvsp[0].Node) ); TEST((yyval.Node)); 
+                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), NE,  (yyvsp[0].Node) ); TEST((yyval.Node));
 		  SIZE((yyval.Node)) = 1;                                     }
 #line 2786 "eval_y.c"
     break;
 
   case 79: /* bexpr: bits LT bits  */
 #line 958 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), LT,  (yyvsp[0].Node) ); TEST((yyval.Node)); 
+                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), LT,  (yyvsp[0].Node) ); TEST((yyval.Node));
 		  SIZE((yyval.Node)) = 1;                                     }
 #line 2793 "eval_y.c"
     break;
 
   case 80: /* bexpr: bits LTE bits  */
 #line 961 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), LTE, (yyvsp[0].Node) ); TEST((yyval.Node)); 
+                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), LTE, (yyvsp[0].Node) ); TEST((yyval.Node));
 		  SIZE((yyval.Node)) = 1;                                     }
 #line 2800 "eval_y.c"
     break;
 
   case 81: /* bexpr: bits GT bits  */
 #line 964 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), GT,  (yyvsp[0].Node) ); TEST((yyval.Node)); 
+                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), GT,  (yyvsp[0].Node) ); TEST((yyval.Node));
 		  SIZE((yyval.Node)) = 1;                                     }
 #line 2807 "eval_y.c"
     break;
 
   case 82: /* bexpr: bits GTE bits  */
 #line 967 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), GTE, (yyvsp[0].Node) ); TEST((yyval.Node)); 
+                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), GTE, (yyvsp[0].Node) ); TEST((yyval.Node));
 		  SIZE((yyval.Node)) = 1;                                     }
 #line 2814 "eval_y.c"
     break;
@@ -2964,7 +2964,7 @@ yyreduce:
 		   if (FSTRCMP((yyvsp[-2].str),"ISNULL(") == 0) {
 		      (yyval.Node) = New_Func(lParse,  0, isnull_fct, 1, (yyvsp[-1].Node), 0, 0,
 				     0, 0, 0, 0 );
-		      TEST((yyval.Node)); 
+		      TEST((yyval.Node));
                       /* Use expression's size, but return BOOLEAN */
 		      TYPE((yyval.Node)) = BOOLEAN;
 		   } else {
@@ -2981,7 +2981,7 @@ yyreduce:
 		   if (FSTRCMP((yyvsp[-2].str),"ISNULL(") == 0) {
 		      (yyval.Node) = New_Func(lParse,  0, isnull_fct, 1, (yyvsp[-1].Node), 0, 0,
 				     0, 0, 0, 0 );
-		      TEST((yyval.Node)); 
+		      TEST((yyval.Node));
                       /* Use expression's size, but return BOOLEAN */
 		      TYPE((yyval.Node)) = BOOLEAN;
 		   } else {
@@ -2998,7 +2998,7 @@ yyreduce:
 		   if (FSTRCMP((yyvsp[-2].str),"ISNULL(") == 0) {
 		      (yyval.Node) = New_Func(lParse,  BOOLEAN, isnull_fct, 1, (yyvsp[-1].Node), 0, 0,
 				     0, 0, 0, 0 );
-		      TEST((yyval.Node)); 
+		      TEST((yyval.Node));
 		   } else {
 		      yyerror(scanner, lParse, "Boolean Function(expr) not supported");
 		      YYERROR;
@@ -3014,7 +3014,7 @@ yyreduce:
 		      if( SIZE((yyvsp[-3].Node))>=SIZE((yyvsp[-1].Node)) && Test_Dims( lParse,  (yyvsp[-3].Node), (yyvsp[-1].Node) ) ) {
 			 (yyval.Node) = New_Func(lParse,  0, defnull_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0,
 					0, 0, 0, 0 );
-			 TEST((yyval.Node)); 
+			 TEST((yyval.Node));
 		      } else {
 			 yyerror(scanner, lParse, "Dimensions of DEFNULL arguments are not compatible");
 			 YYERROR;
@@ -3045,7 +3045,7 @@ yyreduce:
 		       yyerror(scanner, lParse, "Boolean Function not supported");
 		       YYERROR;
 		     }
-		     TEST((yyval.Node)); 
+		     TEST((yyval.Node));
 
 		     if( SIZE((yyval.Node))<SIZE((yyvsp[-5].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-5].Node));
 		     if( SIZE((yyvsp[-5].Node))<SIZE((yyvsp[-3].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-3].Node));
@@ -3063,7 +3063,7 @@ yyreduce:
 		   if( TYPE((yyvsp[-5].Node)) != DOUBLE ) (yyvsp[-5].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-5].Node) );
 		   if( TYPE((yyvsp[-3].Node)) != DOUBLE ) (yyvsp[-3].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-3].Node) );
 		   if( TYPE((yyvsp[-1].Node))!= DOUBLE ) (yyvsp[-1].Node)= New_Unary(lParse,  DOUBLE, 0, (yyvsp[-1].Node));
-		   if( ! (Test_Dims( lParse,  (yyvsp[-9].Node), (yyvsp[-7].Node) ) && Test_Dims( lParse,  (yyvsp[-7].Node), (yyvsp[-5].Node) ) && 
+		   if( ! (Test_Dims( lParse,  (yyvsp[-9].Node), (yyvsp[-7].Node) ) && Test_Dims( lParse,  (yyvsp[-7].Node), (yyvsp[-5].Node) ) &&
 			  Test_Dims( lParse,  (yyvsp[-5].Node), (yyvsp[-3].Node) ) && Test_Dims( lParse,  (yyvsp[-3].Node), (yyvsp[-1].Node) )) ) {
 		     yyerror(scanner, lParse, "Dimensions of CIRCLE arguments "
 			     "are not compatible");
@@ -3076,7 +3076,7 @@ yyreduce:
 		       yyerror(scanner, lParse, "Boolean Function not supported");
 		       YYERROR;
 		     }
-		     TEST((yyval.Node)); 
+		     TEST((yyval.Node));
 		     if( SIZE((yyval.Node))<SIZE((yyvsp[-9].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-9].Node));
 		     if( SIZE((yyvsp[-9].Node))<SIZE((yyvsp[-7].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-7].Node));
 		     if( SIZE((yyvsp[-7].Node))<SIZE((yyvsp[-5].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-5].Node));
@@ -3097,7 +3097,7 @@ yyreduce:
 		   if( TYPE((yyvsp[-5].Node))!= DOUBLE ) (yyvsp[-5].Node)= New_Unary(lParse,  DOUBLE, 0, (yyvsp[-5].Node));
 		   if( TYPE((yyvsp[-3].Node))!= DOUBLE ) (yyvsp[-3].Node)= New_Unary(lParse,  DOUBLE, 0, (yyvsp[-3].Node));
 		   if( TYPE((yyvsp[-1].Node))!= DOUBLE ) (yyvsp[-1].Node)= New_Unary(lParse,  DOUBLE, 0, (yyvsp[-1].Node));
-		   if( ! (Test_Dims( lParse,  (yyvsp[-13].Node), (yyvsp[-11].Node) ) && Test_Dims( lParse,  (yyvsp[-11].Node), (yyvsp[-9].Node) ) && 
+		   if( ! (Test_Dims( lParse,  (yyvsp[-13].Node), (yyvsp[-11].Node) ) && Test_Dims( lParse,  (yyvsp[-11].Node), (yyvsp[-9].Node) ) &&
 			  Test_Dims( lParse,  (yyvsp[-9].Node), (yyvsp[-7].Node) ) && Test_Dims( lParse,  (yyvsp[-7].Node), (yyvsp[-5].Node) ) &&
 			  Test_Dims( lParse, (yyvsp[-5].Node),(yyvsp[-3].Node) ) && Test_Dims( lParse, (yyvsp[-3].Node), (yyvsp[-1].Node) ) ) ) {
 		     yyerror(scanner, lParse, "Dimensions of BOX or ELLIPSE arguments "
@@ -3114,7 +3114,7 @@ yyreduce:
 		       yyerror(scanner, lParse, "SAO Image Function not supported");
 		       YYERROR;
 		     }
-		     TEST((yyval.Node)); 
+		     TEST((yyval.Node));
 		     if( SIZE((yyval.Node))<SIZE((yyvsp[-13].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-13].Node));
 		     if( SIZE((yyvsp[-13].Node))<SIZE((yyvsp[-11].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-11].Node));
 		     if( SIZE((yyvsp[-11].Node))<SIZE((yyvsp[-9].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-9].Node));
@@ -3291,7 +3291,7 @@ yyreduce:
 
   case 132: /* sexpr: sexpr '+' sexpr  */
 #line 1262 "eval.y"
-                { 
+                {
 		  if (SIZE((yyvsp[-2].Node))+SIZE((yyvsp[0].Node)) >= MAX_STRLEN) {
 		    yyerror(scanner, lParse, "Combined string size exceeds " MAX_STRLEN_S " characters");
 		    YYERROR;
@@ -3317,7 +3317,7 @@ yyreduce:
 		  if (SIZE((yyvsp[0].Node)) > outSize) outSize = SIZE((yyvsp[0].Node));
                   (yyval.Node) = New_FuncSize(lParse,  0, ifthenelse_fct, 3, (yyvsp[-2].Node), (yyvsp[0].Node), (yyvsp[-4].Node),
 				     0, 0, 0, 0, outSize);
-		  
+
                   TEST((yyval.Node));
                   if( SIZE((yyvsp[-2].Node))<SIZE((yyvsp[0].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[0].Node));
                 }
@@ -3326,7 +3326,7 @@ yyreduce:
 
   case 134: /* sexpr: FUNCTION sexpr ',' sexpr ')'  */
 #line 1290 "eval.y"
-                { 
+                {
 		  if (FSTRCMP((yyvsp[-4].str),"DEFNULL(") == 0) {
 		     int outSize;
 		     /* Since the output can be calculated now, as a constant
@@ -3334,10 +3334,10 @@ yyreduce:
 			order to avoid an overflow. */
 		     outSize = SIZE((yyvsp[-3].Node));
 		     if (SIZE((yyvsp[-1].Node)) > outSize) outSize = SIZE((yyvsp[-1].Node));
-		     
+
 		     (yyval.Node) = New_FuncSize(lParse,  0, defnull_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0,
 					0, 0, 0, 0, outSize );
-		     TEST((yyval.Node)); 
+		     TEST((yyval.Node));
 		     if( SIZE((yyvsp[-1].Node))>SIZE((yyvsp[-3].Node)) ) SIZE((yyval.Node)) = SIZE((yyvsp[-1].Node));
 		  } else {
 		     yyerror(scanner, lParse, "Function(string,string) not supported");
@@ -3349,7 +3349,7 @@ yyreduce:
 
   case 135: /* sexpr: FUNCTION sexpr ',' expr ',' expr ')'  */
 #line 1309 "eval.y"
-                { 
+                {
 		  if (FSTRCMP((yyvsp[-6].str),"STRMID(") == 0) {
 		    int len;
 		    if( TYPE((yyvsp[-3].Node)) != LONG || SIZE((yyvsp[-3].Node)) != 1 ||
@@ -3593,7 +3593,7 @@ static int Alloc_Node( ParseData *lParse )
       } else {
 	 lParse->nNodesAlloc = 100;
 	 newNodePtr = (Node *)malloc ( sizeof(Node)*lParse->nNodesAlloc );
-      }	 
+      }
 
       if( newNodePtr ) {
 	 lParse->Nodes = newNodePtr;
@@ -3690,7 +3690,7 @@ static int New_Unary( ParseData *lParse, int returnType, int Op, int Node1 )
    if( (Op==DOUBLE || Op==FLTCAST) && that->type==DOUBLE  ) return( Node1 );
    if( (Op==LONG   || Op==INTCAST) && that->type==LONG    ) return( Node1 );
    if( (Op==BOOLEAN              ) && that->type==BOOLEAN ) return( Node1 );
-   
+
    n = Alloc_Node(lParse);
    if( n>=0 ) {
       this              = lParse->Nodes + n;
@@ -3766,18 +3766,18 @@ static int New_BinOp( ParseData *lParse, int returnType, int Node1, int Op, int 
 
 static int New_Func( ParseData *lParse,
 		     int returnType, funcOp Op, int nNodes,
-		     int Node1, int Node2, int Node3, int Node4, 
+		     int Node1, int Node2, int Node3, int Node4,
 		     int Node5, int Node6, int Node7 )
 {
   return New_FuncSize(lParse,
 		      returnType, Op, nNodes,
-		      Node1, Node2, Node3, Node4, 
+		      Node1, Node2, Node3, Node4,
 		      Node5, Node6, Node7, 0);
 }
 
 static int New_FuncSize( ParseData *lParse,
 			 int returnType, funcOp Op, int nNodes,
-			 int Node1, int Node2, int Node3, int Node4, 
+			 int Node1, int Node2, int Node3, int Node4,
 			 int Node5, int Node6, int Node7, int Size )
 /* If returnType==0 , use Node1's type and vector sizes as returnType, */
 /* else return a single value of type returnType                       */
@@ -3785,7 +3785,7 @@ static int New_FuncSize( ParseData *lParse,
    Node *this, *that;
    int  i,n,constant;
 
-   if( Node1<0 || Node2<0 || Node3<0 || Node4<0 || 
+   if( Node1<0 || Node2<0 || Node3<0 || Node4<0 ||
        Node5<0 || Node6<0 || Node7<0 ) return(-1);
 
    n = Alloc_Node(lParse);
@@ -3806,7 +3806,7 @@ static int New_FuncSize( ParseData *lParse,
 
       while( i-- )
 	constant = ( constant && OPER(this->SubNodes[i]) == CONST_OP );
-      
+
       if( returnType ) {
 	 this->type           = returnType;
 	 this->value.nelem    = 1;
@@ -4097,7 +4097,7 @@ static int New_GTI( ParseData *lParse, funcOp Op, char *fname, int Node1, int No
 	 }
 	 startptr = that0->value.data.dblptr;
 	 stopptr  = that0->value.data.dblptr + nrows;
-	 
+
 	 ffgcvd( fptr, startCol, 1L, 1L, nrows, 0.0,
 		 startptr, &i, &lParse->status );
 	 ffgcvd( fptr, stopCol, 1L, 1L, nrows, 0.0,
@@ -4126,13 +4126,13 @@ static int New_GTI( ParseData *lParse, funcOp Op, char *fname, int Node1, int No
 	   yyerror(0, lParse, errmsg);
 	   return(-1);
 	 }
-	 
+
 	 /*  Handle TIMEZERO offset, if any  */
-	 
+
 	 dt = (timeZeroI[1] - timeZeroI[0]) + (timeZeroF[1] - timeZeroF[0]);
 	 timeSpan = stopptr[nrows-1] - startptr[0];
 	 if (timeSpan == 0) timeSpan = 1.0;
-	 
+
 	 if( fabs( dt / timeSpan ) > 1e-12 ) {
 	   for( i=0; i<nrows; i++ ) {
 	     startptr[i] += dt;
@@ -4206,7 +4206,7 @@ static int New_REG( ParseData *lParse, char *fname, int NodeX, int NodeY, char *
       this->value.nelem    = 1;
       this->value.naxis    = 1;
       this->value.naxes[0] = 1;
-      
+
       Copy_Dims(lParse, n, NodeX);
       if( SIZE(NodeX)<SIZE(NodeY) )  Copy_Dims(lParse, n, NodeY);
 
@@ -4343,7 +4343,7 @@ static int New_Array( ParseData *lParse, int valueNode, int dimNode )
    /* Check that dimensions are {a,b,c,d}
         - vector
 	- every element is constant integer
-	- 5 or fewer dimensions 
+	- 5 or fewer dimensions
    */
 
    dims = &(lParse->Nodes[dimNode]);
@@ -4391,7 +4391,7 @@ static int New_Array( ParseData *lParse, int valueNode, int dimNode )
      yyerror(0, lParse, "ARRAY(V,n) value V must have vector dimension of 1");
      return (-1);
    }
-   
+
    n = Alloc_Node(lParse);
    if( n>=0 ) {
       this             = lParse->Nodes + n;
@@ -4416,7 +4416,7 @@ static int Locate_Col( ParseData *lParse, Node *this )
 {
    Node *that;
    int  i, col=0, newCol, nfound=0;
-   
+
    if( this->nSubNodes==0
        && this->operation<=0 && this->operation!=CONST_OP )
       return lParse->colData[ - this->operation].colnum;
@@ -4475,7 +4475,7 @@ static int Test_Dims( ParseData *lParse, int Node1, int Node2 )
    } else
       valid = 0;
    return( valid );
-}   
+}
 
 static void Copy_Dims( ParseData *lParse, int Node1, int Node2 )
 {
@@ -4538,20 +4538,20 @@ void Evaluate_Parser( ParseData *lParse, long firstRow, long nRows )
 	 lParse->Nodes[i].value.undef       = NULL;
 	 break;
       case STRING:
-	 lParse->Nodes[i].value.data.strptr = 
+	 lParse->Nodes[i].value.data.strptr =
 	    (char**)lParse->varData[column].data + rowOffset;
 	 lParse->Nodes[i].value.undef = lParse->varData[column].undef + rowOffset;
 	 break;
       case BOOLEAN:
-	 lParse->Nodes[i].value.data.logptr = 
+	 lParse->Nodes[i].value.data.logptr =
 	    (char*)lParse->varData[column].data + offset;
 	 break;
       case LONG:
-	 lParse->Nodes[i].value.data.lngptr = 
+	 lParse->Nodes[i].value.data.lngptr =
 	    (long*)lParse->varData[column].data + offset;
 	 break;
       case DOUBLE:
-	 lParse->Nodes[i].value.data.dblptr = 
+	 lParse->Nodes[i].value.data.dblptr =
 	    (double*)lParse->varData[column].data + offset;
 	 break;
       }
@@ -4568,7 +4568,7 @@ static void Evaluate_Node( ParseData *lParse, int thisNode )
 {
    Node *this;
    int i;
-   
+
    if( lParse->status ) return;
 
    this = lParse->Nodes + thisNode;
@@ -4944,10 +4944,10 @@ static void Do_BinOp_bit( ParseData *lParse, Node *this )
       case GTE:
 	 this->value.data.log = bitlgte( sptr1, this->operation, sptr2 );
 	 break;
-      case '|': 
+      case '|':
 	 bitor( this->value.data.str, sptr1, sptr2 );
 	 break;
-      case '&': 
+      case '&':
 	 bitand( this->value.data.str, sptr1, sptr2 );
 	 break;
       case '+':
@@ -4961,14 +4961,14 @@ static void Do_BinOp_bit( ParseData *lParse, Node *this )
 	  sptr1 ++;
 	}
 	break;
-	
+
       }
       this->operation = CONST_OP;
 
    } else {
 
       Allocate_Ptrs( lParse, this );
-     
+
       if( !lParse->status ) {
 	 rows  = lParse->nRows;
 	 switch( this->operation ) {
@@ -4987,27 +4987,27 @@ static void Do_BinOp_bit( ParseData *lParse, Node *this )
 	       if( !const2 )
 		  sptr2 = that2->value.data.strptr[rows];
 	       switch( this->operation ) {
-	       case NE:  this->value.data.logptr[rows] = 
+	       case NE:  this->value.data.logptr[rows] =
                                                       !bitcmp( sptr1, sptr2 );
                          break;
-	       case EQ:  this->value.data.logptr[rows] = 
+	       case EQ:  this->value.data.logptr[rows] =
                                                        bitcmp( sptr1, sptr2 );
                          break;
 	       case GT:
 	       case LT:
 	       case LTE:
-	       case GTE: this->value.data.logptr[rows] = 
+	       case GTE: this->value.data.logptr[rows] =
                                      bitlgte( sptr1, this->operation, sptr2 );
 	                 break;
 	       }
 	       this->value.undef[rows] = 0;
 	    }
 	    break;
-	 
+
 	    /*  BITSTR AND/ORs ...  no UNDEFS in or out */
-      
-	 case '|': 
-	 case '&': 
+
+	 case '|':
+	 case '&':
 	 case '+':
 	    while( rows-- ) {
 	       if( !const1 )
@@ -5027,11 +5027,11 @@ static void Do_BinOp_bit( ParseData *lParse, Node *this )
 
 	    /* Accumulate 1 bits */
 	 case ACCUM:
-	   { 
+	   {
 	     long i, previous, curr;
 
 	     previous = that2->value.data.lng;
-	     
+
 	      /* Cumulative sum of this chunk */
 	     for (i=0; i<rows; i++) {
 	       sptr1 = that1->value.data.strptr[i];
@@ -5042,7 +5042,7 @@ static void Do_BinOp_bit( ParseData *lParse, Node *this )
 	       this->value.data.lngptr[i] = previous;
 	       this->value.undef[i] = 0;
 	     }
-	     
+
 	      /* Store final cumulant for next pass */
 	     that2->value.data.lng = previous;
 	   }
@@ -5133,7 +5133,7 @@ static void Do_BinOp_str( ParseData *lParse, Node *this )
 	       }
 	    }
 	    break;
-	    
+
 	 case GT:
 	 case LT:
 	    while( rows-- ) {
@@ -5167,7 +5167,7 @@ static void Do_BinOp_str( ParseData *lParse, Node *this )
 	    break;
 
 	    /*  Concat Strings  */
-	    
+
 	 case '+':
 	    while( rows-- ) {
 	       if( !const1 ) null1 = that1->value.undef[rows];
@@ -5243,12 +5243,12 @@ static void Do_BinOp_log( ParseData *lParse, Node *this )
       rows  = lParse->nRows;
       nelem = this->value.nelem;
       elem  = this->value.nelem * rows;
-      
+
       Allocate_Ptrs( lParse, this );
-      
+
       if( !lParse->status ) {
 	previous = that2->value.data.lng;
-	
+
 	/* Cumulative sum of this chunk */
 	for (i=0; i<elem; i++) {
 	  if (!that1->value.undef[i]) {
@@ -5258,11 +5258,11 @@ static void Do_BinOp_log( ParseData *lParse, Node *this )
 	  this->value.data.lngptr[i] = previous;
 	  this->value.undef[i] = 0;
 	}
-	
+
 	/* Store final cumulant for next pass */
 	that2->value.data.lng = previous;
       }
-      
+
    } else {
       rows  = lParse->nRows;
       nelem = this->value.nelem;
@@ -5271,12 +5271,12 @@ static void Do_BinOp_log( ParseData *lParse, Node *this )
       Allocate_Ptrs( lParse, this );
 
       if( !lParse->status ) {
-	
+
 	 if (this->operation == ACCUM) {
 	   long i, previous, curr;
-	   
+
 	   previous = that2->value.data.lng;
-	   
+
 	   /* Cumulative sum of this chunk */
 	   for (i=0; i<elem; i++) {
 	     if (!that1->value.undef[i]) {
@@ -5286,11 +5286,11 @@ static void Do_BinOp_log( ParseData *lParse, Node *this )
 	     this->value.data.lngptr[i] = previous;
 	     this->value.undef[i] = 0;
 	   }
-	   
+
 	   /* Store final cumulant for next pass */
 	   that2->value.data.lng = previous;
 	 }
-	
+
 	 while( rows-- ) {
 	    while( nelem-- ) {
 	       elem--;
@@ -5341,7 +5341,7 @@ static void Do_BinOp_log( ParseData *lParse, Node *this )
 		  break;
 
 	       case EQ:
-		  this->value.data.logptr[elem] = 
+		  this->value.data.logptr[elem] =
 		     ( (val1 && val2) || (!val1 && !val2) );
 		  break;
 
@@ -5412,8 +5412,8 @@ static void Do_BinOp_lng( ParseData *lParse, Node *this )
 	 if( val2 ) this->value.data.lng = (val1 % val2);
 	 else       yyerror(0, lParse, "Divide by Zero");
 	 break;
-      case '/': 
-	 if( val2 ) this->value.data.lng = (val1 / val2); 
+      case '/':
+	 if( val2 ) this->value.data.lng = (val1 / val2);
 	 else       yyerror(0, lParse, "Divide by Zero");
 	 break;
       case POWER:
@@ -5434,13 +5434,13 @@ static void Do_BinOp_lng( ParseData *lParse, Node *this )
       rows  = lParse->nRows;
       nelem = this->value.nelem;
       elem  = this->value.nelem * rows;
-      
+
       Allocate_Ptrs( lParse, this );
-      
+
       if( !lParse->status ) {
 	previous = that2->value.data.lng;
 	undef    = (long) that2->value.undef;
-	
+
 	if (this->operation == ACCUM) {
 	  /* Cumulative sum of this chunk */
 	  for (i=0; i<elem; i++) {
@@ -5468,13 +5468,13 @@ static void Do_BinOp_lng( ParseData *lParse, Node *this )
 	    previous = curr;
 	    undef = that1->value.undef[i];
 	  }
-	}	  
-	
+	}
+
 	/* Store final cumulant for next pass */
 	that2->value.data.lng = previous;
 	that2->value.undef    = (char *) undef; /* XXX evil, but no harm here */
       }
-      
+
    } else {
 
       rows  = lParse->nRows;
@@ -5512,7 +5512,7 @@ static void Do_BinOp_lng( ParseData *lParse, Node *this )
 	    case LT:   this->value.data.logptr[elem] = (val1 <  val2);   break;
 	    case LTE:  this->value.data.logptr[elem] = (val1 <= val2);   break;
 	    case GTE:  this->value.data.logptr[elem] = (val1 >= val2);   break;
-	       
+
 	    case '+':  this->value.data.lngptr[elem] = (val1  + val2);   break;
 	    case '-':  this->value.data.lngptr[elem] = (val1  - val2);   break;
 	    case '*':  this->value.data.lngptr[elem] = (val1  * val2);   break;
@@ -5521,15 +5521,15 @@ static void Do_BinOp_lng( ParseData *lParse, Node *this )
 	    case '|':  this->value.data.lngptr[elem] = (val1  | val2);   break;
 	    case '^':  this->value.data.lngptr[elem] = (val1  ^ val2);   break;
 
-	    case '%':   
+	    case '%':
 	       if( val2 ) this->value.data.lngptr[elem] = (val1 % val2);
 	       else {
 		 this->value.data.lngptr[elem] = 0;
 		 this->value.undef[elem] = 1;
 	       }
 	       break;
-	    case '/': 
-	       if( val2 ) this->value.data.lngptr[elem] = (val1 / val2); 
+	    case '/':
+	       if( val2 ) this->value.data.lngptr[elem] = (val1 / val2);
 	       else {
 		 this->value.data.lngptr[elem] = 0;
 		 this->value.undef[elem] = 1;
@@ -5575,7 +5575,7 @@ static void Do_BinOp_dbl( ParseData *lParse, Node *this )
       vector2 = that2->value.nelem;
    else {
       val2  = that2->value.data.dbl;
-   } 
+   }
 
    if( !vector1 && !vector2 ) {  /*  Result is a constant  */
 
@@ -5596,8 +5596,8 @@ static void Do_BinOp_dbl( ParseData *lParse, Node *this )
 	 if( val2 ) this->value.data.dbl = val1 - val2*((int)(val1/val2));
 	 else       yyerror(0, lParse, "Divide by Zero");
 	 break;
-      case '/': 
-	 if( val2 ) this->value.data.dbl = (val1 / val2); 
+      case '/':
+	 if( val2 ) this->value.data.dbl = (val1 / val2);
 	 else       yyerror(0, lParse, "Divide by Zero");
 	 break;
       case POWER:
@@ -5619,13 +5619,13 @@ static void Do_BinOp_dbl( ParseData *lParse, Node *this )
       rows  = lParse->nRows;
       nelem = this->value.nelem;
       elem  = this->value.nelem * rows;
-      
+
       Allocate_Ptrs( lParse, this );
-      
+
       if( !lParse->status ) {
 	previous = that2->value.data.dbl;
 	undef    = (long) that2->value.undef;
-	
+
 	if (this->operation == ACCUM) {
 	  /* Cumulative sum of this chunk */
 	  for (i=0; i<elem; i++) {
@@ -5653,13 +5653,13 @@ static void Do_BinOp_dbl( ParseData *lParse, Node *this )
 	    previous = curr;
 	    undef = that1->value.undef[i];
 	  }
-	}	  
-	
+	}
+
 	/* Store final cumulant for next pass */
 	that2->value.data.dbl = previous;
 	that2->value.undef    = (char *) undef; /* XXX evil, but no harm here */
       }
-      
+
    } else {
 
       rows  = lParse->nRows;
@@ -5698,7 +5698,7 @@ static void Do_BinOp_dbl( ParseData *lParse, Node *this )
 	    case LT:    this->value.data.logptr[elem] = (val1 <  val2);   break;
 	    case LTE:   this->value.data.logptr[elem] = (val1 <= val2);   break;
 	    case GTE:   this->value.data.logptr[elem] = (val1 >= val2);   break;
-	       
+
 	    case '+':   this->value.data.dblptr[elem] = (val1  + val2);   break;
 	    case '-':   this->value.data.dblptr[elem] = (val1  - val2);   break;
 	    case '*':   this->value.data.dblptr[elem] = (val1  * val2);   break;
@@ -5711,8 +5711,8 @@ static void Do_BinOp_dbl( ParseData *lParse, Node *this )
 		 this->value.undef[elem] = 1;
 	       }
 	       break;
-	    case '/': 
-	       if( val2 ) this->value.data.dblptr[elem] = (val1 / val2); 
+	    case '/':
+	       if( val2 ) this->value.data.dblptr[elem] = (val1 / val2);
 	       else {
 		 this->value.data.dblptr[elem] = 0.0;
 		 this->value.undef[elem] = 1;
@@ -5745,7 +5745,7 @@ static void Do_BinOp_dbl( ParseData *lParse, Node *this )
 
 #define ELEM_SWAP(a,b) { register long t=(a);(a)=(b);(b)=t; }
 
-/* 
+/*
  * qselect_median_lng - select the median value of a long array
  *
  * This routine selects the median value of the long integer array
@@ -5771,7 +5771,7 @@ long qselect_median_lng(long arr[], int n)
     for (;;) {
 
         if (high <= low) { /* One element only */
-	  return arr[median];	  
+	  return arr[median];
 	}
 
         if (high == low + 1) {  /* Two elements only */
@@ -5817,7 +5817,7 @@ long qselect_median_lng(long arr[], int n)
 
 #define ELEM_SWAP(a,b) { register double t=(a);(a)=(b);(b)=t; }
 
-/* 
+/*
  * qselect_median_dbl - select the median value of a double array
  *
  * This routine selects the median value of the double array
@@ -5888,14 +5888,14 @@ double qselect_median_dbl(double arr[], int n)
 
 /*
  * angsep_calc - compute angular separation between celestial coordinates
- *   
+ *
  * This routine computes the angular separation between to coordinates
  * on the celestial sphere (i.e. RA and Dec).  Note that all units are
  * in DEGREES, unlike the other trig functions in the calculator.
  *
  * double ra1, dec1 - RA and Dec of the first position in degrees
  * double ra2, dec2 - RA and Dec of the second position in degrees
- * 
+ *
  * RETURNS: (double) angular separation in degrees
  *
  */
@@ -5904,7 +5904,7 @@ double angsep_calc(double ra1, double dec1, double ra2, double dec2)
 /*  double cd;  */
   static double deg = 0;
   double a, sdec, sra;
-  
+
   if (deg == 0) deg = ((double)4)*atan((double)1)/((double)180);
   /* deg = 1.0; **** UNCOMMENT IF YOU WANT RADIANS */
 
@@ -6117,7 +6117,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 
 	    /* Four-argument ANGSEP function */
          case angsep_fct:
-	    this->value.data.dbl = 
+	    this->value.data.dbl =
 	      angsep_calc(pVals[0].data.dbl, pVals[1].data.dbl,
 			  pVals[2].data.dbl, pVals[3].data.dbl);
 
@@ -6209,8 +6209,8 @@ static void Do_Func( ParseData *lParse, Node *this )
 
 	    /* String functions */
          case strmid_fct:
-	   cstrmid(lParse, 
-		   this->value.data.str, this->value.nelem, 
+	   cstrmid(lParse,
+		   this->value.data.str, this->value.nelem,
 		   pVals[0].data.str,    pVals[0].nelem,
 		   pVals[1].data.lng);
 	   break;
@@ -6218,7 +6218,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 	   {
 	     char *res = strstr(pVals[0].data.str, pVals[1].data.str);
 	     if (res == NULL) {
-	       this->value.data.lng = 0; 
+	       this->value.data.lng = 0;
 	     } else {
 	       this->value.data.lng = (res - pVals[0].data.str) + 1;
 	     }
@@ -6277,8 +6277,8 @@ static void Do_Func( ParseData *lParse, Node *this )
 	       this->value.undef[ielem] = 0;
 	       iaxis[0]++;
 	       for (j = 0; j < naxis; j++) {
-		 if (iaxis[j] > this->value.naxes[j]) { 
-		   iaxis[j] = 1; 
+		 if (iaxis[j] > this->value.naxes[j]) {
+		   iaxis[j] = 1;
 		   if (j < (naxis-1)) iaxis[j+1]++;
 		 } else {
 		   break;
@@ -6323,14 +6323,14 @@ static void Do_Func( ParseData *lParse, Node *this )
 		  if (! this->value.undef[elem]) {
 		    this->value.data.lngptr[elem] = simplerng_getpoisson(pVals[0].data.dbl);
 		  }
-		} 
+		}
 	      } else {
 		while( elem-- ) {
 		  this->value.undef[elem] = theParams[0]->value.undef[elem];
-		  if (theParams[0]->value.data.dblptr[elem] < 0) 
+		  if (theParams[0]->value.data.dblptr[elem] < 0)
 		    this->value.undef[elem] = 1;
 		  if (! this->value.undef[elem]) {
-		    this->value.data.lngptr[elem] = 
+		    this->value.data.lngptr[elem] =
 		      simplerng_getpoisson(theParams[0]->value.data.dblptr[elem]);
 		  }
 		} /* while */
@@ -6343,14 +6343,14 @@ static void Do_Func( ParseData *lParse, Node *this )
 		  if (! this->value.undef[elem]) {
 		    this->value.data.lngptr[elem] = simplerng_getpoisson(pVals[0].data.lng);
 		  }
-		} 
+		}
 	      } else {
 		while( elem-- ) {
 		  this->value.undef[elem] = theParams[0]->value.undef[elem];
-		  if (theParams[0]->value.data.lngptr[elem] < 0) 
+		  if (theParams[0]->value.data.lngptr[elem] < 0)
 		    this->value.undef[elem] = 1;
 		  if (! this->value.undef[elem]) {
-		    this->value.data.lngptr[elem] = 
+		    this->value.data.lngptr[elem] =
 		      simplerng_getpoisson(theParams[0]->value.data.lngptr[elem]);
 		  }
 		} /* while */
@@ -6360,7 +6360,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 
 
 	    /* Non-Trig single-argument functions */
-	    
+
 	 case sum_fct:
 	    elem = row * theParams[0]->value.nelem;
 	    if( theParams[0]->type==BOOLEAN ) {
@@ -6392,7 +6392,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 		       this->value.undef[row] = 0;
 		     }
 		  }
-	       }		  
+	       }
 	    } else if( theParams[0]->type==DOUBLE ){
 	       while( row-- ) {
 		  this->value.data.dblptr[row] = 0.0;
@@ -6407,7 +6407,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 		       this->value.undef[row] = 0;
 		     }
 		  }
-	       }		  
+	       }
 	    } else { /* BITSTR */
 	       nelem = theParams[0]->value.nelem;
 	       while( row-- ) {
@@ -6418,7 +6418,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 		    if (*sptr1 == '1') this->value.data.lngptr[row] ++;
 		    sptr1++;
 		  }
-	       }		  
+	       }
 	    }
 	    break;
 
@@ -6443,7 +6443,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 		    this->value.undef[row] = 0;
 		    this->value.data.dblptr[row] /= count;
 		  }
-	       }		  
+	       }
 	    } else if( theParams[0]->type==DOUBLE ){
 	       while( row-- ) {
 		  int count = 0;
@@ -6463,7 +6463,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 		    this->value.undef[row] = 0;
 		    this->value.data.dblptr[row] /= count;
 		  }
-	       }		  
+	       }
 	    }
 	    break;
 	 case stddev_fct:
@@ -6569,14 +6569,14 @@ static void Do_Func( ParseData *lParse, Node *this )
 		  int nelem1 = nelem;
 
 
-		  while ( nelem1-- ) { 
+		  while ( nelem1-- ) {
 		    if (*uptr == 0) {
 		      *p++ = *dptr;   /* Only advance the dest pointer if we copied */
 		    }
 		    dptr ++;  /* Advance the source pointer ... */
 		    uptr ++;  /* ... and source "undef" pointer */
 		  }
-		  
+
 		  nelem1 = (p - mptr);  /* Number of accepted data points */
 		  if (nelem1 > 0) {
 		    this->value.undef[irow] = 0;
@@ -6585,8 +6585,8 @@ static void Do_Func( ParseData *lParse, Node *this )
 		    this->value.undef[irow] = 1;
 		    this->value.data.lngptr[irow] = 0;
 		  }
-		    
-	       }		  
+
+	       }
 
 	       free(mptr);
 	    } else {
@@ -6607,7 +6607,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 		  double *p = mptr;
 		  int nelem1 = nelem;
 
-		  while ( nelem1-- ) { 
+		  while ( nelem1-- ) {
 		    if (*uptr == 0) {
 		      *p++ = *dptr;   /* Only advance the dest pointer if we copied */
 		    }
@@ -6654,7 +6654,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 
 	     this->value.undef[row] = 0;        /* Initialize to 0 (defined) */
 	     this->value.data.lngptr[row] = 0;
-	     while( nelem1-- ) {	
+	     while( nelem1-- ) {
 	       elem --;
 	       if ( theParams[0]->value.undef[elem] == 0 ) this->value.data.lngptr[row] ++;
 	     }
@@ -6766,7 +6766,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 	    switch( this->type ) {
 	    case LONG:
 	      while( elem-- ) {
-		if ( theParams[1]->value.data.lng == 
+		if ( theParams[1]->value.data.lng ==
 		     theParams[0]->value.data.lngptr[elem] ) {
 		  this->value.data.lngptr[elem] = 0;
 		  this->value.undef[elem] = 1;
@@ -6778,7 +6778,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 	      break;
 	    case DOUBLE:
 	      while( elem-- ) {
-		if ( theParams[1]->value.data.dbl == 
+		if ( theParams[1]->value.data.dbl ==
 		     theParams[0]->value.data.dblptr[elem] ) {
 		  this->value.data.dblptr[elem] = 0;
 		  this->value.undef[elem] = 1;
@@ -6796,21 +6796,21 @@ static void Do_Func( ParseData *lParse, Node *this )
 	 case sin_fct:
 	    while( elem-- )
 	       if( !(this->value.undef[elem] = theParams[0]->value.undef[elem]) ) {
-		  this->value.data.dblptr[elem] = 
+		  this->value.data.dblptr[elem] =
 		     sin( theParams[0]->value.data.dblptr[elem] );
 	       }
 	    break;
 	 case cos_fct:
 	    while( elem-- )
 	       if( !(this->value.undef[elem] = theParams[0]->value.undef[elem]) ) {
-		  this->value.data.dblptr[elem] = 
+		  this->value.data.dblptr[elem] =
 		     cos( theParams[0]->value.data.dblptr[elem] );
 	       }
 	    break;
 	 case tan_fct:
 	    while( elem-- )
 	       if( !(this->value.undef[elem] = theParams[0]->value.undef[elem]) ) {
-		  this->value.data.dblptr[elem] = 
+		  this->value.data.dblptr[elem] =
 		     tan( theParams[0]->value.data.dblptr[elem] );
 	       }
 	    break;
@@ -6846,21 +6846,21 @@ static void Do_Func( ParseData *lParse, Node *this )
 	 case sinh_fct:
 	    while( elem-- )
 	       if( !(this->value.undef[elem] = theParams[0]->value.undef[elem]) ) {
-		  this->value.data.dblptr[elem] = 
+		  this->value.data.dblptr[elem] =
 		     sinh( theParams[0]->value.data.dblptr[elem] );
 	       }
 	    break;
 	 case cosh_fct:
 	    while( elem-- )
 	       if( !(this->value.undef[elem] = theParams[0]->value.undef[elem]) ) {
-		  this->value.data.dblptr[elem] = 
+		  this->value.data.dblptr[elem] =
 		     cosh( theParams[0]->value.data.dblptr[elem] );
 	       }
 	    break;
 	 case tanh_fct:
 	    while( elem-- )
 	       if( !(this->value.undef[elem] = theParams[0]->value.undef[elem]) ) {
-		  this->value.data.dblptr[elem] = 
+		  this->value.data.dblptr[elem] =
 		     tanh( theParams[0]->value.data.dblptr[elem] );
 	       }
 	    break;
@@ -6907,27 +6907,27 @@ static void Do_Func( ParseData *lParse, Node *this )
 	 case ceil_fct:
 	    while( elem-- )
 	       if( !(this->value.undef[elem] = theParams[0]->value.undef[elem]) ) {
-		  this->value.data.dblptr[elem] = 
+		  this->value.data.dblptr[elem] =
 		     ceil( theParams[0]->value.data.dblptr[elem] );
 	       }
 	    break;
 	 case floor_fct:
 	    while( elem-- )
 	       if( !(this->value.undef[elem] = theParams[0]->value.undef[elem]) ) {
-		  this->value.data.dblptr[elem] = 
+		  this->value.data.dblptr[elem] =
 		     floor( theParams[0]->value.data.dblptr[elem] );
 	       }
 	    break;
 	 case round_fct:
 	    while( elem-- )
 	       if( !(this->value.undef[elem] = theParams[0]->value.undef[elem]) ) {
-		  this->value.data.dblptr[elem] = 
+		  this->value.data.dblptr[elem] =
 		     floor( theParams[0]->value.data.dblptr[elem] + 0.5);
 	       }
 	    break;
 
 	    /* Two-argument Trig Functions */
-	    
+
 	 case atan2_fct:
 	    while( row-- ) {
 	       nelem = this->value.nelem;
@@ -6951,7 +6951,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 	    break;
 
 	    /* Four-argument ANGSEP Function */
-	    
+
 	 case angsep_fct:
 	    while( row-- ) {
 	       nelem = this->value.nelem;
@@ -7000,9 +7000,9 @@ static void Do_Func( ParseData *lParse, Node *this )
 		       }
 		       this->value.undef[row] = 0;
 		     }
-		  }  
+		  }
 		  this->value.data.lngptr[row] = minVal;
-	       }		  
+	       }
 	    } else if( this->type==DOUBLE ) {
 	       double minVal=0.0;
 	       while( row-- ) {
@@ -7021,9 +7021,9 @@ static void Do_Func( ParseData *lParse, Node *this )
 		       }
 		       this->value.undef[row] = 0;
 		     }
-		  }  
+		  }
 		  this->value.data.dblptr[row] = minVal;
-	       }		  
+	       }
 	    } else if( this->type==BITSTR ) {
 	       char minVal;
 	       while( row-- ) {
@@ -7035,7 +7035,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 		  }
 		  this->value.data.strptr[row][0] = minVal;
 		  this->value.data.strptr[row][1] = 0;     /* Null terminate */
-	       }		  
+	       }
 	    }
 	    break;
          case min2_fct:
@@ -7126,7 +7126,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 		     }
 		  }
 		  this->value.data.lngptr[row] = maxVal;
-	       }		  
+	       }
 	    } else if( this->type==DOUBLE ) {
 	       double maxVal=0.0;
 	       while( row-- ) {
@@ -7147,7 +7147,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 		     }
 		  }
 		  this->value.data.dblptr[row] = maxVal;
-	       }		  
+	       }
 	    } else if( this->type==BITSTR ) {
 	       char maxVal;
 	       while( row-- ) {
@@ -7159,7 +7159,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 		  }
 		  this->value.data.strptr[row][0] = maxVal;
 		  this->value.data.strptr[row][1] = 0;     /* Null terminate */
-	       }		  
+	       }
 	    }
 	    break;
          case max2_fct:
@@ -7303,7 +7303,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 		     saobox( pVals[0].data.dbl, pVals[1].data.dbl,
 			     pVals[2].data.dbl, pVals[3].data.dbl,
 			     pVals[4].data.dbl, pVals[5].data.dbl,
-			     pVals[6].data.dbl );	
+			     pVals[6].data.dbl );
 	       }
 	    }
 	    break;
@@ -7522,7 +7522,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 		  }
 		  this->value.undef[row] = undef;
 		}
-	      }		      
+	      }
 	      break;
 
 	    /* String functions */
@@ -7552,7 +7552,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 		    char *res = strstr(str1, str2);
 		    if (res == NULL) {
 		      undef = 1;
-		      this->value.data.lngptr[row] = 0; 
+		      this->value.data.lngptr[row] = 0;
 		    } else {
 		      this->value.data.lngptr[row] = (res - str1) + 1;
 		    }
@@ -7562,7 +7562,7 @@ static void Do_Func( ParseData *lParse, Node *this )
 	      }
 	      break;
 
-		    
+
 	 } /* End switch(this->operation) */
       } /* End if (!lParse->status) */
    } /* End non-constant operations */
@@ -7624,26 +7624,26 @@ static void Do_Deref( ParseData *lParse, Node *this )
 	    for( row=0; row<lParse->nRows; row++ ) {
 	       if( this->type==STRING )
 		 this->value.undef[row] = theVar->value.undef[row];
-	       else if( this->type==BITSTR ) 
+	       else if( this->type==BITSTR )
 		 this->value.undef;  /* Dummy - BITSTRs do not have undefs */
-	       else 
+	       else
 		 this->value.undef[row] = theVar->value.undef[elem];
 
 	       if( this->type==DOUBLE )
-		  this->value.data.dblptr[row] = 
+		  this->value.data.dblptr[row] =
 		     theVar->value.data.dblptr[elem];
 	       else if( this->type==LONG )
-		  this->value.data.lngptr[row] = 
+		  this->value.data.lngptr[row] =
 		     theVar->value.data.lngptr[elem];
 	       else if( this->type==BOOLEAN )
-		  this->value.data.logptr[row] = 
+		  this->value.data.logptr[row] =
 		     theVar->value.data.logptr[elem];
 	       else {
 		 /* XXX Note, the below expression uses knowledge of
                     the layout of the string format, namely (nelem+1)
                     characters per string, followed by (nelem+1)
                     "undef" values. */
-		  this->value.data.strptr[row][0] = 
+		  this->value.data.strptr[row][0] =
 		     theVar->value.data.strptr[0][elem+row];
 		  this->value.data.strptr[row][1] = 0;  /* Null terminate */
 	       }
@@ -7653,11 +7653,11 @@ static void Do_Deref( ParseData *lParse, Node *this )
 	    yyerror(0, lParse, "Index out of range");
 	    free( this->value.data.ptr );
 	 }
-	 
+
       } else if( allConst && nDims==1 ) {
-	 
+
 	 /* Reduce dimensions by 1, using a constant index */
-	 
+
 	 if( dimVals[0] < 1 ||
 	     dimVals[0] > theVar->value.naxes[ theVar->value.naxis-1 ] ) {
 	    yyerror(0, lParse, "Index out of range");
@@ -7665,7 +7665,7 @@ static void Do_Deref( ParseData *lParse, Node *this )
 	 } else if ( this->type == BITSTR || this->type == STRING ) {
 	    elem = this->value.nelem * (dimVals[0]-1);
 	    for( row=0; row<lParse->nRows; row++ ) {
-	      if (this->value.undef) 
+	      if (this->value.undef)
 		this->value.undef[row] = theVar->value.undef[row];
 	      memcpy( (char*)this->value.data.strptr[0]
 		      + row*sizeof(char)*(this->value.nelem+1),
@@ -7674,7 +7674,7 @@ static void Do_Deref( ParseData *lParse, Node *this )
 	      /* Null terminate */
 	      this->value.data.strptr[row][this->value.nelem] = 0;
 	      elem += theVar->value.nelem+1;
-	    }	       
+	    }
 	 } else {
 	    elem = this->value.nelem * (dimVals[0]-1);
 	    for( row=0; row<lParse->nRows; row++ ) {
@@ -7686,9 +7686,9 @@ static void Do_Deref( ParseData *lParse, Node *this )
 		       (char*)theVar->value.data.ptr + elem*dsize,
 		       this->value.nelem * dsize );
 	       elem += theVar->value.nelem;
-	    }	       
+	    }
 	 }
-      
+
       } else if( theVar->value.naxis==nDims ) {
 
 	 /* Dereference completely using an expression for the indices */
@@ -7718,26 +7718,26 @@ static void Do_Deref( ParseData *lParse, Node *this )
 
 	       if( this->type==STRING )
 		 this->value.undef[row] = theVar->value.undef[row];
-	       else if( this->type==BITSTR ) 
+	       else if( this->type==BITSTR )
 		 this->value.undef;  /* Dummy - BITSTRs do not have undefs */
-	       else 
+	       else
 		 this->value.undef[row] = theVar->value.undef[elem];
 
 	       if( this->type==DOUBLE )
-		  this->value.data.dblptr[row] = 
+		  this->value.data.dblptr[row] =
 		     theVar->value.data.dblptr[elem];
 	       else if( this->type==LONG )
-		  this->value.data.lngptr[row] = 
+		  this->value.data.lngptr[row] =
 		     theVar->value.data.lngptr[elem];
 	       else if( this->type==BOOLEAN )
-		  this->value.data.logptr[row] = 
+		  this->value.data.logptr[row] =
 		     theVar->value.data.logptr[elem];
 	       else {
 		 /* XXX Note, the below expression uses knowledge of
                     the layout of the string format, namely (nelem+1)
                     characters per string, followed by (nelem+1)
                     "undef" values. */
-		  this->value.data.strptr[row][0] = 
+		  this->value.data.strptr[row][0] =
 		     theVar->value.data.strptr[0][elem+row];
 		  this->value.data.strptr[row][1] = 0;  /* Null terminate */
 	       }
@@ -7769,7 +7769,7 @@ static void Do_Deref( ParseData *lParse, Node *this )
 	    } else if ( this->type == BITSTR || this->type == STRING ) {
 	      elem = this->value.nelem * (dimVals[0]-1);
 	      elem += row*(theVar->value.nelem+1);
-	      if (this->value.undef) 
+	      if (this->value.undef)
 		this->value.undef[row] = theVar->value.undef[row];
 	      memcpy( (char*)this->value.data.strptr[0]
 		      + row*sizeof(char)*(this->value.nelem+1),
@@ -7793,9 +7793,9 @@ static void Do_Deref( ParseData *lParse, Node *this )
    }
 
    if( theVar->operation>0 ) {
-     if (theVar->type == STRING || theVar->type == BITSTR) 
+     if (theVar->type == STRING || theVar->type == BITSTR)
        free(theVar->value.data.strptr[0] );
-     else 
+     else
        free( theVar->value.data.ptr );
    }
    for( i=0; i<nDims; i++ )
@@ -7866,7 +7866,7 @@ static void Do_GTI( ParseData *lParse, Node *this )
 	       this->value.undef[elem]       = 0;
 	     }
 	   }
-	   
+
 	 }
       }
    }
@@ -7892,7 +7892,7 @@ static void Do_GTI_Over( ParseData *lParse, Node *this )
 
    if( theStart->operation==CONST_OP && theStop->operation==CONST_OP) {
 
-      this->value.data.dbl = 
+      this->value.data.dbl =
 	(GTI_Over( theStart->value.data.dbl, theStop->value.data.dbl,
 		   nGTI, gtiStart, gtiStop, &gti));
       this->operation      = CONST_OP;
@@ -7927,12 +7927,12 @@ static void Do_GTI_Over( ParseData *lParse, Node *this )
 		  continue;
 
             /*  Before searching entire GTI, check the GTI found last time  */
-	       if( gti<0 || 
+	       if( gti<0 ||
 		   uStart<gtiStart[gti] || uStart>gtiStop[gti] ||
 		   uStop <gtiStart[gti] || uStop >gtiStop[gti]) {
 		 /* Nope, need to recalculate */
-		 toverlap = GTI_Over(uStart, uStop, 
-				     nGTI, gtiStart, gtiStop, 
+		 toverlap = GTI_Over(uStart, uStop,
+				     nGTI, gtiStart, gtiStop,
 				     &gti);
 	       } else {
 		 /* We are in same GTI, the overlap is just stop-start of user range */
@@ -8000,13 +8000,13 @@ static double GTI_Over(double evtStart, double evtStop,
     if (evtStop  < stopi ) stopi  = evtStop;
     overlap += (stopi - starti);
   }
-    
+
   return overlap;
 }
 
 /*
  * Search_GTI - search GTI for requested evtTime
- * 
+ *
  * double evtTime - requested event time
  * long nGTI - number of entries in start[] and stop[]
  * double start[], stop[] - start and stop of each GTI
@@ -8026,14 +8026,14 @@ static long Search_GTI( double evtTime, long nGTI, double *start,
 			double *stop, int ordered, long *nextGTI0 )
 {
    long gti, nextGTI = -1L, step;
-                             
+
    if( ordered && nGTI>15 ) { /*  If time-ordered and lots of GTIs,   */
                               /*  use "FAST" Binary search algorithm  */
       if( evtTime>=start[0] && evtTime<=stop[nGTI-1] ) {
 	 gti = step = (nGTI >> 1);
 	 while(1) {
 	    if( step>1L ) step >>= 1;
-	    
+
 	    if( evtTime>stop[gti] ) {
 	       if( evtTime>=start[gti+1] )
 		  gti += step;
@@ -8059,8 +8059,8 @@ static long Search_GTI( double evtTime, long nGTI, double *start,
 	 if (start[0] > evtTime) nextGTI = 0;
 	 gti = -1L;
       }
-      
-   } else { /*  Use "SLOW" linear search.  Not required to be 
+
+   } else { /*  Use "SLOW" linear search.  Not required to be
 	        ordered, so we have to search the whole table
 		no matter what.
 	    */
@@ -8102,7 +8102,7 @@ static void Do_REG( ParseData *lParse, Node *this )
       Yvector = theY->value.nelem;
    else {
       Yval  = theY->value.data.dbl;
-   } 
+   }
 
    if( !Xvector && !Yvector ) {
 
@@ -8145,7 +8145,7 @@ static void Do_REG( ParseData *lParse, Node *this )
 	       if( this->value.undef[elem] )
 		  continue;
 
-	       this->value.data.logptr[elem] = 
+	       this->value.data.logptr[elem] =
 		  ( fits_in_region( Xval, Yval,
 				    (SAORegion *)theRegion->value.data.ptr )
 		    != 0 );
@@ -8179,7 +8179,7 @@ static void Do_Vector( ParseData *lParse, Node *this )
 
 	    idx = lParse->nRows*this->value.nelem + offset;
 	    while( (idx-=this->value.nelem)>=0 ) {
-	       
+
 	       this->value.undef[idx] = 0;
 
 	       switch( this->type ) {
@@ -8194,9 +8194,9 @@ static void Do_Vector( ParseData *lParse, Node *this )
 		  break;
 	       }
 	    }
-	    
+
 	 } else {
-	       
+
 	    row  = lParse->nRows;
 	    idx  = row * that->value.nelem;
 	    while( row-- ) {
@@ -8268,7 +8268,7 @@ static void Do_Array( ParseData *lParse, Node *this )
      } else if (that->value.nelem > 1) { /* array "REFORM" */
        /* Note that dimensions change but total number of elements is same,
 	  so we just do a straight copy */
-      
+
        idx = lParse->nRows*this->value.nelem;
        while( idx-- ) {
 
@@ -8286,9 +8286,9 @@ static void Do_Array( ParseData *lParse, Node *this )
 	   break;
 	 }
        }
-       
+
      } else { /* Any promotion of scalar to vector/array */
-       
+
        row  = lParse->nRows;
        idx  = row * this->value.nelem - 1;
        while( row-- ) {
@@ -8417,7 +8417,7 @@ static void bitand(char *result,char *bitstrm1,char *bitstrm2)
     stream[i] = '\0';
     bitstrm2 = stream;
    }
- while ( (chr1 = *(bitstrm1++)) ) 
+ while ( (chr1 = *(bitstrm1++)) )
     {
        chr2 = *(bitstrm2++);
        if ((chr1 == 'x') || (chr2 == 'x'))
@@ -8460,7 +8460,7 @@ static void bitor(char *result,char *bitstrm1,char *bitstrm2)
     stream[i] = '\0';
     bitstrm2 = stream;
    }
- while ( (chr1 = *(bitstrm1++)) ) 
+ while ( (chr1 = *(bitstrm1++)) )
     {
        chr2 = *(bitstrm2++);
        if ((chr1 == '1') || (chr2 == '1'))
@@ -8603,7 +8603,7 @@ static char ellipse(double xcen, double ycen, double xrad, double yrad,
   if (src_len == 0) { src_len = strlen(src_str); } /* .. if constant */
 
   /* Fill destination with blanks */
-  if (pos < 0) { 
+  if (pos < 0) {
     yyerror(0, lParse, "STRMID(S,P,N) P must be 0 or greater");
     return -1;
   }

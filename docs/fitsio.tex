@@ -21,7 +21,7 @@
 \begin{center}
 {\Huge \bf FITSIO User's Guide}\\
 \end{center}
-\medskip 
+\medskip
 \medskip
 \begin{center}
 {\LARGE \bf A Subroutine Interface to FITS Format Files}\\
@@ -1262,7 +1262,7 @@ about 40 characters, which leaves enough room for most keyword values.
 CFITSIO returns an error if there is not enough room for both the
 keyword name and the keyword value on the 80-character card, except for
 string-valued keywords which are simply truncated so that the closing
-quote character falls in column 80. A space is also required on either 
+quote character falls in column 80. A space is also required on either
 side of the equal sign.
 
 
@@ -3315,7 +3315,7 @@ contiguous rectangular subset of pixels within the n-dimensional array.
    integer FITS arrays, the null value defined by the previous call to FTPNUL
    will be substituted;  for floating point FITS arrays (BITPIX = -32
    or -64) then the special IEEE NaN (Not-a-Number) value will be
-  substituted.  The FTPPN[]LL routines accept 64-bit integers for 
+  substituted.  The FTPPN[]LL routines accept 64-bit integers for
   fpixel and nelements.
 \end{description}
 
@@ -5860,7 +5860,7 @@ syntax
 \begin{verbatim}
   filename.fits[col *][col -Y][col Z=X+1]
 \end{verbatim}
-would be treated as equivalent to joining the expressions with semicolons, 
+would be treated as equivalent to joining the expressions with semicolons,
 or
 \begin{verbatim}
   filename.fits[col *; -Y;col Z=X+1]
@@ -6117,11 +6117,11 @@ like this,
 Please note that if multiple row filtering expressions are used, it is
 not permitted to also use the \verb+[@filename.txt]+ syntax in any
 of the individual expressions.
-    
+
 
 %% <!-- IMPORTANT NOTE IMPORTANT NOTE IMPORTANT NOTE -->
-%% <!-- If you edit this file then you must also edit 
-%%      the following other locations where calculator 
+%% <!-- If you edit this file then you must also edit
+%%      the following other locations where calculator
 %%      expressions are documented:
 %%         heacore/cfitsio/docs/cfitsio.tex
 %%         heacore/cfitsio/docs/fitsio.tex
@@ -6173,7 +6173,7 @@ log(negative), log10(negative), arccos(.gt. 1), arcsin(.gt. 1).
     "natural log"        log(x)     "common log"           log10(x)
     "error function"     erf(x)     "complement of erf"    erfc(x)
     "gamma function"     gamma(x)
-    "modulus"            x % y      
+    "modulus"            x % y
     "bitwise AND"        x & y      "bitwise OR"           x | y
     "bitwise XOR"        x ^^ y     (bitwise operators are 32-bit int only)
     "random # [0.0,1.0)" random()
@@ -6184,7 +6184,7 @@ log(negative), log10(negative), arccos(.gt. 1), arcsin(.gt. 1).
     "angular separation" angsep(ra1,dec1,ra2,de2) (all in degrees)
     "substring"          strmid(s,p,n) "string search"     strstr(s,r)
 \end{verbatim}
-The bitwise operators for AND, OR and XOR operate upon 32-bit integer 
+The bitwise operators for AND, OR and XOR operate upon 32-bit integer
 expressions only.
 
 Three different random number functions are provided: random(), with
@@ -6324,7 +6324,7 @@ usage. Also, the integer to real casts values to double precision:
     wild card. Note that the x represents a  different  number  of  wild
     card  bits  in  each  representation.  All  representations are case
     insensitive.  Although bitmasks may be of arbitrary length and contain
-    a wildcard, they may only be used in logical expressions, unlike 
+    a wildcard, they may only be used in logical expressions, unlike
     integer constants (see above) which may be used in any arithmetic
     expression.
 
@@ -6562,7 +6562,7 @@ usage. Also, the integer to real casts values to double precision:
     list must be separated by good time interval.  The results of
     gtifind() can be used with histogram binning techniques to bin an
     event list by which GTI.
-    
+
 \begin{verbatim}
       gtifind( "gtifile" , expr [, "STARTCOL", "STOPCOL" ] )
 \end{verbatim}
@@ -6620,7 +6620,7 @@ usage. Also, the integer to real casts values to double precision:
     The \verb+#EXPOSURE+ syntax with a leading \verb+#+ ensures that the
     requested values are treated as keywords.  Otherwise, a column
     named EXPOSURE will be created with the (constant) exposure value
-    in each entry.  
+    in each entry.
 
 
 
@@ -6911,9 +6911,9 @@ so that the histogram will have at least 10 bins along each axis.
 
 Please note that if explicit min and max values (or TLMINn/TLMAXn keywords)
 are not present, then CFITSIO must check every value of the binned quantity
-in advance to determine the binning limits.  This is especially relevant 
+in advance to determine the binning limits.  This is especially relevant
 for binning expressions, which must be evaluated multiple times to determine
-the limits of the expression.  Thus, it is always advisable to specify 
+the limits of the expression.  Thus, it is always advisable to specify
 min and max limits where possible.
 
 A shortcut notation is allowed if all the columns/axes have the same
@@ -6981,16 +6981,16 @@ ignored and may be used to add comments into the file.
 
     [bin pha, gti_num(gtifind())=1:2:1] - a 2-D image, where PHA is the
                                        X axis and the Y axis is an expression
-                                       which evaluates to the GTI number, 
+                                       which evaluates to the GTI number,
                                        as determined using the
                                        GTIFIND() function.
 
     [bin time=0:4000:2000, HR( (LC2/LC1).lt.1.5 ? 1 : 2 )=1:2:1] - a 2-D
                                        histogram which determines the number
                                        of samples in two time bins between 0 and
-                                       4000 and separating hardness ratio, 
+                                       4000 and separating hardness ratio,
                                        evaluated as (LC2/LC1), between less than
-                                       1.5 or greater than 1.5.  The ?: 
+                                       1.5 or greater than 1.5.  The ?:
                                        conditional function is used to decide
                                        less (or greater) than 1.5 and assign
                                        HR bin 1 or 2.

@@ -36,9 +36,9 @@ C  The STATUS parameter must be initialized before using FITSIO.  A
 C  positive value of STATUS is returned whenever a serious error occurs.
 C  FITSIO uses an `inherited status' convention, which means that if a
 C  subroutine is called with a positive input value of STATUS, then the
-C  subroutine will exit immediately, preserving the status value. For 
-C  simplicity, this program only checks the status value at the end of 
-C  the program, but it is usually better practice to check the status 
+C  subroutine will exit immediately, preserving the status value. For
+C  simplicity, this program only checks the status value at the end of
+C  the program, but it is usually better practice to check the status
 C  value more frequently.
 
       status=0
@@ -62,7 +62,7 @@ C  historical artifact and the value is ignored by FITSIO.
 
 C  Initialize parameters about the FITS image.
 C  BITPIX = 16 means that the image pixels will consist of 16-bit
-C  integers.  The size of the image is given by the NAXES values. 
+C  integers.  The size of the image is given by the NAXES values.
 C  The EXTEND = TRUE parameter indicates that the FITS file
 C  may contain extensions following the primary array.
       simple=.true.
@@ -101,7 +101,7 @@ C  EXPOSURE=                 1500 / Total Exposure Time
 C
       call ftpkyj(unit,'EXPOSURE',1500,'Total Exposure Time',status)
 
-C  The FITS file must always be closed before exiting the program. 
+C  The FITS file must always be closed before exiting the program.
 C  Any unit numbers allocated with FTGIOU must be freed with FTFIOU.
       call ftclos(unit, status)
       call ftfiou(unit, status)
@@ -114,7 +114,7 @@ C *************************************************************************
       subroutine writeascii
 
 C  Create an ASCII table containing 3 columns and 6 rows.  For convenience,
-C  the ASCII table extension is appended to the FITS image file created 
+C  the ASCII table extension is appended to the FITS image file created
 C  previously by the WRITEIMAGE subroutine.
 
       integer status,unit,readwrite,blocksize,tfields,nrows,rowlen
@@ -155,7 +155,7 @@ C  define parameters for the ASCII table (see the above data statements)
       tfields=3
       nrows=6
       extname='PLANETS_ASCII'
-      
+
 C  FTGABC is a convenient subroutine for calculating the total width of
 C  the table and the starting position of each column in an ASCII table.
 C  Any number of blank spaces (including zero)  may be inserted between
@@ -183,11 +183,11 @@ C  table in a column by column order rather than row by row.
       colnum=1
       call ftpcls(unit,colnum,frow,felem,nrows,name,status)
       colnum=2
-      call ftpclj(unit,colnum,frow,felem,nrows,diameter,status)  
+      call ftpclj(unit,colnum,frow,felem,nrows,diameter,status)
       colnum=3
-      call ftpcle(unit,colnum,frow,felem,nrows,density,status)  
+      call ftpcle(unit,colnum,frow,felem,nrows,density,status)
 
-C  The FITS file must always be closed before exiting the program. 
+C  The FITS file must always be closed before exiting the program.
 C  Any unit numbers allocated with FTGIOU must be freed with FTFIOU.
       call ftclos(unit, status)
       call ftfiou(unit, status)
@@ -241,7 +241,7 @@ C  Define parameters for the binary table (see the above data statements)
       nrows=6
       extname='PLANETS_BINARY'
       varidat=0
-      
+
 C  FTPHBN writes all the required header keywords which define the
 C  structure of the binary table. NROWS and TFIELDS gives the number of
 C  rows and columns in the table, and the TTYPE, TFORM, and TUNIT arrays
@@ -262,11 +262,11 @@ C  binary FITS tables.
       colnum=1
       call ftpcls(unit,colnum,frow,felem,nrows,name,status)
       colnum=2
-      call ftpclj(unit,colnum,frow,felem,nrows,diameter,status)  
+      call ftpclj(unit,colnum,frow,felem,nrows,diameter,status)
       colnum=3
-      call ftpcle(unit,colnum,frow,felem,nrows,density,status)  
+      call ftpcle(unit,colnum,frow,felem,nrows,density,status)
 
-C  The FITS file must always be closed before exiting the program. 
+C  The FITS file must always be closed before exiting the program.
 C  Any unit numbers allocated with FTGIOU must be freed with FTFIOU.
       call ftclos(unit, status)
       call ftfiou(unit, status)
@@ -324,9 +324,9 @@ C  is the binary table created by the previous WRITEBINARY routine.
 
 C  FTCOPY now copies the binary table from the input FITS file
 C  to the output file.
-      call ftcopy(inunit,outunit,morekeys,status)  
+      call ftcopy(inunit,outunit,morekeys,status)
 
-C  The FITS files must always be closed before exiting the program. 
+C  The FITS files must always be closed before exiting the program.
 C  Any unit numbers allocated with FTGIOU must be freed with FTFIOU.
 C  Giving -1 for the value of the first argument causes all previously
 C  allocated unit numbers to be released.
@@ -447,7 +447,7 @@ C  from the FITS file without any modification.  This is a faster
 C  way of transferring large chunks of data from one FITS file to another,
 C  than reading and then writing each column of data individually.
 C  In this case an entire row of bytes (the row length is specified
-C  by the naxes(1) parameter) is transferred.  The datatype of the 
+C  by the naxes(1) parameter) is transferred.  The datatype of the
 C  buffer array (TEMP in this case) is immaterial so long as it is
 C  declared large enough to hold the required number of bytes.
       noutrows=0
@@ -469,7 +469,7 @@ C  was unknown when the table was first created, any value (including 0)
 C  could have been used for the initial NAXIS2 keyword value.
       call ftmkyj(outunit,'NAXIS2',noutrows,'&',status)
 
-C  The FITS files must always be closed before exiting the program. 
+C  The FITS files must always be closed before exiting the program.
 C  Any unit numbers allocated with FTGIOU must be freed with FTFIOU.
       call ftclos(inunit, status)
       call ftclos(outunit, status)
@@ -493,11 +493,11 @@ C  The STATUS parameter must always be initialized.
 C  Get an unused Logical Unit Number to use to open the FITS file.
       call ftgiou(unit,status)
 
-C     name of FITS file 
+C     name of FITS file
       filename='ATESTFILEZ.FITS'
 
 C     open the FITS file, with read-only access.  The returned BLOCKSIZE
-C     parameter is obsolete and should be ignored. 
+C     parameter is obsolete and should be ignored.
       readwrite=0
       call ftopen(unit,filename,readwrite,blocksize,status)
 
@@ -541,7 +541,7 @@ C         hit end of file, so quit
           status=0
       end if
 
-C  The FITS file must always be closed before exiting the program. 
+C  The FITS file must always be closed before exiting the program.
 C  Any unit numbers allocated with FTGIOU must be freed with FTFIOU.
       call ftclos(unit, status)
       call ftfiou(unit, status)
@@ -556,7 +556,7 @@ C *************************************************************************
 C  Read a FITS image and determine the minimum and maximum pixel value.
 C  Rather than reading the entire image in
 C  at once (which could require a very large array), the image is read
-C  in pieces, 100 pixels at a time.  
+C  in pieces, 100 pixels at a time.
 
       integer status,unit,readwrite,blocksize,naxes(2),nfound
       integer group,firstpix,nbuffer,npixels,i
@@ -593,9 +593,9 @@ C  Initialize variables
       datamax=-1.0E30
 
       do while (npixels .gt. 0)
-C         read up to 100 pixels at a time 
+C         read up to 100 pixels at a time
           nbuffer=min(100,npixels)
-      
+
           call ftgpve(unit,group,firstpix,nbuffer,nullval,
      &            buffer,anynull,status)
 
@@ -613,7 +613,7 @@ C         increment pointers and loop back to read the next group of pixels
       print *
       print *,'Min and max image pixels = ',datamin,datamax
 
-C  The FITS file must always be closed before exiting the program. 
+C  The FITS file must always be closed before exiting the program.
 C  Any unit numbers allocated with FTGIOU must be freed with FTFIOU.
       call ftclos(unit, status)
       call ftfiou(unit, status)
@@ -692,7 +692,7 @@ C             FTGCVE reads the DENSITY values from the third column.
           end do
       end do
 
-C  The FITS file must always be closed before exiting the program. 
+C  The FITS file must always be closed before exiting the program.
 C  Any unit numbers allocated with FTGIOU must be freed with FTFIOU.
       call ftclos(unit, status)
       call ftfiou(unit, status)
@@ -754,7 +754,7 @@ C  Try to open the file, to see if it exists
       call ftopen(unit,filename,1,blocksize,status)
 
       if (status .eq. 0)then
-C         file was opened;  so now delete it 
+C         file was opened;  so now delete it
           call ftdelt(unit,status)
       else if (status .eq. 103)then
 C         file doesn't exist, so just reset status to zero and clear errors

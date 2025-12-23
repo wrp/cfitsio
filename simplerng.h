@@ -1,4 +1,4 @@
-/* 
+/*
    Simple Random Number Generators
        - getuniform - uniform deviate [0,1]
        - getnorm    - gaussian (normal) deviate (mean=0, stddev=1)

@@ -84,7 +84,7 @@ struct ParseData_struct {
                   int         nNodes;
                   int         nNodesAlloc;
                   int         resultNode;
-                  
+
                   long        firstRow;
                   long        nRows;
 

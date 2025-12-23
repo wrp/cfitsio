@@ -65,7 +65,7 @@ jobs:
           diff testprog.lis testprog.out
           cmp testprog.fit testprog.std
 
-    
+
 #      - name: Iterators
 #        run: |
 #          ./iter_a

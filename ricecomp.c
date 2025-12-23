@@ -3,14 +3,14 @@
   available for use in CFITSIO in July 1999.  These routines were
   originally contained in 2 source files: rcomp.c and rdecomp.c,
   and the 'include' file now called ricecomp.h was originally called buffer.h.
-  
+
   Note that beginning with CFITSIO v3.08, EOB checking was removed to improve
   speed, and so now the input compressed bytes buffers must have been
   allocated big enough so that they will never be overflowed. A simple
   rule of thumb that guarantees the buffer will be large enough is to make
   it 1% larger than the size of the input array of pixels that are being
   compressed.
-  
+
 */
 
 /*----------------------------------------------------------*/
@@ -36,25 +36,25 @@
  * leading zeros used in fits_rdecomp, fits_rdecomp_short and fits_rdecomp_byte
  */
 static const int nonzero_count[256] = {
-0, 
-1, 
-2, 2, 
-3, 3, 3, 3, 
-4, 4, 4, 4, 4, 4, 4, 4, 
-5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 
-6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 
-6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 
-7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 
-7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 
-7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 
-7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 
-8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 
-8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 
-8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 
-8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 
-8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 
-8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 
-8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 
+0,
+1,
+2, 2,
+3, 3, 3, 3,
+4, 4, 4, 4, 4, 4, 4, 4,
+5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
 
 typedef unsigned char Buffer_t;
@@ -319,13 +319,13 @@ Buffer bufmem, *buffer = &bufmem;
 /* int bsize;  */
 int i, j, thisblock;
 
-/* 
+/*
 NOTE: in principle, the following 2 variable could be declared as 'short'
 but in fact the code runs faster (on 32-bit Linux at least) as 'int'
 */
 int lastpix, nextpix;
 /* int pdiff; */
-short pdiff; 
+short pdiff;
 int v, fs, fsmask, top, fsmax, fsbits, bbits;
 int lbitbuffer, lbits_to_go;
 /* unsigned int psum; */
@@ -372,7 +372,7 @@ unsigned int *diff;
     /* move these out of switch block to further tweak performance */
     fsbits = 4;
     fsmax = 14;
-    
+
     bbits = 1<<fsbits;
 
     /*
@@ -548,13 +548,13 @@ Buffer bufmem, *buffer = &bufmem;
 /* int bsize; */
 int i, j, thisblock;
 
-/* 
+/*
 NOTE: in principle, the following 2 variable could be declared as 'short'
 but in fact the code runs faster (on 32-bit Linux at least) as 'int'
 */
 int lastpix, nextpix;
 /* int pdiff; */
-signed char pdiff; 
+signed char pdiff;
 int v, fs, fsmask, top, fsmax, fsbits, bbits;
 int lbitbuffer, lbits_to_go;
 /* unsigned int psum; */
@@ -789,7 +789,7 @@ static int output_nbits(Buffer *buffer, int bits, int n)
 int lbitbuffer;
 int lbits_to_go;
     /* AND mask for the right-most n bits */
-    static unsigned int mask[33] = 
+    static unsigned int mask[33] =
          {0,
 	  0x1,       0x3,       0x7,       0xf,       0x1f,       0x3f,       0x7f,       0xff,
 	  0x1ff,     0x3ff,     0x7ff,     0xfff,     0x1fff,     0x3fff,     0x7fff,     0xffff,
@@ -835,7 +835,7 @@ static int done_outputing_bits(Buffer *buffer)
 {
     if(buffer->bits_to_go < 8) {
 	putcbuf(buffer->bitbuffer<<buffer->bits_to_go,buffer);
-	
+
 /*	if (putcbuf(buffer->bitbuffer<<buffer->bits_to_go,buffer) == EOF)
 	    return(EOF);
 */
@@ -927,7 +927,7 @@ extern const int nonzero_count[];
 
     /* first 4 bytes of input buffer contain the value of the first */
     /* 4 byte integer value, without any encoding */
-    
+
     if (clen < 4)
     {
        ffpmsg("decompression error: input buffer not properly allocated");
@@ -943,7 +943,7 @@ extern const int nonzero_count[];
     bytevalue = c[3];
     lastpix = lastpix | bytevalue;
 
-    c += 4;  
+    c += 4;
     cend = c + clen - 4;
 
     b = *c++;		    /* bit buffer			*/
@@ -1061,7 +1061,7 @@ extern const int nonzero_count[];
      */
 
 /*    bsize = 2; */
-    
+
 /*    nblock = 32; now an input parameter */
     /*
      * From bsize derive:
@@ -1102,14 +1102,14 @@ extern const int nonzero_count[];
 
     /* first 2 bytes of input buffer contain the value of the first */
     /* 2 byte integer value, without any encoding */
-    
+
     lastpix = 0;
     bytevalue = c[0];
     lastpix = lastpix | (bytevalue<<8);
     bytevalue = c[1];
     lastpix = lastpix | bytevalue;
 
-    c += 2;  
+    c += 2;
     cend = c + clen - 2;
 
     b = *c++;		    /* bit buffer			*/
@@ -1146,7 +1146,7 @@ extern const int nonzero_count[];
 		} else {
 		    b = 0;
 		}
-   
+
 		/*
 		 * undo mapping and differencing
 		 * Note that some of these operations will overflow the
@@ -1228,7 +1228,7 @@ extern const int nonzero_count[];
      */
 
 /*    bsize = 1; */
-    
+
 /*    nblock = 32; now an input parameter */
     /*
      * From bsize derive:
@@ -1269,9 +1269,9 @@ extern const int nonzero_count[];
 
     /* first byte of input buffer contain the value of the first */
     /* byte integer value, without any encoding */
-    
+
     lastpix = c[0];
-    c += 1;  
+    c += 1;
     cend = c + clen - 1;
 
     b = *c++;		    /* bit buffer			*/
@@ -1308,7 +1308,7 @@ extern const int nonzero_count[];
 		} else {
 		    b = 0;
 		}
-   
+
 		/*
 		 * undo mapping and differencing
 		 * Note that some of these operations will overflow the

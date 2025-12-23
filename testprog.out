@@ -68,22 +68,22 @@ KEY_PKYT 12345678 0.12345678901235 fxpkyt comment 0
 KEY_PKY J 11 [km/s/Mpc] fxpkyj comment 0
 KEY_PKY units = km/s/Mpc
 KEY_PKY J 11 fxpkyj comment 0
-KEY_PKY units = 
+KEY_PKY units =
 KEY_PKY J 11 [feet/second/second] fxpkyj comment 0
 KEY_PKY units = feet/second/second
-KEY_PKLS long string value = 
+KEY_PKLS long string value =
 This is a very long string value that is continued over more than one keyword.
-header contains 65 keywords; located at keyword 27 
-ffgkns:  first string, second string, 
+header contains 65 keywords; located at keyword 27
+ffgkns:  first string, second string,
 ffgknl:  1, 0, 1
 ffgknj:  11, 12, 13
 ffgkne:  13.131310, 14.141410, 15.151520
 ffgknd:  15.151515, 16.161616, 17.171717
 
 Before deleting the HISTORY and DATE keywords...
-COMMENT 
-HISTORY 
-DATE    
+COMMENT
+HISTORY
+DATE
 KY_PKNS1
 
 After deleting the keywords...
@@ -146,7 +146,7 @@ Updated header using template file (ffpktp)
 
 ffibin status = 0
 HDU number = 2
-header contains 33 keywords; located at keyword 1 
+header contains 33 keywords; located at keyword 1
 header contains 33 keywords with room for 74 more
 TDIM3 = (1,2,8), 3, 1, 2, 8
 ffpcl_ status = 0
@@ -185,11 +185,11 @@ HDU number = 2
 ffpcl_ status = 0
 
 ASCII table: rowlen, nrows, tfields, extname: 76 11 5 Test-ASCII
-    Name   1      A15          
-  Ivalue  17      I10     m**2 
-  Fvalue  28    F14.6       cm 
-  Evalue  43    E12.5    erg/s 
-  Dvalue  56   D21.14     km/s 
+    Name   1      A15
+  Ivalue  17      I10     m**2
+  Fvalue  28    F14.6       cm
+  Evalue  43    E12.5    erg/s
+  Dvalue  56   D21.14     km/s
 
 Data values read from ASCII table:
    first string  1  1  1  1.0  1.0
@@ -204,7 +204,7 @@ Data values read from ASCII table:
                 10 10 10 10.0 10.0
                 99 99 99 99.0 99.0
 
-      1       1.000000  1.00000E+00  1.00000000000000E+00second string        
+      1       1.000000  1.00000E+00  1.00000000000000E+00second string
 
 Column name is number 1; status = 0.
 Column Ivalue is number 2; status = 237.
@@ -296,46 +296,46 @@ HDU number = 3
 header contains 38 keywords with room for 69 more
 
 Binary table: nrows, tfields, extname, pcount: 21 10 Test-BINTABLE 0
-  Avalue      15A          
-  Lvalue       1L     m**2 
-  Xvalue      16X       cm 
-  Bvalue       1B    erg/s 
-  Ivalue       1I     km/s 
-  Jvalue       1J          
-  Evalue       1E          
-  Dvalue       1D          
-  Cvalue       1C          
-  Mvalue       1M          
+  Avalue      15A
+  Lvalue       1L     m**2
+  Xvalue      16X       cm
+  Bvalue       1B    erg/s
+  Ivalue       1I     km/s
+  Jvalue       1J
+  Evalue       1E
+  Dvalue       1D
+  Cvalue       1C
+  Mvalue       1M
 
 Data values read from binary table:
-  Bit column (X) data values: 
+  Bit column (X) data values:
 
-01001100 01110000 11110000 01111100 00000000 
+01001100 01110000 11110000 01111100 00000000
 
 null string column value = -- (should be --)
 
 Read columns with ffgcv_:
-   first string 0  76  1   1   1   1.0   1.0 (  1.0, -2.0) (  1.0, -2.0) 
-  second string 1 112  2   2   2   2.0   2.0 (  3.0, -4.0) (  3.0, -4.0) 
-                0 240  3   3   3   3.0   3.0 (  5.0, -6.0) (  5.0, -6.0) 
-    NOT DEFINED 0 124  0  -4  -4  -4.0  -4.0 (  7.0, -8.0) (  7.0, -8.0) 
-    NOT DEFINED 1   0  5   5   5   5.0   5.0 (  9.0,-10.0) (  9.0,-10.0) 
-    NOT DEFINED 1   0  0  -6  -6  -6.0  -6.0 ( 11.0,-12.0) ( 11.0,-12.0) 
-    NOT DEFINED 0   0  7   7   7   7.0   7.0 ( 13.0,-14.0) ( 13.0,-14.0) 
-    NOT DEFINED 0   0  0  -8  -8  -8.0  -8.0 ( 15.0,-16.0) ( 15.0,-16.0) 
-    NOT DEFINED 0   0  9   9   9   9.0   9.0 ( 17.0,-18.0) ( 17.0,-18.0) 
-    NOT DEFINED 1   0  0 -10 -10 -10.0 -10.0 ( 19.0,-20.0) ( 19.0,-20.0) 
-    NOT DEFINED 0   0 98  98  98  98.0  98.0 (  0.0,  0.0) (  0.0,  0.0) 
-    NOT DEFINED 1   0 12  12  12  12.0  12.0 (  0.0,  0.0) (  0.0,  0.0) 
-    NOT DEFINED 0   0 98  98  98  98.0  98.0 (  0.0,  0.0) (  0.0,  0.0) 
-    NOT DEFINED 0   0  0 -14 -14 -14.0 -14.0 (  0.0,  0.0) (  0.0,  0.0) 
-    NOT DEFINED 0   0 98  98  98  98.0  98.0 (  0.0,  0.0) (  0.0,  0.0) 
-    NOT DEFINED 0   0  0 -16 -16 -16.0 -16.0 (  0.0,  0.0) (  0.0,  0.0) 
-    NOT DEFINED 1   0 98  98  98  98.0  98.0 (  0.0,  0.0) (  0.0,  0.0) 
-    NOT DEFINED 1   0  0 -18 -18 -18.0 -18.0 (  0.0,  0.0) (  0.0,  0.0) 
-    NOT DEFINED 1   0 98  98  98  98.0  98.0 (  0.0,  0.0) (  0.0,  0.0) 
-    NOT DEFINED 1   0  0 -20 -20 -20.0 -20.0 (  0.0,  0.0) (  0.0,  0.0) 
-    NOT DEFINED 0   0 98  98  98  98.0  98.0 (  0.0,  0.0) (  0.0,  0.0) 
+   first string 0  76  1   1   1   1.0   1.0 (  1.0, -2.0) (  1.0, -2.0)
+  second string 1 112  2   2   2   2.0   2.0 (  3.0, -4.0) (  3.0, -4.0)
+                0 240  3   3   3   3.0   3.0 (  5.0, -6.0) (  5.0, -6.0)
+    NOT DEFINED 0 124  0  -4  -4  -4.0  -4.0 (  7.0, -8.0) (  7.0, -8.0)
+    NOT DEFINED 1   0  5   5   5   5.0   5.0 (  9.0,-10.0) (  9.0,-10.0)
+    NOT DEFINED 1   0  0  -6  -6  -6.0  -6.0 ( 11.0,-12.0) ( 11.0,-12.0)
+    NOT DEFINED 0   0  7   7   7   7.0   7.0 ( 13.0,-14.0) ( 13.0,-14.0)
+    NOT DEFINED 0   0  0  -8  -8  -8.0  -8.0 ( 15.0,-16.0) ( 15.0,-16.0)
+    NOT DEFINED 0   0  9   9   9   9.0   9.0 ( 17.0,-18.0) ( 17.0,-18.0)
+    NOT DEFINED 1   0  0 -10 -10 -10.0 -10.0 ( 19.0,-20.0) ( 19.0,-20.0)
+    NOT DEFINED 0   0 98  98  98  98.0  98.0 (  0.0,  0.0) (  0.0,  0.0)
+    NOT DEFINED 1   0 12  12  12  12.0  12.0 (  0.0,  0.0) (  0.0,  0.0)
+    NOT DEFINED 0   0 98  98  98  98.0  98.0 (  0.0,  0.0) (  0.0,  0.0)
+    NOT DEFINED 0   0  0 -14 -14 -14.0 -14.0 (  0.0,  0.0) (  0.0,  0.0)
+    NOT DEFINED 0   0 98  98  98  98.0  98.0 (  0.0,  0.0) (  0.0,  0.0)
+    NOT DEFINED 0   0  0 -16 -16 -16.0 -16.0 (  0.0,  0.0) (  0.0,  0.0)
+    NOT DEFINED 1   0 98  98  98  98.0  98.0 (  0.0,  0.0) (  0.0,  0.0)
+    NOT DEFINED 1   0  0 -18 -18 -18.0 -18.0 (  0.0,  0.0) (  0.0,  0.0)
+    NOT DEFINED 1   0 98  98  98  98.0  98.0 (  0.0,  0.0) (  0.0,  0.0)
+    NOT DEFINED 1   0  0 -20 -20 -20.0 -20.0 (  0.0,  0.0) (  0.0,  0.0)
+    NOT DEFINED 0   0 98  98  98  98.0  98.0 (  0.0,  0.0) (  0.0,  0.0)
 
 Read columns with ffgcf_:
    first string 0  76  1   1   1   1.0   1.0 (  1.0, -2.0) (  1.0, -2.0)
@@ -348,17 +348,17 @@ Read columns with ffgcf_:
                 0   0  0  -8  -8  -8.0  -8.0 ( 15.0,-16.0) ( 15.0,-16.0)
                 0   0  9   9   9   9.0   9.0 ( 17.0,-18.0) ( 17.0,-18.0)
                 1   0  0 -10 -10 -10.0 -10.0 ( 19.0,-20.0) ( 19.0,-20.0)
-                0   0 99  99 
-                1   0 12  12 
-                0   0 99  99 
-                0   0  0 -14 
-                0   0 99  99 
-                0   0  0 -16 
-                1   0 99  99 
-                1   0  0 -18 
-                1   0 99  99 
-                1   0  0 -20 
-                0   0 99  99 
+                0   0 99  99
+                1   0 12  12
+                0   0 99  99
+                0   0  0 -14
+                0   0 99  99
+                0   0  0 -16
+                1   0 99  99
+                1   0  0 -18
+                1   0 99  99
+                1   0  0 -20
+                0   0 99  99
 
 Data values after inserting 3 rows after row 2:
    first string  1   1   1   1.0   1.0
@@ -775,11 +775,11 @@ Total number of HDUs in the file = 8
 
 Encode checksum: 1234567890 -> dCW2fBU0dBU0dBU0
 Decode checksum: dCW2fBU0dBU0dBU0 -> 1234567890
-DATASUM = '475248536'         
+DATASUM = '475248536'
 ffgcks data checksum, status = 475248536, 0
 ffvcks datastatus, hdustatus, status = 1 1 0
 ffupck status = 0
-DATASUM = '475248536'         
+DATASUM = '475248536'
 ffvcks datastatus, hdustatus, status = 1 1 0
 ffclos status = 0
 

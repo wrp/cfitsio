@@ -21,11 +21,11 @@
 
 #if defined(_WIN32)
 /*
-*  The following #undef is required before the #include <windows.h> 
+*  The following #undef is required before the #include <windows.h>
 *  because the TBYTE definition in fitsio.h conflicts with the usage
 *  of TBYTE as a typedef name in winnt.h.
-*  
-*/ 
+*
+*/
 #undef TBYTE
 #include <windows.h>
 #include <malloc.h>
@@ -43,7 +43,7 @@
 
 static char file_outfile[FLEN_FILENAME];
 
-typedef struct    /* structure containing disk file structure */ 
+typedef struct    /* structure containing disk file structure */
 {
     FILE *fileptr;
     LONGLONG currentpos;
@@ -110,7 +110,7 @@ int file_open(char *filename, int rwmode, int *handle)
         file_outfile[0] = '\0';
         return(status);
       }
-      
+
       /* create the output file */
       status =  file_create(file_outfile,handle);
       if (status)
@@ -217,7 +217,7 @@ int file_openfile(char *filename, int rwmode, FILE **diskfile)
 #if CFITSIO_MACHINE == ALPHAVMS || CFITSIO_MACHINE == VAXVMS
         /* specify VMS record structure: fixed format, 2880 byte records */
         /* but force stream mode access to enable random I/O access      */
-    *diskfile = fopen(filename, mode, "rfm=fix", "mrs=2880", "ctx=stm"); 
+    *diskfile = fopen(filename, mode, "rfm=fix", "mrs=2880", "ctx=stm");
 
 #elif defined(unix) || defined(__unix__) || defined(__unix)
 
@@ -231,7 +231,7 @@ int file_openfile(char *filename, int rwmode, FILE **diskfile)
             if (cptr)
             {
                  if (strlen(cptr) + strlen(filename+1) > 1023)
-		      return(FILE_NOT_OPENED); 
+		      return(FILE_NOT_OPENED);
 
                  strcpy(tempname, cptr);
                  strcat(tempname, filename+1);
@@ -239,7 +239,7 @@ int file_openfile(char *filename, int rwmode, FILE **diskfile)
             else
             {
                  if (strlen(filename) > 1023)
-		      return(FILE_NOT_OPENED); 
+		      return(FILE_NOT_OPENED);
 
                  strcpy(tempname, filename);
             }
@@ -271,22 +271,22 @@ int file_openfile(char *filename, int rwmode, FILE **diskfile)
 
             /* copy user's home directory */
             if (strlen(pwd->pw_dir) + strlen(cptr) > 1023)
-		      return(FILE_NOT_OPENED); 
+		      return(FILE_NOT_OPENED);
 
             strcpy(tempname, pwd->pw_dir);
             strcat(tempname, cptr);
         }
 
-        *diskfile = fopen(tempname, mode); 
+        *diskfile = fopen(tempname, mode);
     }
     else
     {
         /* don't need to expand the input file name */
-        *diskfile = fopen(filename, mode); 
+        *diskfile = fopen(filename, mode);
 
 #if defined(REPLACE_LINKS)
 
-        if (!(*diskfile) && (rwmode == READWRITE))  
+        if (!(*diskfile) && (rwmode == READWRITE))
         {
            /* failed to open file with READWRITE privilege.  Test if  */
            /* the file we are trying to open is a soft link to a file that */
@@ -299,7 +299,7 @@ int file_openfile(char *filename, int rwmode, FILE **diskfile)
               {
 
                  if (strlen(filename) + 7 > 1023)
-		      return(FILE_NOT_OPENED); 
+		      return(FILE_NOT_OPENED);
 
                  strcpy(tempname, filename);
                  strcat(tempname, ".TmxFil");
@@ -309,16 +309,16 @@ int file_openfile(char *filename, int rwmode, FILE **diskfile)
                     while ((n = fread(buf, 1, BUFSIZ, f1)) > 0)
                     {
                        /* copy linked file to local temporary file */
-                       if (fwrite(buf, 1, n, f2) != n) 
+                       if (fwrite(buf, 1, n, f2) != n)
                        {
                           success = 0;
                           break;
-                       } 
+                       }
                     }
                     fclose(f2);
                  }
                  fclose(f1);
-  
+
                  if (success)
                  {
                     /* delete link and rename temp file to previous link name */
@@ -326,7 +326,7 @@ int file_openfile(char *filename, int rwmode, FILE **diskfile)
                     rename(tempname, filename);
 
                     /* try once again to open the file with write access */
-                    *diskfile = fopen(filename, mode); 
+                    *diskfile = fopen(filename, mode);
                  }
                  else
                     remove(tempname);  /* clean up the failed copy */
@@ -338,8 +338,8 @@ int file_openfile(char *filename, int rwmode, FILE **diskfile)
     }
 
 #elif defined(_WIN32)
-    /* Windows 
-    * 
+    /* Windows
+    *
 	*  Assume that the input filename is in UTF-8 encoding and convert to UTF-16.
    	*/
     {
@@ -392,7 +392,7 @@ int file_openfile(char *filename, int rwmode, FILE **diskfile)
 
     if (!(*diskfile))           /* couldn't open file */
     {
-            return(FILE_NOT_OPENED); 
+            return(FILE_NOT_OPENED);
     }
     return(0);
 }
@@ -406,7 +406,7 @@ int file_create(char *filename, int *handle)
 #else
     char mode[4];
 #endif
- 
+
     int status = 0, rootlen, rootlen2, slen;
     char *cptr, *cpos;
     char cwd[FLEN_FILENAME], absURL[FLEN_FILENAME];
@@ -422,9 +422,9 @@ int file_create(char *filename, int *handle)
 
 /*
 printf("env = %s\n",cptr);
-*/	
+*/
         if (strlen(cptr) > 200)  /* guard against possible string overflows */
-	    return(FILE_NOT_CREATED); 
+	    return(FILE_NOT_CREATED);
 
 	/* environment variable has the form "path/one/;/path/two/" where the */
 	/* second path is optional */
@@ -440,11 +440,11 @@ printf("env = %s\n",cptr);
 	}
 /*
 printf("%s, %s\n", rootstring, rootstring2);
-printf("CWD = %s\n", cwd); 
+printf("CWD = %s\n", cwd);
 printf("rootstring=%s, cwd=%s.\n", rootstring, cwd);
 */
 	/* Get the current working directory */
-	fits_get_cwd(cwd, &status);  
+	fits_get_cwd(cwd, &status);
 	slen = strlen(cwd);
 	if ((slen < FLEN_FILENAME) && cwd[slen-1] != '/') strcat(cwd,"/"); /* make sure the CWD ends with slash */
 
@@ -453,7 +453,7 @@ printf("rootstring=%s, cwd=%s.\n", rootstring, cwd);
 	rootlen = strlen(rootstring);
 	if (strncmp(rootstring, cwd, rootlen)) {
 	    ffpmsg("invalid CWD: does not match root data directory");
-	    return(FILE_NOT_CREATED); 
+	    return(FILE_NOT_CREATED);
 	} else {
 
 	    /* get the user name from CWD (it follows the root string) */
@@ -462,7 +462,7 @@ printf("rootstring=%s, cwd=%s.\n", rootstring, cwd);
 	    cpos=strchr(username, '/');
 	    if (!cpos) {
                ffpmsg("invalid CWD: not equal to root data directory + username");
-               return(FILE_NOT_CREATED); 
+               return(FILE_NOT_CREATED);
 	    } else {
 	        *(cpos+1) = '\0';   /* truncate user name string */
 
@@ -491,13 +491,13 @@ printf("ABS = %s\n", absURL);
 		if ( strncmp(userroot,  absURL, rootlen)  &&
 		   strncmp(userroot2, absURL, rootlen2) ) {
 		   ffpmsg("invalid filename: path not within user directory");
-		   return(FILE_NOT_CREATED); 
+		   return(FILE_NOT_CREATED);
 		}
 	    }
 	}
 	/* if we got here, then the input filename appears to be valid */
     }
-    
+
     *handle = -1;
     for (ii = 0; ii < NMAXFILES; ii++)  /* find empty slot in table */
     {
@@ -550,7 +550,7 @@ printf("ABS = %s\n", absURL);
         wideFilename,
         outputLength
     );
-    
+
     if (0 == rc) return (FILE_NOT_CREATED);
 
 #else
@@ -563,31 +563,31 @@ printf("ABS = %s\n", absURL);
     {
         fclose(diskfile);         /* close file and exit with error */
         free(wideFilename);
-        return(FILE_NOT_CREATED); 
+        return(FILE_NOT_CREATED);
     }
 #else
     diskfile = fopen(filename, "r"); /* does file already exist? */
     if (diskfile)
     {
         fclose(diskfile);         /* close file and exit with error */
-        return(FILE_NOT_CREATED); 
+        return(FILE_NOT_CREATED);
     }
 #endif
 
 #if CFITSIO_MACHINE == ALPHAVMS || CFITSIO_MACHINE == VAXVMS
         /* specify VMS record structure: fixed format, 2880 byte records */
         /* but force stream mode access to enable random I/O access      */
-    diskfile = fopen(filename, mode, "rfm=fix", "mrs=2880", "ctx=stm"); 
+    diskfile = fopen(filename, mode, "rfm=fix", "mrs=2880", "ctx=stm");
 #elif defined (_WIN32)
     diskfile = _wfopen(wideFilename, mode);
     free(wideFilename);
 #else
-    diskfile = fopen(filename, mode); 
+    diskfile = fopen(filename, mode);
 #endif
 
     if (!(diskfile))           /* couldn't create file */
     {
-            return(FILE_NOT_CREATED); 
+            return(FILE_NOT_CREATED);
     }
 
     handleTable[ii].fileptr = diskfile;
@@ -611,7 +611,7 @@ int file_truncate(int handle, LONGLONG filesize)
     status = ftruncate(fdesc, (OFF_T) filesize);
 
     if (status) { return status; }
-    
+
     file_seek(handle, filesize);
 
     handleTable[handle].currentpos = filesize;
@@ -633,7 +633,7 @@ int file_size(int handle, LONGLONG *filesize)
     diskfile = handleTable[handle].fileptr;
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
- 
+
 /* call the VISUAL C++ version of the routines which support */
 /*  Large Files (> 2GB) if they are supported (since VC 8.0)  */
 
@@ -689,7 +689,7 @@ int file_size(int handle, LONGLONG *filesize)
 #endif
 
     *filesize = (LONGLONG) position2;
-    
+
     return(0);
 }
 /*--------------------------------------------------------------------------*/
@@ -698,7 +698,7 @@ int file_close(int handle)
   close the file
 */
 {
-    
+
     if (fclose(handleTable[handle].fileptr) )
         return(FILE_NOT_CLOSED);
 
@@ -745,13 +745,13 @@ int file_seek(int handle, LONGLONG offset)
 {
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
-    
+
      /* Microsoft visual studio C++ */
      /* _fseeki64 supported beginning with version 8.0 */
- 
+
     if (_fseeki64(handleTable[handle].fileptr, (OFF_T) offset, 0) != 0)
         return(SEEK_ERROR);
-	
+
 #elif _FILE_OFFSET_BITS - 0 == 64
 
     if (fseeko(handleTable[handle].fileptr, (OFF_T) offset, 0) != 0)
@@ -781,7 +781,7 @@ int file_read(int hdl, void *buffer, long nbytes)
         if (file_seek(hdl, handleTable[hdl].currentpos))
             return(SEEK_ERROR);
     }
-  
+
     nread = (long) fread(buffer, 1, nbytes, handleTable[hdl].fileptr);
 
     if (nread == 1)
@@ -810,7 +810,7 @@ int file_write(int hdl, void *buffer, long nbytes)
   write bytes at the current position in the file
 */
 {
-    if (handleTable[hdl].last_io_op == IO_READ) 
+    if (handleTable[hdl].last_io_op == IO_READ)
     {
         if (file_seek(hdl, handleTable[hdl].currentpos))
             return(SEEK_ERROR);
@@ -866,7 +866,7 @@ int file_compress_open(char *filename, int rwmode, int *hdl)
           ffpmsg(file_outfile);
           fclose(outdiskfile);         /* close file and exit with error */
 	  file_outfile[0] = '\0';
-          return(FILE_NOT_CREATED); 
+          return(FILE_NOT_CREATED);
         }
     }
 
@@ -876,7 +876,7 @@ int file_compress_open(char *filename, int rwmode, int *hdl)
         ffpmsg("could not create uncompressed file: (file_compress_open)");
         ffpmsg(file_outfile);
 	file_outfile[0] = '\0';
-        return(FILE_NOT_CREATED); 
+        return(FILE_NOT_CREATED);
     }
 
     /* uncompress file into another file */
@@ -912,7 +912,7 @@ int file_is_compressed(char *filename) /* I - FITS file name          */
     unsigned char buffer[2];
     char tmpfilename[FLEN_FILENAME];
 
-    /* Open file.  Try various suffix combinations */  
+    /* Open file.  Try various suffix combinations */
     if (file_openfile(filename, 0, &diskfile))
     {
       if (strlen(filename) > FLEN_FILENAME - 5)
@@ -987,7 +987,7 @@ int file_is_compressed(char *filename) /* I - FITS file name          */
         }
 }
 /*--------------------------------------------------------------------------*/
-int file_checkfile (char *urltype, char *infile, char *outfile) 
+int file_checkfile (char *urltype, char *infile, char *outfile)
 {
     /* special case: if file:// driver, check if the file is compressed */
     if ( file_is_compressed(infile) )
@@ -1000,7 +1000,7 @@ int file_checkfile (char *urltype, char *infile, char *outfile)
         {
            /* uncompress the file in memory, with READ and WRITE access */
            strcpy(urltype, "compressmem://");  /* use special driver */
-           *file_outfile = '\0';  
+           *file_outfile = '\0';
         }
         else
         {
@@ -1051,7 +1051,7 @@ int stream_open(char *filename, int rwmode, int *handle)
     if (filename)
       rwmode = 1;  /* dummy statement to suppress unused parameter compiler warning */
 
-    *handle = 1;     /*  1 = stdin */   
+    *handle = 1;     /*  1 = stdin */
 
     return(0);
 }
@@ -1065,7 +1065,7 @@ int stream_create(char *filename, int *handle)
     if (filename)  /* dummy statement to suppress unused parameter compiler warning */
        *handle = 2;
     else
-       *handle = 2;         /*  2 = stdout */       
+       *handle = 2;         /*  2 = stdout */
 
     return(0);
 }
@@ -1076,7 +1076,7 @@ int stream_size(int handle, LONGLONG *filesize)
 */
 {
     handle = 0;  /* suppress unused parameter compiler warning */
-    
+
     /* this operation is not supported in a stream; return large value */
     *filesize = LONG_MAX;
     return(0);
@@ -1084,11 +1084,11 @@ int stream_size(int handle, LONGLONG *filesize)
 /*--------------------------------------------------------------------------*/
 int stream_close(int handle)
 /*
-     don't have to close stdin or stdout 
+     don't have to close stdin or stdout
 */
 {
     handle = 0;  /* suppress unused parameter compiler warning */
-    
+
     return(0);
 }
 /*--------------------------------------------------------------------------*/
@@ -1098,13 +1098,13 @@ int stream_flush(int handle)
 */
 {
     if (handle == 2)
-       fflush(stdout);  
+       fflush(stdout);
 
     return(0);
 }
 /*--------------------------------------------------------------------------*/
 int stream_seek(int handle, LONGLONG offset)
-   /* 
+   /*
       seeking is not allowed in a stream
    */
 {
@@ -1114,12 +1114,12 @@ int stream_seek(int handle, LONGLONG offset)
 /*--------------------------------------------------------------------------*/
 int stream_read(int hdl, void *buffer, long nbytes)
 /*
-     reading from stdin stream 
+     reading from stdin stream
 */
 
 {
     long nread;
-    
+
     if (hdl != 1)
        return(1);  /* can only read from stdin */
 

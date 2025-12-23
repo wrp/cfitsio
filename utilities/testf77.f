@@ -1,6 +1,6 @@
 C     This is a big and complicated program that tests most of
 C     the fitsio routines.  This code does not represent
-C     the most efficient method of reading or writing FITS files 
+C     the most efficient method of reading or writing FITS files
 C     because this code is primarily designed to stress the fitsio
 C     library routines.
 
@@ -10,7 +10,7 @@ C     library routines.
       character colname*70, tdisp*40, nulstr*40
       character oskey*15
       character iskey*21
-      character lstr*200   
+      character lstr*200
       character  comm*73
       character*30 inskey(21)
       character*30 onskey(3)
@@ -126,7 +126,7 @@ C     library routines.
 
       filename = 'testf77.fit'
 
-C delete previous version of the file, if it exists 
+C delete previous version of the file, if it exists
 
       call ftopen(iunit, filename, 1, block, status)
       if (status .eq. 0)then
@@ -142,7 +142,7 @@ C
 C        #####################
 C        #  create FITS file #
 C        #####################
-      
+
 
       call ftinit(iunit, filename, 1, status)
       write(*,'(1x,A,i4)')'ftinit create new file status = ', status
@@ -159,15 +159,15 @@ C        #####################
       pcount = 0
       gcount = 1
       extend = .true.
-      
+
 C        ############################
 C        #  write single keywords   #
 C        ############################
-      
-      call ftphpr(iunit,simple, bitpix, naxis, naxes, 
+
+      call ftphpr(iunit,simple, bitpix, naxis, naxes,
      & 0,1,extend,status)
 
-      call ftprec(iunit, 
+      call ftprec(iunit,
      &'key_prec= ''This keyword was written by fxprec'' / '//
      & 'comment goes here',  status)
 
@@ -179,21 +179,21 @@ C        ############################
 
       write(*,'(1x,A)') card
       write(*,'(1x,A)') card2
-      
+
       card = '1234567890123456789012345678901234567890'//
      &  '123456789012345678901234''6789012345'
       call ftpkys(iunit, 'card2', card, ' ', status)
       call ftgkey(iunit, 'card2', card2, comment, status)
       write(*,'(1x,A)') card
       write(*,'(1x,A)') card2
-      
+
       card = '1234567890123456789012345678901234567890'//
      &  '123456789012345678901234''''789012345'
       call ftpkys(iunit, 'card3', card, ' ', status)
       call ftgkey(iunit, 'card3', card2, comment, status)
       write(*,'(1x,A)') card
       write(*,'(1x,A)') card2
-      
+
       card = '1234567890123456789012345678901234567890'//
      & '123456789012345678901234567''9012345'
       call ftpkys(iunit, 'card4', card, ' ', status)
@@ -219,19 +219,19 @@ C        ############################
      & status)
       call ftpcom(iunit, 'This keyword was written by fxpcom.',
      &  status)
-      call ftphis(iunit, 
+      call ftphis(iunit,
      &'  This keyword written by fxphis (w/ 2 leading spaces).',
      &    status)
 
       call ftpdat(iunit, status)
-      
-      if (status .gt. 0)go to 999   
+
+      if (status .gt. 0)go to 999
 
 C
 C        ###############################
 C        #  write arrays of keywords   #
 C        ###############################
-      
+
       nkeys = 3
 
       comm = 'fxpkns comment&'
@@ -253,13 +253,13 @@ C        ###############################
 
       comm = 'fxpknd comment&'
       call ftpknd(iunit, 'ky_pknd', 1, nkeys, ondkey,14,comm,status)
-      
+
       if (status .gt. 0)go to 999
-      
+
 C        ############################
 C        #  write generic keywords  #
 C        ############################
-      
+
 
       oskey = '1'
       call ftpkys(iunit, 'tstring', oskey, 'tstring comment',status)
@@ -294,23 +294,23 @@ C        ############################
 C        ############################
 C        #  write data              #
 C        ############################
-      
-      
-C define the null value (must do this before writing any data) 
+
+
+C define the null value (must do this before writing any data)
       call ftpkyj(iunit,'BLANK',-99,
      & 'value to use for undefined pixels',   status)
-      
-C initialize arrays of values to write to primary array 
+
+C initialize arrays of values to write to primary array
       do ii = 1, npixels
           boutarray(ii) = char(ii)
           ioutarray(ii) = ii
           joutarray(ii) = ii
           eoutarray(ii) = ii
           doutarray(ii) = ii
-      end do      
+      end do
 
-C write a few pixels with each datatype 
-C set the last value in each group of 4 as undefined 
+C write a few pixels with each datatype
+C set the last value in each group of 4 as undefined
       call ftpprb(iunit, 1,  1, 2, boutarray(1),  status)
       call ftppri(iunit, 1,  5, 2, ioutarray(5),  status)
       call ftpprj(iunit, 1,  9, 2, joutarray(9),  status)
@@ -331,8 +331,8 @@ C set the last value in each group of 4 as undefined
           goto 999
       end if
 
-      call ftflus(iunit, status)   
-C flush all data to the disk file  
+      call ftflus(iunit, status)
+C flush all data to the disk file
       write(*,'(1x,A,I4)')'ftflus status = ', status
       write(*,'(1x,A)')' '
 
@@ -342,12 +342,12 @@ C flush all data to the disk file
 C        ############################
 C        #  read data               #
 C        ############################
-      
-     
-C read back the data, setting null values = 99 
+
+
+C read back the data, setting null values = 99
       write(*,'(1x,A)')
      &   'Values read back from primary array (99 = null pixel)'
-      write(*,'(1x,A)') 
+      write(*,'(1x,A)')
      &  'The 1st, and every 4th pixel should be undefined: '
 
       anynull = .false.
@@ -392,15 +392,15 @@ C read back the data, setting null values = 99
           write(*,'(1x,A,I4)')'ERROR: ftgpv_ status = ', status
           goto 999
       end if
-      
+
       if (.not. anynull)then
          write(*,'(1x,A)') 'ERROR: ftgpv_ did not detect null values '
          go to 999
       end if
-      
-C reset the output null value to the expected input value 
 
-      do ii = 4, npixels, 4      
+C reset the output null value to the expected input value
+
+      do ii = 4, npixels, 4
           boutarray(ii) = char(99)
           ioutarray(ii) = 99
           joutarray(ii) = 99
@@ -415,22 +415,22 @@ C reset the output null value to the expected input value
           eoutarray(ii) = 99.
           doutarray(ii) = 99.
 
-      
-C compare the output with the input flag any differences 
+
+C compare the output with the input flag any differences
       do ii = 1, npixels
-     
+
          if (boutarray(ii) .ne. binarray(ii))then
-             write(*,'(1x,A,2A2)') 'bout != bin ', boutarray(ii), 
+             write(*,'(1x,A,2A2)') 'bout != bin ', boutarray(ii),
      &      binarray(ii)
          end if
 
          if (ioutarray(ii) .ne. iinarray(ii))then
-             write(*,'(1x,A,2I8)') 'bout != bin ', ioutarray(ii), 
+             write(*,'(1x,A,2I8)') 'bout != bin ', ioutarray(ii),
      &      iinarray(ii)
          end if
 
          if (joutarray(ii) .ne. jinarray(ii))then
-             write(*,'(1x,A,2I12)') 'bout != bin ', joutarray(ii), 
+             write(*,'(1x,A,2I12)') 'bout != bin ', joutarray(ii),
      &       jinarray(ii)
          end if
 
@@ -438,9 +438,9 @@ C compare the output with the input flag any differences
              write(*,'(1x,A,2E15.3)') 'bout != bin ', eoutarray(ii),
      &       einarray(ii)
          end if
-    
+
          if (doutarray(ii) .ne. dinarray(ii))then
-             write(*,'(1x,A,2D20.6)') 'bout != bin ', doutarray(ii), 
+             write(*,'(1x,A,2D20.6)') 'bout != bin ', doutarray(ii),
      &       dinarray(ii)
          end if
       end do
@@ -451,7 +451,7 @@ C compare the output with the input flag any differences
         jinarray(ii) = 0
         einarray(ii) = 0.
         dinarray(ii) = 0.
-      end do      
+      end do
 
       anynull = .false.
       call ftgpfb(iunit, 1,  1, 10, binarray, larray, anynull,status)
@@ -519,11 +519,11 @@ C compare the output with the input flag any differences
 C        ##########################################
 C        #  close and reopen file multiple times  #
 C        ##########################################
-      
+
 
       do ii = 1, 10
          call ftclos(iunit, status)
-        
+
          if (status .gt. 0)then
             write(*,'(1x,A,I4)')'ERROR in ftclos (1) = ', status
             go to 999
@@ -537,7 +537,7 @@ C        ##########################################
             go to 999
          end if
       end do
-      
+
       write(*,'(1x,A)') ' '
       write(*,'(1x,A)') 'Closed then reopened the FITS file 10 times.'
       write(*,'(1x,A)')' '
@@ -549,7 +549,7 @@ C        ##########################################
 C        ############################
 C        #  read single keywords    #
 C        ############################
-      
+
 
       simple = .false.
       bitpix = 0
@@ -595,11 +595,11 @@ C        ############################
      & status
 
       call ftgkyl(iunit, 'key_pkyl', ilkey, comment, status)
-      write(*,'(1x,2A,L4,2A,I4)') 'KEY_PKYL ',':', ilkey,':', 
+      write(*,'(1x,2A,L4,2A,I4)') 'KEY_PKYL ',':', ilkey,':',
      &comment(1:16), status
 
       call ftgkyj(iunit, 'KEY_PKYJ', ijkey, comment, status)
-      write(*,'(1x,2A,I4,2A,I4)') 'KEY_PKYJ ',':',ijkey,':', 
+      write(*,'(1x,2A,I4,2A,I4)') 'KEY_PKYJ ',':',ijkey,':',
      &  comment(1:16), status
 
       call ftgkye(iunit, 'KEY_PKYJ', iekey, comment, status)
@@ -607,7 +607,7 @@ C        ############################
      & comment(1:16), status
 
       call ftgkyd(iunit, 'KEY_PKYJ', idkey, comment, status)
-      write(*,'(1x,2A,F12.5,2A,I4)') 'KEY_PKYD ',':',idkey,':', 
+      write(*,'(1x,2A,F12.5,2A,I4)') 'KEY_PKYD ',':',idkey,':',
      & comment(1:16), status
 
       if (ijkey .ne. 11 .or. iekey .ne. 11. .or. idkey .ne. 11.)
@@ -626,12 +626,12 @@ C        ############################
 
       ijkey = 0
       call ftgkyj(iunit, 'KEY_PKYJ', ijkey, comment, status)
-      write(*,'(1x,2A,I4,2A,I4)') 'KEY_PKYJ ',':',ijkey,':', 
+      write(*,'(1x,2A,I4,2A,I4)') 'KEY_PKYJ ',':',ijkey,':',
      & comment(1:16), status
 
       iekey = 0
       call ftgkye(iunit, 'KEY_PKYE', iekey, comment, status)
-      write(*,'(1x,2A,f12.5,2A,I4)') 'KEY_PKYE ',':',iekey,':', 
+      write(*,'(1x,2A,f12.5,2A,I4)') 'KEY_PKYE ',':',iekey,':',
      & comment(1:16), status
 
       idkey = 0
@@ -646,7 +646,7 @@ C        ############################
 
       iekey = 0
       call ftgkye(iunit, 'KEY_PKYE', iekey, comment, status)
-      write(*,'(1x,2A,f12.5,2A,I4)') 'KEY_PKYE ',':',iekey,':', 
+      write(*,'(1x,2A,f12.5,2A,I4)') 'KEY_PKYE ',':',iekey,':',
      & comment(1:16), status
 
       idkey = 0
@@ -656,7 +656,7 @@ C        ############################
 
       idkey = 0
       call ftgkyd(iunit, 'KEY_PKYD', idkey, comment, status)
-      write(*,'(1x,2A,f16.12,2A,I4)') 'KEY_PKYD ',':',idkey,':', 
+      write(*,'(1x,2A,f16.12,2A,I4)') 'KEY_PKYD ',':',idkey,':',
      & comment(1:16), status
 
       call ftgkyt(iunit, 'KEY_PKYT', ijkey, idkey, comment, status)
@@ -666,7 +666,7 @@ C        ############################
       call ftpunt(iunit, 'KEY_PKYJ', 'km/s/Mpc', status)
       ijkey = 0
       call ftgkyj(iunit, 'KEY_PKYJ', ijkey, comment, status)
-      write(*,'(1x,2A,I4,2A,I4)') 'KEY_PKYJ ',':',ijkey,':', 
+      write(*,'(1x,2A,I4,2A,I4)') 'KEY_PKYJ ',':',ijkey,':',
      & comment(1:38), status
       call ftgunt(iunit,'KEY_PKYJ',kunit,status)
       write(*,'(1x,2A)') 'keyword unit=', kunit
@@ -674,7 +674,7 @@ C        ############################
       call ftpunt(iunit, 'KEY_PKYJ', ' ', status)
       ijkey = 0
       call ftgkyj(iunit, 'KEY_PKYJ', ijkey, comment, status)
-      write(*,'(1x,2A,I4,2A,I4)') 'KEY_PKYJ ',':',ijkey,':', 
+      write(*,'(1x,2A,I4,2A,I4)') 'KEY_PKYJ ',':',ijkey,':',
      & comment(1:38), status
       call ftgunt(iunit,'KEY_PKYJ',kunit,status)
       write(*,'(1x,2A)') 'keyword unit=', kunit
@@ -682,7 +682,7 @@ C        ############################
       call ftpunt(iunit, 'KEY_PKYJ', 'feet/second/second', status)
       ijkey = 0
       call ftgkyj(iunit, 'KEY_PKYJ', ijkey, comment, status)
-      write(*,'(1x,2A,I4,2A,I4)') 'KEY_PKYJ ',':',ijkey,':', 
+      write(*,'(1x,2A,I4,2A,I4)') 'KEY_PKYJ ',':',ijkey,':',
      & comment(1:38), status
       call ftgunt(iunit,'KEY_PKYJ',kunit,status)
       write(*,'(1x,2A)') 'keyword unit=', kunit
@@ -691,7 +691,7 @@ C        ############################
       write(*,'(1x,2A)') 'KEY_PKLS long string value = ', lstr(1:50)
       write(*,'(1x,A)')lstr(51:120)
 
-C get size and position in header 
+C get size and position in header
       call ftghps(iunit, existkeys, keynum, status)
       write(*,'(1x,A,I4,A,I4)') 'header contains ', existkeys,
      & ' keywords; located at keyword ', keynum
@@ -699,7 +699,7 @@ C get size and position in header
 C        ############################
 C        #  read array keywords     #
 C        ############################
-      
+
       call ftgkns(iunit, 'ky_pkns', 1, 3, inskey, nfound, status)
       write(*,'(1x,4A)') 'ftgkns: ', inskey(1)(1:14), inskey(2)(1:14),
      &  inskey(3)(1:14)
@@ -729,38 +729,38 @@ C        ############################
       write(*,'(1x,A)')' '
       write(*,'(1x,A)')
      & 'Before deleting the HISTORY and DATE keywords...'
-      do ii = 29, 32     
+      do ii = 29, 32
           call ftgrec(iunit, ii, card, status)
           write(*,'(1x,A)') card(1:8)
       end do
 
-C don't print date value, so that 
-C the output will always be the same 
-      
+C don't print date value, so that
+C the output will always be the same
+
 
 C        ############################
 C        #  delete keywords         #
 C        ############################
-      
+
 
       call ftdrec(iunit, 30, status)
       call ftdkey(iunit, 'DATE', status)
 
       write(*,'(1x,A)')' '
       write(*,'(1x,A)') 'After deleting the keywords... '
-      do ii = 29, 30            
+      do ii = 29, 30
           call ftgrec(iunit, ii, card, status)
           write(*,'(1x,A)') card
-      end do      
+      end do
 
       if (status .gt. 0)
      &   write(*,'(1x,A)') ' ERROR deleting keywords '
-      
+
 
 C        ############################
 C        #  insert keywords         #
 C        ############################
-      
+
       call ftirec(iunit,26,
      & 'KY_IREC = ''This keyword inserted by fxirec''',
      &   status)
@@ -786,15 +786,15 @@ C        ############################
 
       if (status .gt. 0)
      &   write(*,'(1x,A)') ' ERROR inserting keywords '
-      
+
 
 C        ############################
 C        #  modify keywords         #
 C        ############################
-      
+
       call ftmrec(iunit, 25,
      & 'COMMENT   This keyword was modified by fxmrec', status)
-      call ftmcrd(iunit, 'KY_IREC', 
+      call ftmcrd(iunit, 'KY_IREC',
      & 'KY_MREC = ''This keyword was modified by fxmcrd''', status)
       call ftmnam(iunit, 'KY_IKYS', 'NEWIKYS', status)
 
@@ -806,7 +806,7 @@ C        ############################
       call ftmkye(iunit, 'KY_IKYE', -12.3456, 4, '&', status)
       odkey = -12.345678901234567D+00
 
-      call ftmkyd(iunit, 'KY_IKYD', odkey, 14, 
+      call ftmkyd(iunit, 'KY_IKYD', odkey, 14,
      & 'modified comment', status)
       call ftmkyf(iunit, 'KY_IKYF', -12.3456, 4, '&', status)
       call ftmkyg(iunit,'KY_IKYG', odkey,13,'&',status)
@@ -817,17 +817,17 @@ C        ############################
           call ftgrec(iunit, ii, card, status)
           write(*,'(1x,A)') card
       end do
-      
+
       if (status .gt. 0)then
          write(*,'(1x,A)') ' ERROR modifying keywords '
          go to 999
       end if
-      
+
 C        ############################
 C        #  update keywords         #
 C        ############################
-      
-      call ftucrd(iunit, 'KY_MREC', 
+
+      call ftucrd(iunit, 'KY_MREC',
      & 'KY_UCRD = ''This keyword was updated by fxucrd''',
      &         status)
 
@@ -837,7 +837,7 @@ C        ############################
       call ftukye(iunit, 'KY_IKYE', -13.3456, 4, '&', status)
       odkey = -13.345678901234567D+00
 
-      call ftukyd(iunit, 'KY_IKYD',odkey , 14, 
+      call ftukyd(iunit, 'KY_IKYD',odkey , 14,
      & 'modified comment', status)
       call ftukyf(iunit, 'KY_IKYF', -13.3456, 4, '&', status)
       call ftukyg(iunit, 'KY_IKYG', odkey, 13, '&', status)
@@ -854,7 +854,7 @@ C        ############################
          go to 999
       end if
 
-C     move to top of header and find keywords using wild cards 
+C     move to top of header and find keywords using wild cards
       call ftgrec(iunit, 0, card, status)
 
       write(*,'(1x,A)')' '
@@ -878,7 +878,7 @@ C     move to top of header and find keywords using wild cards
 C        ############################
 C        #  create binary table     #
 C        ############################
-      
+
       tform(1) = '15A'
       tform(2) = '1L'
       tform(3) = '16X'
@@ -916,14 +916,14 @@ C        ############################
       tfields = 10
       pcount = 0
 
-      call ftibin(iunit, nrows, tfields, ttype, tform, tunit, 
+      call ftibin(iunit, nrows, tfields, ttype, tform, tunit,
      & binname, pcount, status)
       write(*,'(1x,A)')' '
       write(*,'(1x,A,I4)') 'ftibin status = ', status
       call ftghdn(iunit, hdunum)
       write(*,'(1x,A,I4)') 'HDU number = ', hdunum
 
-C get size and position in header, and reserve space for more keywords 
+C get size and position in header, and reserve space for more keywords
       call ftghps(iunit, existkeys, keynum, status)
       write(*,'(1x,A,I4,A,I4)') 'header contains ',existkeys,
      & ' keywords located at keyword ', keynum
@@ -934,8 +934,8 @@ C get size and position in header, and reserve space for more keywords
       write(*,'(1x,A,I4,A,I4,A)') 'header contains ', existkeys,
      &' keywords with room for ', morekeys,' more'
 
-C define null value for int cols 
-      call fttnul(iunit, 4, 99, status)   
+C define null value for int cols
+      call fttnul(iunit, 4, 99, status)
       call fttnul(iunit, 5, 99, status)
       call fttnul(iunit, 6, 99, status)
 
@@ -961,14 +961,14 @@ C define null value for int cols
       write(*,'(1x,2A,4I4)') 'TDIM3 = ', iskey, naxis, naxes(1),
      &      naxes(2), naxes(3)
 
-C force header to be scanned (not required) 
-      call ftrdef(iunit, status)  
-    
+C force header to be scanned (not required)
+      call ftrdef(iunit, status)
+
 C        ############################
 C        #  write data to columns   #
 C        ############################
-         
-C initialize arrays of values to write to table 
+
+C initialize arrays of values to write to table
       signval = -1
       do ii = 1, 21
           signval = signval * (-1)
@@ -980,10 +980,10 @@ C initialize arrays of values to write to table
           doutarray(ii) = (ii) * signval
       end do
 
-      call ftpcls(iunit, 1, 1, 1, 3, onskey, status)  
-C write string values 
-      call ftpclu(iunit, 1, 4, 1, 1, status)  
-C write null value 
+      call ftpcls(iunit, 1, 1, 1, 3, onskey, status)
+C write string values
+      call ftpclu(iunit, 1, 4, 1, 1, status)
+C write null value
 
       larray(1) = .false.
       larray(2) =.true.
@@ -1023,17 +1023,17 @@ C write null value
       larray(36) =.false.
 
 C write bits
-      call ftpclx(iunit, 3, 1, 1, 36, larray, status) 
+      call ftpclx(iunit, 3, 1, 1, 36, larray, status)
 
-C loop over cols 4 - 8 
-      do ii = 4, 8   
+C loop over cols 4 - 8
+      do ii = 4, 8
           call ftpclb(iunit, ii, 1, 1, 2, boutarray, status)
           if (status .eq. 412) status = 0
 
-          call ftpcli(iunit, ii, 3, 1, 2, ioutarray(3), status) 
+          call ftpcli(iunit, ii, 3, 1, 2, ioutarray(3), status)
           if (status .eq. 412) status = 0
 
-          call ftpclj(iunit, ii, 5, 1, 2, koutarray(5), status) 
+          call ftpclj(iunit, ii, 5, 1, 2, koutarray(5), status)
           if (status .eq. 412) status = 0
 
           call ftpcle(iunit, ii, 7, 1, 2, eoutarray(7), status)
@@ -1042,22 +1042,22 @@ C loop over cols 4 - 8
           call ftpcld(iunit, ii, 9, 1, 2, doutarray(9), status)
           if (status .eq. 412)status = 0
 
-C write null value 
-          call ftpclu(iunit, ii, 11, 1, 1, status)  
+C write null value
+          call ftpclu(iunit, ii, 11, 1, 1, status)
       end do
 
       call ftpclc(iunit,  9, 1, 1, 10, eoutarray, status)
       call ftpclm(iunit, 10, 1, 1, 10, doutarray, status)
 
-C loop over cols 4 - 8 
+C loop over cols 4 - 8
       do ii = 4, 8
           bnul = char(13)
           call ftpcnb(iunit, ii, 12, 1, 2, boutarray(12),bnul,status)
           if (status .eq. 412) status = 0
           inul=15
-          call ftpcni(iunit, ii, 14, 1, 2, ioutarray(14),inul,status) 
+          call ftpcni(iunit, ii, 14, 1, 2, ioutarray(14),inul,status)
           if (status .eq. 412) status = 0
-          call ftpcnj(iunit, ii, 16, 1, 2, koutarray(16), 17, status) 
+          call ftpcnj(iunit, ii, 16, 1, 2, koutarray(16), 17, status)
           if (status .eq. 412) status = 0
           call ftpcne(iunit, ii, 18, 1, 2, eoutarray(18), 19.,status)
           if (status .eq. 412) status = 0
@@ -1065,23 +1065,23 @@ C loop over cols 4 - 8
           call ftpcnd(iunit, ii, 20, 1, 2, doutarray(20),dnul,status)
           if (status .eq. 412) status = 0
       end do
-      
+
 C write logicals
-      call ftpcll(iunit, 2, 1, 1, 21, larray, status) 
-C write null value 
-      call ftpclu(iunit, 2, 11, 1, 1, status)  
+      call ftpcll(iunit, 2, 1, 1, 21, larray, status)
+C write null value
+      call ftpclu(iunit, 2, 11, 1, 1, status)
       write(*,'(1x,A,I4)') 'ftpcl_ status = ', status
       if (status .gt. 0)go to 999
-      
+
 C        #########################################
 C        #  get information about the columns    #
 C        #########################################
-      
+
       write(*,'(1x,A)')' '
       write(*,'(1x,A)')
      & 'Find the column numbers a returned status value'//
      & ' of 237 is'
-      write(*,'(1x,A)') 
+      write(*,'(1x,A)')
      & 'expected and indicates that more than one column'//
      & ' name matches'
       write(*,'(1x,A)')'the input column name template.'//
@@ -1095,7 +1095,7 @@ C        #########################################
 219   continue
       if (status .ne. 219)then
         call ftgcnn(iunit, 1, '*ue', colname, colnum, status)
-        write(*,'(1x,3A,I4,A,I4)') 'Column ',colname(1:6),' is number', 
+        write(*,'(1x,3A,I4,A,I4)') 'Column ',colname(1:6),' is number',
      &   colnum,' status = ',  status
         go to 219
       end if
@@ -1147,19 +1147,19 @@ C        ###############################################
       nrows = 11
       tfields = 5
 
-      call ftitab(iunit, rowlen, nrows, tfields, ttype, tbcol, 
+      call ftitab(iunit, rowlen, nrows, tfields, ttype, tbcol,
      & tform, tunit, tblname, status)
       write(*,'(1x,A,I4)') 'ftitab status = ', status
       call ftghdn(iunit, hdunum)
       write(*,'(1x,A,I4)') 'HDU number = ', hdunum
 
-C define null value for int cols 
-      call ftsnul(iunit, 1, 'null1', status)   
+C define null value for int cols
+      call ftsnul(iunit, 1, 'null1', status)
       call ftsnul(iunit, 2, 'null2', status)
       call ftsnul(iunit, 3, 'null3', status)
       call ftsnul(iunit, 4, 'null4', status)
       call ftsnul(iunit, 5, 'null5', status)
- 
+
       call ftpkys(iunit, 'TNULL1', 'null1',
      & 'value for undefined pixels', status)
       call ftpkys(iunit, 'TNULL2', 'null2',
@@ -1172,49 +1172,49 @@ C define null value for int cols
      & 'value for undefined pixels', status)
 
       if (status .gt. 0) goto 999
-      
+
 C        ############################
 C        #  write data to columns   #
 C        ############################
-           
-C initialize arrays of values to write to table 
-      do ii = 1,21     
+
+C initialize arrays of values to write to table
+      do ii = 1,21
           boutarray(ii) = char(ii)
           ioutarray(ii) = ii
           joutarray(ii) = ii
           eoutarray(ii) = ii
           doutarray(ii) = ii
-      end do      
+      end do
 
-C write string values 
-      call ftpcls(iunit, 1, 1, 1, 3, onskey, status)  
-C write null value 
-      call ftpclu(iunit, 1, 4, 1, 1, status)  
+C write string values
+      call ftpcls(iunit, 1, 1, 1, 3, onskey, status)
+C write null value
+      call ftpclu(iunit, 1, 4, 1, 1, status)
 
-      do ii = 2,5 
-C loop over cols 2 - 5       
-          call ftpclb(iunit, ii, 1, 1, 2, boutarray, status)  
-C char array 
+      do ii = 2,5
+C loop over cols 2 - 5
+          call ftpclb(iunit, ii, 1, 1, 2, boutarray, status)
+C char array
           if (status .eq. 412) status = 0
-             
-          call ftpcli(iunit, ii, 3, 1, 2, ioutarray(3), status)  
-C short array 
+
+          call ftpcli(iunit, ii, 3, 1, 2, ioutarray(3), status)
+C short array
           if (status .eq. 412) status = 0
-             
-          call ftpclj(iunit, ii, 5, 1, 2, joutarray(5), status)  
-C long array 
+
+          call ftpclj(iunit, ii, 5, 1, 2, joutarray(5), status)
+C long array
           if (status .eq. 412)status = 0
-              
-          call ftpcle(iunit, ii, 7, 1, 2, eoutarray(7), status)  
-C float array 
-          if (status .eq. 412) status = 0
-             
-          call ftpcld(iunit, ii, 9, 1, 2, doutarray(9), status)  
-C double array 
+
+          call ftpcle(iunit, ii, 7, 1, 2, eoutarray(7), status)
+C float array
           if (status .eq. 412) status = 0
 
-          call ftpclu(iunit, ii, 11, 1, 1, status)  
-C write null value 
+          call ftpcld(iunit, ii, 9, 1, 2, doutarray(9), status)
+C double array
+          if (status .eq. 412) status = 0
+
+          call ftpclu(iunit, ii, 11, 1, 1, status)
+C write null value
       end do
       write(*,'(1x,A,I4)') 'ftpcl_ status = ', status
       write(*,'(1x,A)')' '
@@ -1222,8 +1222,8 @@ C write null value
 C        ################################
 C        #  read data from ASCII table  #
 C        ################################
-      
-      call ftghtb(iunit, 99, rowlen, nrows, tfields, ttype, tbcol, 
+
+      call ftghtb(iunit, 99, rowlen, nrows, tfields, ttype, tbcol,
      &       tform, tunit, tblname, status)
 
       write(*,'(1x,A,3I3,2A)')
@@ -1231,7 +1231,7 @@ C        ################################
      & rowlen, nrows, tfields,' ',tblname
 
       do ii = 1,tfields
-        write(*,'(1x,A,I4,3A)') 
+        write(*,'(1x,A,I4,3A)')
      & ttype(ii)(1:7), tbcol(ii),' ',tform(ii)(1:7), tunit(ii)(1:7)
       end do
 
@@ -1265,7 +1265,7 @@ C        ################################
       write(*,'(1x,A)')' '
       write(*,'(1x,A)') uchars
       call ftptbs(iunit, 1, 20, 78, uchars, status)
-      
+
 C        #########################################
 C        #  get information about the columns    #
 C        #########################################
@@ -1284,12 +1284,12 @@ C        #########################################
      & 'Column ',colname(1:6),' is number',colnum,' status = ',status
         go to 2190
       end if
-   
+
       status = 0
 
-      do ii = 1, tfields       
+      do ii = 1, tfields
         call ftgtcl(iunit, ii, typecode, repeat, width, status)
-        call ftgacl(iunit, ii, ttype, tbcol,tunit,tform, 
+        call ftgacl(iunit, ii, ttype, tbcol,tunit,tform,
      &   scale,zero, nulstr, tdisp, status)
 
         write(*,'(1x,A,3I4,2A,I4,2A,2F10.2,3A)')
@@ -1304,7 +1304,7 @@ C        #########################################
 C        ###############################################
 C        #  test the insert/delete row/column routines #
 C        ###############################################
-      
+
       call ftirow(iunit, 2, 3, status)
       if (status .gt. 0) goto 999
 
@@ -1324,7 +1324,7 @@ C        ###############################################
 
       write(*,'(1x,A)')' '
       write(*,'(1x,A)')'Data values after inserting 3 rows after row 2:'
-      do ii = 1, nrows     
+      do ii = 1, nrows
         jj = ichar(binarray(ii))
         write(*,1011) inskey(ii), jj,
      &   iinarray(ii), jinarray(ii), einarray(ii), dinarray(ii)
@@ -1333,7 +1333,7 @@ C        ###############################################
       call ftdrow(iunit, 10, 2, status)
 
       nrows = 12
-      call ftgcvs(iunit, 1, 1, 1, nrows, 'UNDEFINED', inskey,  
+      call ftgcvs(iunit, 1, 1, 1, nrows, 'UNDEFINED', inskey,
      & anynull, status)
       call ftgcvb(iunit, 2, 1, 1, nrows, bnul, binarray, anynull,
      & status)
@@ -1348,14 +1348,14 @@ C        ###############################################
 
       write(*,'(1x,A)')' '
       write(*,'(1x,A)') 'Data values after deleting 2 rows at row 10: '
-      do ii = 1, nrows    
+      do ii = 1, nrows
         jj = ichar(binarray(ii))
         write(*,1011)  inskey(ii), jj,
      &       iinarray(ii), jinarray(ii), einarray(ii), dinarray(ii)
       end do
       call ftdcol(iunit, 3, status)
 
-      call ftgcvs(iunit, 1, 1, 1, nrows, 'UNDEFINED', inskey, 
+      call ftgcvs(iunit, 1, 1, 1, nrows, 'UNDEFINED', inskey,
      &  anynull, status)
       call ftgcvb(iunit, 2, 1, 1, nrows, bnul, binarray, anynull,
      & status)
@@ -1404,7 +1404,7 @@ C        ###############################################
 C        ################################
 C        #  read data from binary table #
 C        ################################
-      
+
 
       call ftmrhd(iunit, 1, hdutype, status)
       if (status .gt. 0)go to 999
@@ -1417,11 +1417,11 @@ C        ################################
       write(*,'(1x,A,I4,A,I4,A)') 'header contains ',existkeys,
      & ' keywords with room for ',morekeys,' more '
 
-      call ftghbn(iunit, 99, nrows, tfields, ttype, 
+      call ftghbn(iunit, 99, nrows, tfields, ttype,
      &        tform, tunit, binname, pcount, status)
 
       write(*,'(1x,A)')' '
-      write(*,'(1x,A,2I4,A,I4)') 
+      write(*,'(1x,A,2I4,A,I4)')
      & 'Binary table: nrows, tfields, extname, pcount:',
      &        nrows, tfields, binname, pcount
 
@@ -1446,15 +1446,15 @@ C        ################################
         larray(ii) = .false.
         xinarray(ii) = ' '
         binarray(ii) = ' '
-        iinarray(ii) = 0 
+        iinarray(ii) = 0
         kinarray(ii) = 0
-        einarray(ii) = 0. 
+        einarray(ii) = 0.
         dinarray(ii) = 0.
-        cinarray(ii * 2 -1) = 0. 
+        cinarray(ii * 2 -1) = 0.
         minarray(ii * 2 -1) = 0.
-        cinarray(ii * 2 ) = 0. 
+        cinarray(ii * 2 ) = 0.
         minarray(ii * 2 ) = 0.
-      end do      
+      end do
 
       write(*,'(1x,A)') '  '
       call ftgcvs(iunit, 1, 4, 1, 1, ' ',  inskey,   anynull,status)
@@ -1483,7 +1483,7 @@ C        ################################
         jj = ichar(xinarray(ii))
         jjj = ichar(binarray(ii))
       write(*,1201)inskey(ii),larray(ii),jj,jjj,iinarray(ii),
-     & kinarray(ii), einarray(ii), dinarray(ii), cinarray(ii * 2 -1), 
+     & kinarray(ii), einarray(ii), dinarray(ii), cinarray(ii * 2 -1),
      &cinarray(ii * 2 ), minarray(ii * 2 -1), minarray(ii * 2 )
       end do
 1201  format(1x,a14,l4,4i4,6f5.0)
@@ -1492,15 +1492,15 @@ C        ################################
         larray(ii) = .false.
         xinarray(ii) = ' '
         binarray(ii) = ' '
-        iinarray(ii) = 0 
+        iinarray(ii) = 0
         kinarray(ii) = 0
-        einarray(ii) = 0. 
+        einarray(ii) = 0.
         dinarray(ii) = 0.
-        cinarray(ii * 2 -1) = 0. 
+        cinarray(ii * 2 -1) = 0.
         minarray(ii * 2 -1) = 0.
-        cinarray(ii * 2 ) = 0. 
+        cinarray(ii * 2 ) = 0.
         minarray(ii * 2 ) = 0.
-      end do      
+      end do
 
       call ftgcfs(iunit, 1, 1, 1, nrows, inskey,   larray2, anynull,
      & status)
@@ -1535,26 +1535,26 @@ C     put blanks in strings if they are undefined.  (contain nulls)
         jjj = ichar(binarray(ii))
       write(*,1201)
      & inskey(ii),larray(ii),jj,jjj,iinarray(ii),
-     & kinarray(ii), einarray(ii), dinarray(ii), cinarray(ii * 2 -1), 
+     & kinarray(ii), einarray(ii), dinarray(ii), cinarray(ii * 2 -1),
      & cinarray(ii * 2 ), minarray(ii * 2 -1), minarray(ii * 2)
       end do
 
       do ii = 11, 21
-C don't try to print the NaN values 
+C don't try to print the NaN values
         jj = ichar(xinarray(ii))
         jjj = ichar(binarray(ii))
         write(*,1201) inskey(ii), larray(ii), jj,
      &    jjj, iinarray(ii)
       end do
-      
-      call ftprec(iunit,'key_prec= '// 
+
+      call ftprec(iunit,'key_prec= '//
      &'''This keyword was written by f_prec'' / comment here',
      & status)
 
 C        ###############################################
 C        #  test the insert/delete row/column routines #
 C        ###############################################
-      
+
       call ftirow(iunit, 2, 3, status)
          if (status .gt. 0) go to 999
 
@@ -1573,7 +1573,7 @@ C        ###############################################
         jj = ichar(binarray(ii))
         write(*,1202)  inskey(ii), jj,
      &      iinarray(ii), jinarray(ii), einarray(ii), dinarray(ii)
-      end do      
+      end do
 1202  format(1x,a14,3i4,2f5.0)
 
       call ftdrow(iunit, 10, 2, status)
@@ -1608,7 +1608,7 @@ C        ###############################################
       write(*,'(1x,A)')' '
       write(*,'(1x,A)') 'Data values after deleting column 6: '
       do ii = 1, nrows
-        jj = ichar(binarray(ii))      
+        jj = ichar(binarray(ii))
         write(*,1203) inskey(ii), jj,
      &       iinarray(ii), einarray(ii), dinarray(ii)
 1203  format(1x,a14,2i4,2f5.0)
@@ -1643,18 +1643,18 @@ C        ###############################################
       call ftgcvj(iunit, 8,1,1,nrows,98, jinarray,anynull, status)
 
       write(*,'(1x,A)')' '
-      write(*,'(1x,A)') 
+      write(*,'(1x,A)')
      &  'Values after setting 1st 10 elements in column 8 = null: '
       do ii = 1, nrows
         jj = ichar(binarray(ii))
         write(*,1204) inskey(ii), jj,
      &      iinarray(ii), einarray(ii), dinarray(ii) , jinarray(ii)
-      end do      
+      end do
 
 C        ####################################################
 C        #  insert binary table following the primary array #
 C        ####################################################
-   
+
       call ftmahd(iunit,  1, hdutype, status)
 
       tform(1) = '15A'
@@ -1694,18 +1694,18 @@ C        ####################################################
       tfields = 10
       pcount = 0
 
-      call ftibin(iunit, nrows, tfields, ttype, tform, tunit, 
+      call ftibin(iunit, nrows, tfields, ttype, tform, tunit,
      & binname, pcount, status)
       write(*,'(1x,A)')' '
       write(*,'(1x,A,I4)') 'ftibin status = ', status
       call ftghdn(iunit, hdunum)
       write(*,'(1x,A,I4)') 'HDU number = ', hdunum
 
-      call ftpkyj(iunit, 'TNULL4', 77, 
+      call ftpkyj(iunit, 'TNULL4', 77,
      & 'value for undefined pixels', status)
-      call ftpkyj(iunit, 'TNULL5', 77, 
+      call ftpkyj(iunit, 'TNULL5', 77,
      & 'value for undefined pixels', status)
-      call ftpkyj(iunit, 'TNULL6', 77, 
+      call ftpkyj(iunit, 'TNULL6', 77,
      & 'value for undefined pixels', status)
 
       call ftpkyj(iunit, 'TSCAL4', 1000, 'scaling factor', status)
@@ -1716,15 +1716,15 @@ C        ####################################################
       call ftpkyj(iunit, 'TZERO5', 32768, 'scaling offset', status)
       call ftpkyj(iunit, 'TZERO6', 100, 'scaling offset', status)
 
-      call fttnul(iunit, 4, 77, status)   
-C define null value for int cols 
+      call fttnul(iunit, 4, 77, status)
+C define null value for int cols
       call fttnul(iunit, 5, 77, status)
       call fttnul(iunit, 6, 77, status)
-      
-C set scaling 
+
+C set scaling
       scale=1000.
       zero = 0.
-      call fttscl(iunit, 4, scale, zero, status)   
+      call fttscl(iunit, 4, scale, zero, status)
       scale=1.
       zero = 32768.
       call fttscl(iunit, 5, scale, zero, status)
@@ -1738,9 +1738,9 @@ C  for some reason, it is still necessary to call ftrdef at this point
 C        ############################
 C        #  write data to columns   #
 C        ############################
-           
-C initialize arrays of values to write to table 
- 
+
+C initialize arrays of values to write to table
+
       joutarray(1) = 0
       joutarray(2) = 1000
       joutarray(3) = 10000
@@ -1749,33 +1749,33 @@ C initialize arrays of values to write to table
 
 
       do ii = 4,6
-      
-          call ftpclj(iunit, ii, 1, 1, 5, joutarray, status) 
+
+          call ftpclj(iunit, ii, 1, 1, 5, joutarray, status)
           if (status .eq. 412)then
               write(*,'(1x,A,I4)') 'Overflow writing to column  ', ii
               status = 0
           end if
 
-          call ftpclu(iunit, ii, 6, 1, 1, status)  
-C write null value 
+          call ftpclu(iunit, ii, 6, 1, 1, status)
+C write null value
       end do
 
-      do jj = 4,6  
+      do jj = 4,6
         call ftgcvj(iunit, jj, 1,1,6, -999,jinarray,anynull,status)
         write(*,'(1x,6I6)') (jinarray(ii), ii=1,6)
       end do
 
       write(*,'(1x,A)') ' '
-      
-C turn off scaling, and read the unscaled values 
+
+C turn off scaling, and read the unscaled values
       scale = 1.
       zero = 0.
-      call fttscl(iunit, 4, scale, zero, status)   
+      call fttscl(iunit, 4, scale, zero, status)
       call fttscl(iunit, 5, scale, zero, status)
       call fttscl(iunit, 6, scale, zero, status)
 
       do jj = 4,6
-        call ftgcvj(iunit, jj,1,1,6,-999,jinarray,anynull,status)       
+        call ftgcvj(iunit, jj,1,1,6,-999,jinarray,anynull,status)
             write(*,'(1x,6I6)') (jinarray(ii), ii = 1,6)
       end do
 
@@ -1784,14 +1784,14 @@ C turn off scaling, and read the unscaled values
 C        ######################################################
 C        #  insert image extension following the binary table #
 C        ######################################################
-      
+
       bitpix = -32
       naxis = 2
       naxes(1) = 15
       naxes(2) = 25
       call ftiimg(iunit, bitpix, naxis, naxes, status)
       write(*,'(1x,A)')' '
-      write(*,'(1x,A,I4)') 
+      write(*,'(1x,A,I4)')
      & ' Create image extension: ftiimg status = ', status
       call ftghdn(iunit, hdunum)
       write(*,'(1x,A,I4)') 'HDU number = ', hdunum
@@ -1810,9 +1810,9 @@ C        ######################################################
       do jj =1, 30
         do ii = 1, 19
           imgarray(ii,jj) = 0
-        end do        
+        end do
       end do
-      
+
       call ftg2di(iunit,1,0,19,naxes(1),naxes(2),imgarray,anynull,
      &       status)
       write(*,'(1x,A)')' '
@@ -1824,25 +1824,25 @@ C        ######################################################
       end do
 
         write(*,'(1x,A)') ' '
-      
+
 
       do jj =1, 30
         do ii = 1, 19
           imgarray(ii,jj) = 0
-        end do        
+        end do
       end do
-      
+
       do jj =0, 19
         do ii = 0, 9
           imgarray2(ii+1,jj+1) = (jj * (-10)) - ii
-        end do        
+        end do
       end do
 
       fpixels(1) = 5
       fpixels(2) = 5
       lpixels(1) = 14
       lpixels(2) = 14
-      call ftpssi(iunit, 1, naxis, naxes, fpixels, lpixels, 
+      call ftpssi(iunit, 1, naxis, naxes, fpixels, lpixels,
      &     imgarray2, status)
       write(*,'(1x,A)')' '
       write(*,'(1x,A,I4)')'Wrote subset 2D array: ftpssi status =',
@@ -1866,12 +1866,12 @@ C        ######################################################
       inc(1) = 2
       inc(2) = 3
 
-      do jj = 1,30    
+      do jj = 1,30
         do ii = 1, 19
           imgarray(ii,jj) = 0
         end do
       end do
-      
+
       call ftgsvi(iunit, 1, naxis, naxes, fpixels, lpixels, inc, 0,
      &       imgarray, anynull, status)
       write(*,'(1x,A)')' '
@@ -1880,13 +1880,13 @@ C        ######################################################
 
       write(*,'(1x,10I5)')(imgarray(ii,1),ii = 1,10)
 
-      
+
 C        ###########################################################
 C        #  insert another image extension                         #
 C        #  copy the image extension to primary array of tmp file. #
 C        #  then delete the tmp file, and the image extension      #
 C        ###########################################################
-      
+
       bitpix = 16
       naxis = 2
       naxes(1) = 15
@@ -1906,7 +1906,7 @@ C        ###########################################################
      & status
 
       call ftcopy(iunit, tmpunit, 0, status)
-      write(*,'(1x,A)') 
+      write(*,'(1x,A)')
      &  'Copy image extension to primary array of tmp file.'
       write(*,'(1x,A,I4)')'ftcopy status = ',status
 
@@ -1933,18 +1933,18 @@ C        ###########################################################
       call ftghdn(iunit, hdunum)
       write(*,'(1x,A,I4)') 'HDU number = ', hdunum
 
-      
+
 C        ###########################################################
 C        #  append bintable extension with variable length columns #
 C        ###########################################################
-      
+
       call ftcrhd(iunit, status)
       write(*,'(1x,A,I4)') 'ftcrhd status = ', status
 
       tform(1)= '1PA'
       tform(2)= '1PL'
-      tform(3)= '1PB' 
-C Fortran FITSIO doesn't support  1PX 
+      tform(3)= '1PB'
+C Fortran FITSIO doesn't support  1PX
       tform(4)= '1PB'
       tform(5)= '1PI'
       tform(6)= '1PJ'
@@ -1979,7 +1979,7 @@ C Fortran FITSIO doesn't support  1PX
       tfields = 10
       pcount = 0
 
-      call ftphbn(iunit, nrows, tfields, ttype, tform, 
+      call ftphbn(iunit, nrows, tfields, ttype, tform,
      & tunit, binname, pcount, status)
       write(*,'(1x,A,I4)')'Variable length arrays: ftphbn status =',
      & status
@@ -1993,12 +1993,12 @@ C Fortran FITSIO doesn't support  1PX
 C        ############################
 C        #  write data to columns   #
 C        ############################
-            
-C initialize arrays of values to write to table 
+
+C initialize arrays of values to write to table
       iskey='abcdefghijklmnopqrst'
 
       do ii = 1, 20
-      
+
           boutarray(ii) = char(ii)
           ioutarray(ii) = ii
           joutarray(ii) = ii
@@ -2030,39 +2030,39 @@ C initialize arrays of values to write to table
 C      inskey(1) = iskey(1:1)
       inskey(1) = ' '
 
-        call ftpcls(iunit, 1, 1, 1, 1, inskey, status)  
-C write string values 
-        call ftpcll(iunit, 2, 1, 1, 1, larray, status)  
-C write logicals 
-        call ftpclx(iunit, 3, 1, 1, 1, larray, status)  
-C write bits 
+        call ftpcls(iunit, 1, 1, 1, 1, inskey, status)
+C write string values
+        call ftpcll(iunit, 2, 1, 1, 1, larray, status)
+C write logicals
+        call ftpclx(iunit, 3, 1, 1, 1, larray, status)
+C write bits
         call ftpclb(iunit, 4, 1, 1, 1, boutarray, status)
-        call ftpcli(iunit, 5, 1, 1, 1, ioutarray, status) 
-        call ftpclj(iunit, 6, 1, 1, 1, joutarray, status) 
+        call ftpcli(iunit, 5, 1, 1, 1, ioutarray, status)
+        call ftpclj(iunit, 6, 1, 1, 1, joutarray, status)
         call ftpcle(iunit, 7, 1, 1, 1, eoutarray, status)
         call ftpcld(iunit, 8, 1, 1, 1, doutarray, status)
 
-      do ii = 2, 20   
-C loop over rows 1 - 20 
-      
-        inskey(1) =  iskey(1:ii)
-        call ftpcls(iunit, 1, ii, 1, ii, inskey, status)  
-C write string values 
+      do ii = 2, 20
+C loop over rows 1 - 20
 
-        call ftpcll(iunit, 2, ii, 1, ii, larray, status)  
-C write logicals 
+        inskey(1) =  iskey(1:ii)
+        call ftpcls(iunit, 1, ii, 1, ii, inskey, status)
+C write string values
+
+        call ftpcll(iunit, 2, ii, 1, ii, larray, status)
+C write logicals
         call ftpclu(iunit, 2, ii, ii-1, 1, status)
 
-        call ftpclx(iunit, 3, ii, 1, ii, larray, status)  
-C write bits 
+        call ftpclx(iunit, 3, ii, 1, ii, larray, status)
+C write bits
 
         call ftpclb(iunit, 4, ii, 1, ii, boutarray, status)
         call ftpclu(iunit, 4, ii, ii-1, 1, status)
 
-        call ftpcli(iunit, 5, ii, 1, ii, ioutarray, status) 
+        call ftpcli(iunit, 5, ii, 1, ii, ioutarray, status)
         call ftpclu(iunit, 5, ii, ii-1, 1, status)
 
-        call ftpclj(iunit, 6, ii, 1, ii, joutarray, status) 
+        call ftpclj(iunit, 6, ii, 1, ii, joutarray, status)
         call ftpclu(iunit, 6, ii, ii-1, 1, status)
 
         call ftpcle(iunit, 7, ii, 1, ii, eoutarray, status)
@@ -2087,12 +2087,12 @@ C        #################################
 C        #############################
 C        #  read data from columns   #
 C        #############################
-      
+
 
       call ftgkyj(iunit, 'PCOUNT', pcount, comm, status)
       write(*,'(1x,A,I4)') 'PCOUNT = ', pcount
-      
-C initialize the variables to be read 
+
+C initialize the variables to be read
       inskey(1) =' '
       iskey = ' '
 
@@ -2103,14 +2103,14 @@ C initialize the variables to be read
           joutarray(jj) = 0
           eoutarray(jj) = 0
           doutarray(jj) = 0
-      end do      
+      end do
 
       call ftghdn(iunit, hdunum)
       write(*,'(1x,A,I4)') 'HDU number = ', hdunum
 
-      do ii = 1, 20   
-C loop over rows 1 - 20 
-      
+      do ii = 1, 20
+C loop over rows 1 - 20
+
         do jj = 1, ii
           larray(jj) = .false.
           boutarray(jj) = char(0)
@@ -2118,12 +2118,12 @@ C loop over rows 1 - 20
           joutarray(jj) = 0
           eoutarray(jj) = 0
           doutarray(jj) = 0
-        end do      
+        end do
 
         call ftgcvs(iunit, 1, ii, 1,1,iskey,inskey,anynull,status)
         write(*,'(1x,2A,I4)') 'A  ', inskey(1), status
 
-        call ftgcl( iunit, 2, ii, 1, ii, larray, status) 
+        call ftgcl( iunit, 2, ii, 1, ii, larray, status)
         write(*,1400)'L',status,(larray(jj),jj=1,ii)
 1400    format(1x,a1,i3,20l3)
 1401    format(1x,a1,21i3)
@@ -2163,20 +2163,20 @@ C loop over rows 1 - 20
 C        #####################################
 C        #  create another image extension   #
 C        #####################################
-      
+
 
       bitpix = 32
       naxis = 2
       naxes(1) = 10
       naxes(2) = 2
       npixels = 20
- 
+
       call ftiimg(iunit, bitpix, naxis, naxes, status)
       write(*,'(1x,A)')' '
       write(*,'(1x,A,I4)')'Create image extension: ftiimg status =',
      &       status
-      
-C initialize arrays of values to write to primary array 
+
+C initialize arrays of values to write to primary array
       do ii = 1, npixels
           boutarray(ii) = char(ii * 2 -2)
           ioutarray(ii) = ii * 2 -2
@@ -2184,9 +2184,9 @@ C initialize arrays of values to write to primary array
           koutarray(ii) = ii * 2 -2
           eoutarray(ii) = ii * 2 -2
           doutarray(ii) = ii * 2 -2
-      end do      
+      end do
 
-C write a few pixels with each datatype 
+C write a few pixels with each datatype
       call ftpprb(iunit, 1, 1,  2, boutarray(1),  status)
       call ftppri(iunit, 1, 3,  2, ioutarray(3),  status)
       call ftpprj(iunit, 1, 5,  2, koutarray(5),  status)
@@ -2196,8 +2196,8 @@ C write a few pixels with each datatype
       call ftpprd(iunit, 1, 13, 2, doutarray(13), status)
       write(*,'(1x,A,I4)') 'ftppr status = ', status
 
-      
-C read back the pixels with each datatype 
+
+C read back the pixels with each datatype
       bnul = char(0)
       inul = 0
       knul = 0
@@ -2240,15 +2240,15 @@ C      ##########################################
       xinc =   -.00277777D+00
       yinc =   .00277777D+00
 
-C     write the WCS keywords 
-C     use example values from the latest WCS document 
+C     write the WCS keywords
+C     use example values from the latest WCS document
       call ftpkyd(iunit, 'CRVAL1', xrval, 10, 'comment', status)
       call ftpkyd(iunit, 'CRVAL2', yrval, 10, 'comment', status)
       call ftpkyd(iunit, 'CRPIX1', xrpix, 10, 'comment', status)
       call ftpkyd(iunit, 'CRPIX2', yrpix, 10, 'comment', status)
       call ftpkyd(iunit, 'CDELT1', xinc, 10, 'comment', status)
       call ftpkyd(iunit, 'CDELT2', yinc, 10, 'comment', status)
-C     call ftpkyd(iunit, 'CROTA2', rot, 10, 'comment', status) 
+C     call ftpkyd(iunit, 'CROTA2', rot, 10, 'comment', status)
       call ftpkys(iunit, 'CTYPE1', xctype, 'comment', status)
       call ftpkys(iunit, 'CTYPE2', yctype, 'comment', status)
       write(*,'(1x,A)')' '
@@ -2290,11 +2290,11 @@ C     reset value, to make sure they are reread correctly
       write(*,6502)xpos,ypos,xpix,ypix
 6502  format('  Sky (',f10.6,f10.6,') --> (',f10.6,f10.6,') Pixels')
 
-     
+
 C        ######################################
 C        #  append another ASCII table        #
 C        ######################################
-      
+
 
       tform(1)= 'A15'
       tform(2)= 'I11'
@@ -2325,16 +2325,16 @@ C        ######################################
       tfields = 5
       tblname = 'new_table'
 
-      call ftitab(iunit, rowlen, nrows, tfields, ttype, tbcol, 
+      call ftitab(iunit, rowlen, nrows, tfields, ttype, tbcol,
      & tform, tunit, tblname, status)
       write(*,'(1x,A)') ' '
       write(*,'(1x,A,I4)') 'ftitab status = ', status
 
-      call ftpcls(iunit, 1, 1, 1, 3, onskey, status)  
-C write string values 
+      call ftpcls(iunit, 1, 1, 1, 3, onskey, status)
+C write string values
 
-C initialize arrays of values to write to primary array 
-      
+C initialize arrays of values to write to primary array
+
       do ii = 1,npixels
           boutarray(ii) = char(ii * 3 -3)
           ioutarray(ii) = ii * 3 -3
@@ -2344,18 +2344,18 @@ C initialize arrays of values to write to primary array
           doutarray(ii) = ii * 3 -3
       end do
 
-      do ii = 2,5 
-C loop over cols 2 - 5 
-      
-          call ftpclb(iunit,  ii, 1, 1, 2, boutarray,  status) 
+      do ii = 2,5
+C loop over cols 2 - 5
+
+          call ftpclb(iunit,  ii, 1, 1, 2, boutarray,  status)
           call ftpcli(iunit,  ii, 3, 1, 2,ioutarray(3),status)
           call ftpclj(iunit,  ii, 5, 1, 2,joutarray(5),status)
           call ftpcle(iunit,  ii, 7, 1, 2,eoutarray(7),status)
           call ftpcld(iunit,  ii, 9, 1, 2,doutarray(9),status)
       end do
       write(*,'(1x,A,I4)') 'ftpcl status = ', status
-      
-C read back the pixels with each datatype 
+
+C read back the pixels with each datatype
       call ftgcvb(iunit,   2, 1, 1, 10, bnul, binarray,anynull,
      & status)
       call ftgcvi(iunit,  2, 1, 1, 10, inul, iinarray,anynull,
@@ -2369,7 +2369,7 @@ C read back the pixels with each datatype
       call ftgcvd(iunit, 5, 1, 1, 10, dnul, dinarray,anynull,
      & status)
 
-      write(*,'(1x,A)') 
+      write(*,'(1x,A)')
      &'Column values written with ftpcl and read with ftgcl: '
       npixels = 10
       do ii = 1,npixels
@@ -2383,7 +2383,7 @@ C read back the pixels with each datatype
       write(*,1602)(dinarray(ii),ii = 1, npixels),anynull,'(double) '
 1601  format(1x,10i3,l3,1x,a)
 1602  format(2x,10f3.0,l2,1x,a)
-      
+
 C        ###########################################################
 C        #  perform stress test by cycling thru all the extensions #
 C        ###########################################################
@@ -2403,7 +2403,7 @@ C        ###########################################################
         call ftghdn(iunit, hdunum)
         if (status .gt. 0) go to 999
       end do
-      
+
       write(*,'(1x,A)') ' '
 
       checksum = 1234567890.D+00
@@ -2430,10 +2430,10 @@ C         write(*,'(1x,A)') card
       write(*,'(1x,A,F13.1,I4)') 'ftgcks data checksum, status = ',
      &         datsum, status
 
-      call ftvcks(iunit, datastatus, hdustatus, status) 
+      call ftvcks(iunit, datastatus, hdustatus, status)
       write(*,'(1x,A,3I4)')'ftvcks datastatus, hdustatus, status =  ',
      &          datastatus, hdustatus, status
- 
+
       call ftprec(iunit,
      & 'new_key = ''written by fxprec'' / to change checksum',status)
       call ftucks(iunit, status)
@@ -2441,13 +2441,13 @@ C         write(*,'(1x,A)') card
 
       call ftgcrd(iunit, 'DATASUM', card, status)
       write(*,'(1x,A)') card(1:22)
-      call ftvcks(iunit, datastatus, hdustatus, status) 
+      call ftvcks(iunit, datastatus, hdustatus, status)
       write(*,'(1x,A,3I4)') 'ftvcks datastatus, hdustatus, status =  ',
      &          datastatus, hdustatus, status
- 
+
 C        delete the checksum keywords, so that the FITS file is always
 C        the same, regardless of the date of when testprog is run.
-      
+
       call ftdkey(iunit, 'CHECKSUM', status)
       call ftdkey(iunit, 'DATASUM',  status)
 
@@ -2455,12 +2455,12 @@ C        the same, regardless of the date of when testprog is run.
 C        ############################
 C        #  close file and quit     #
 C        ############################
-      
 
-999   continue  
-C jump here on error 
 
-      call ftclos(iunit, status) 
+999   continue
+C jump here on error
+
+      call ftclos(iunit, status)
       write(*,'(1x,A,I4)') 'ftclos status = ', status
       write(*,'(1x,A)')' '
 
@@ -2472,7 +2472,7 @@ C jump here on error
       nmsg = 0
 
 998   continue
-      if (errmsg .ne. ' ')then      
+      if (errmsg .ne. ' ')then
           write(*,'(1x,A)') errmsg
           nmsg = nmsg + 1
           call ftgmsg(errmsg)

@@ -8,7 +8,7 @@ int ffwldp(double xpix, double ypix, double xref, double yref,
       double xrefpix, double yrefpix, double xinc, double yinc, double rot,
       char *type, double *xpos, double *ypos, int *status)
 
-/* This routine is based on the classic AIPS WCS routine. 
+/* This routine is based on the classic AIPS WCS routine.
 
    It converts from pixel location to RA,Dec for 9 projective geometries:
    "-CAR", "-SIN", "-TAN", "-ARC", "-NCP", "-GLS", "-MER", "-AIT" and "-STG".
@@ -40,7 +40,7 @@ int ffwldp(double xpix, double ypix, double xref, double yref,
   double geo1, geo2, geo3;
   double deps = 1.0e-5;
   char *cptr;
-  
+
   if (*status > 0)
      return(*status);
 
@@ -130,7 +130,7 @@ int ffwldp(double xpix, double ypix, double xref, double yref,
         } else  {
           return(*status = 504);
         }
- 
+
     } else if (*cptr == 'A') {
 
       if (*(cptr + 1) == 'R' &&  *(cptr + 2) == 'C') { /* ARC */
@@ -190,7 +190,7 @@ int ffwldp(double xpix, double ypix, double xref, double yref,
         } else  {
           return(*status = 504);
         }
- 
+
     } else if (*cptr == 'N') { /* -NCP North celestial pole*/
       if (*(cptr + 1) != 'C' ||  *(cptr + 2) != 'P') {
          return(*status = 504);
@@ -256,13 +256,13 @@ int ffwldp(double xpix, double ypix, double xref, double yref,
   *xpos  = rat  / D2R;
   *ypos  = dect  / D2R;
   return(*status);
-} 
+}
 /*--------------------------------------------------------------------------*/
-int ffxypx(double xpos, double ypos, double xref, double yref, 
+int ffxypx(double xpos, double ypos, double xref, double yref,
       double xrefpix, double yrefpix, double xinc, double yinc, double rot,
       char *type, double *xpix, double *ypix, int *status)
 
-/* This routine is based on the classic AIPS WCS routine. 
+/* This routine is based on the classic AIPS WCS routine.
 
    It converts from RA,Dec to pixel location to for 9 projective geometries:
    "-CAR", "-SIN", "-TAN", "-ARC", "-NCP", "-GLS", "-MER", "-AIT" and "-STG".
@@ -392,7 +392,7 @@ int ffxypx(double xpos, double ypos, double xref, double yref,
         } else  {
           return(*status = 504);
         }
- 
+
     } else if (*cptr == 'A') {
 
       if (*(cptr + 1) == 'R' &&  *(cptr + 2) == 'C') { /* ARC */
@@ -400,7 +400,7 @@ int ffxypx(double xpos, double ypos, double xref, double yref,
          if (m<-1.0) m = -1.0;
          if (m>1.0) m = 1.0;
          m = acos (m);
-         if (m!=0) 
+         if (m!=0)
             m = m / sin(m);
          else
             m = 1.0;
@@ -435,13 +435,13 @@ int ffxypx(double xpos, double ypos, double xref, double yref,
         } else  {
           return(*status = 504);
         }
- 
+
     } else if (*cptr == 'N') { /* -NCP North celestial pole*/
          if (*(cptr + 1) != 'C' ||  *(cptr + 2) != 'P') {
              return(*status = 504);
          }
 
-         if (dec0==0.0) 
+         if (dec0==0.0)
 	     return(*status = 501);  /* can't stand the equator */
          else
 	   m = (cos(dec0) - coss * cos(ra-ra0)) / sin(dec0);

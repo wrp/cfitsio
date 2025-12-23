@@ -50,7 +50,7 @@ int fp_get_param (int argc, char *argv[], fpstate *fpptr)
 	        !strncmp(argv[iarg], "-g1", 3) || !strncmp(argv[iarg], "-g2", 3) ||
 	        !strncmp(argv[iarg], "-i2f", 4) ||
 	        !strncmp(argv[iarg], "-n3ratio", 8) || !strncmp(argv[iarg], "-n3min", 6) ||
-	        !strncmp(argv[iarg], "-tableonly", 10) || !strncmp(argv[iarg], "-table", 6) )  
+	        !strncmp(argv[iarg], "-tableonly", 10) || !strncmp(argv[iarg], "-table", 6) )
 	    {
 
 		/* Rice is the default, so -r is superfluous  */
@@ -113,7 +113,7 @@ int fp_get_param (int argc, char *argv[], fpstate *fpptr)
 		    /* compression method may give higher compression than the */
 		    /* lossless compression method that is usually applied to */
 		    /* integer images. */
-		    
+
 		    fpptr->int_to_float = 1;
 
 		} else if (!strcmp(argv[iarg], "-n3ratio")) {
@@ -269,7 +269,7 @@ int fp_get_param (int argc, char *argv[], fpstate *fpptr)
 
 		} else if (argv[iarg][1] == 'V') {
 		    fp_version (); exit (0);
-                    
+
                 } else if (argv[iarg][1] == 'O') {
                     if (gotR) {
                         fp_msg("Error: -O option is not allowed with -R\n");
@@ -281,7 +281,7 @@ int fp_get_param (int argc, char *argv[], fpstate *fpptr)
                         fpptr->outfile[SZ_STR-1]=0;
                         gotO=1;
                     }
-                
+
 		} else {
 		    fp_msg ("Error: unknown command line flag `");
 		    fp_msg (argv[iarg]); fp_msg ("'\n");
@@ -293,25 +293,25 @@ int fp_get_param (int argc, char *argv[], fpstate *fpptr)
 	}
 
         /* In earlier loop, already made sure both -O and -R are not being used.
-           This is essential, as each must store info in the same 'outfile' array. 
+           This is essential, as each must store info in the same 'outfile' array.
            Now do additional tests of -O and -R with other flags. */
-        
+
         if (gotR && !fpptr->test_all) {
             fp_msg("Error: -R option may only be used with -T\n"); exit(-1);
         }
-        
+
         if (gotO && (fpptr->test_all || fpptr->to_stdout)) {
             fp_msg("Error: -O option may not be used with -S or -T\n"); exit(-1);
         }
-        
-	if (fpptr->scale != 0. && 
+
+	if (fpptr->scale != 0. &&
 	         fpptr->comptype != HCOMPRESS_1 && fpptr->test_all != 1) {
 
 	    fp_msg ("Error: `-s' requires `-h or -T'\n"); exit (-1);
 	}
 
 	if (fpptr->quantize_level == 0) {
-	
+
 	    if ((fpptr->comptype != GZIP_1) && (fpptr->comptype != GZIP_2)) {
 	        fp_msg ("Error: `-q 0' only allowed with GZIP\n"); exit (-1);
 	    }
@@ -366,8 +366,8 @@ return(0);
 }
 
 /* ================================================================== */
-int fp_hint (void) 
-{ fp_msg ("      `fpack -H' for help\n"); 
+int fp_hint (void)
+{ fp_msg ("      `fpack -H' for help\n");
 return(0);
 }
 

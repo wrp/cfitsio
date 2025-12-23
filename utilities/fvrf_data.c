@@ -1,5 +1,5 @@
 #include "fverify.h"
-typedef struct { 
+typedef struct {
    int nnum;
    int ncmp;
    int nfloat;
@@ -15,9 +15,9 @@ typedef struct {
 
 /*************************************************************
 *
-*      test_data 
+*      test_data
 *
-*   Test the HDU data  
+*   Test the HDU data
 *
 *  This routine reads every row and column of ASCII tables to
 *  verify that the values have the correct format.
@@ -34,42 +34,42 @@ typedef struct {
 *
 *  Since it is impossible to write an invalid value in a FITS image,
 *  this routine does not read the image pixels.
-*	
+*
 *************************************************************/
-void test_data(fitsfile *infits, 	/* input fits file   */ 
+void test_data(fitsfile *infits, 	/* input fits file   */
 	      FILE	*out,		/* output ascii file */
 	      FitsHdu    *hduptr	/* fits hdu pointer  */
             )
 
-{  
+{
     iteratorCol *iter_col=0;
-    int  ncols; 
+    int  ncols;
 
     int nnum = 0;
     int *numlist;	/* the list of the column  whose data
                            type is numerical(scalar and complex) */
     int nfloat = 0;
     int *floatlist;	/* the list of the floating point columns in ASCII table */
- 
+
     int ncmp = 0;
     int *cmplist;	/* the list of the column  whose data
                            type is numerical(scalar and complex) */
-    int ntxt = 0;		 
+    int ntxt = 0;
     int *txtlist;	/* the list of column  whose data type is
 			   string, logical, bit or complex */
     int niter = 0;	/* total columns read into  the literator function */
 
-    int ndesc = 0;		 
+    int ndesc = 0;
     int *desclist;	/* the list of column which is the descriptor of
 			   the variable length array. */
-    int *isVarQFormat;  /* Format type for each of the ndesc variable-length 
+    int *isVarQFormat;  /* Format type for each of the ndesc variable-length
                              columns: 0 = type 'P', 1 = type 'Q' */
 
     long rows_per_loop = 0, offset;
     UserIter usrdata;
 
     int datatype;
-    long repeat; 
+    long repeat;
 
     long totalrows;
     LONGLONG length;
@@ -80,7 +80,7 @@ void test_data(fitsfile *infits, 	/* input fits file   */
     double *ndata;
     int *idata;
     int *maxminflag;
-    int *dflag; 
+    int *dflag;
     char lnull = 2;
     int anynul;
 
@@ -97,74 +97,74 @@ void test_data(fitsfile *infits, 	/* input fits file   */
     int*  perbyte;
 
     LONGLONG naxis2;
-    
+
     int largeVarLengthWarned = 0;
     int largeVarOffsetWarned = 0;
 
     if(testcsum)
-        test_checksum(infits,out); 
+        test_checksum(infits,out);
 
-    if(testfill) { 
+    if(testfill) {
         test_agap(infits,out,hduptr);     /* test the bytes between the
                                                    ascii table columns. */
-        if(ffcdfl(infits, &status)) { 
+        if(ffcdfl(infits, &status)) {
             wrtferr(out,"checking data fill: ", &status, 1);
             status = 0;
         }
     }
 
-    if(hduptr->hdutype != ASCII_TBL &&  
+    if(hduptr->hdutype != ASCII_TBL &&
        hduptr->hdutype != BINARY_TBL ) return;
 
     ncols = hduptr->ncols;
     if(ncols <= 0) return;
-    
+
     ffgkyjj(infits, "NAXIS2", &naxis2, NULL, &status);
 
     if (naxis2 > 2147483647) {
        wrtout(out, "Cannot test data in tables with more than 2**31 (2147483647) rows.");
        return;
     }
-    
-    /* separate the numerical, complex, text and 
+
+    /* separate the numerical, complex, text and
       the variable length vector columns */
-    numlist =(int*)malloc(ncols * sizeof(int)); 
-    floatlist =(int*)malloc(ncols * sizeof(int)); 
-    cmplist =(int*)malloc(ncols * sizeof(int)); 
-    txtlist =(int*)malloc(ncols * sizeof(int)); 
+    numlist =(int*)malloc(ncols * sizeof(int));
+    floatlist =(int*)malloc(ncols * sizeof(int));
+    cmplist =(int*)malloc(ncols * sizeof(int));
+    txtlist =(int*)malloc(ncols * sizeof(int));
     desclist =(int*)malloc(ncols * sizeof(int));
 
     if(hduptr->hdutype == ASCII_TBL) {
 
         /*read every column of an ASCII table */
 	rows_per_loop = 0;
-        for (i=0; i< ncols; i++){ 
-            if(fits_get_coltype(infits, i+1, &datatype, NULL, NULL, &status)){ 
+        for (i=0; i< ncols; i++){
+            if(fits_get_coltype(infits, i+1, &datatype, NULL, NULL, &status)){
                sprintf(errmes,"Column #%d: ",i);
  	       wrtferr(out,errmes, &status,2);
             }
-            if ( datatype != TSTRING ) { 
-	           numlist[nnum] = i+1; 
+            if ( datatype != TSTRING ) {
+	           numlist[nnum] = i+1;
 	           nnum++;
-		   
+
 		   if (datatype > TLONG) { /* floating point number column */
 		      floatlist[nfloat] = i + 1;
 		      nfloat++;
                    }
 
-            } else { 
+            } else {
  	       txtlist[ntxt] = i+1;
 	       ntxt++;
             }
         }
 
-    } else if (hduptr->hdutype == BINARY_TBL) { 
+    } else if (hduptr->hdutype == BINARY_TBL) {
 
         /* only check Bit, Logical and String columns in Binary tables */
 	rows_per_loop = 0;
-        for (i=0; i< ncols; i++){ 
-            if(fits_get_coltype(infits, i+1, &datatype, &repeat, NULL, 
-               &status)){ 
+        for (i=0; i< ncols; i++){
+            if(fits_get_coltype(infits, i+1, &datatype, &repeat, NULL,
+               &status)){
                sprintf(errmes,"Column #%d: ",i);
  	       wrtferr(out,errmes, &status,2);
             }
@@ -173,48 +173,48 @@ void test_data(fitsfile *infits, 	/* input fits file   */
 	       desclist[ndesc] = i+1;
 	       ndesc++;
 
-            } else if(datatype == TBIT && (repeat%8) ) 
+            } else if(datatype == TBIT && (repeat%8) )
                 {  /* bit column that does not have a multiple of 8 bits */
-	           numlist[nnum] = i+1; 
+	           numlist[nnum] = i+1;
 	           nnum++;
 
             } else if( (datatype == TLOGICAL) ||
                        (datatype == TSTRING ) )  {
-	           txtlist[ntxt] = i+1; 
+	           txtlist[ntxt] = i+1;
 	           ntxt++;
             }
             /* ignore all other types of columns (B I J K E D C and M ) */
-        } 
+        }
     }
 
 
-    /*  Use Iterator to read the columns that are not variable length arrays */ 
-    /* columns from  1 to nnum are scalar numerical columns. 
+    /*  Use Iterator to read the columns that are not variable length arrays */
+    /* columns from  1 to nnum are scalar numerical columns.
        columns from  nnum+1 to  nnum+ncmp are complex columns.
        columns from  nnum+ncmp are text columns */
     niter = nnum + ncmp + ntxt + nfloat;
 
     if(niter)iter_col = (iteratorCol *) malloc (sizeof(iteratorCol)*niter);
 
-    for (i=0; i< nnum; i++){  
-	fits_iter_set_by_num(&iter_col[i], infits, numlist[i], TDOUBLE, 
+    for (i=0; i< nnum; i++){
+	fits_iter_set_by_num(&iter_col[i], infits, numlist[i], TDOUBLE,
 	   InputCol);
     }
-    for (i=0; i< ncmp; i++){ 
+    for (i=0; i< ncmp; i++){
 	j = nnum + i;
-	fits_iter_set_by_num(&iter_col[j], infits, cmplist[i], TDBLCOMPLEX, 
+	fits_iter_set_by_num(&iter_col[j], infits, cmplist[i], TDBLCOMPLEX,
 	   InputCol);
-    }	  
-    for (i=0; i< ntxt; i++){ 
+    }
+    for (i=0; i< ntxt; i++){
 	j = nnum + ncmp + i;
-	fits_iter_set_by_num(&iter_col[j], infits, txtlist[i], 0, 
+	fits_iter_set_by_num(&iter_col[j], infits, txtlist[i], 0,
 	   InputCol);
-    }	  
-    for (i=0; i< nfloat; i++){ 
+    }
+    for (i=0; i< nfloat; i++){
 	j = nnum + ncmp + ntxt + i;
-	fits_iter_set_by_num(&iter_col[j], infits, floatlist[i], TSTRING, 
+	fits_iter_set_by_num(&iter_col[j], infits, floatlist[i], TSTRING,
 	   InputCol);
-    }	  
+    }
 
 
     offset = 0;
@@ -229,40 +229,40 @@ void test_data(fitsfile *infits, 	/* input fits file   */
     usrdata.hduptr = hduptr;
     usrdata.out = out;
     usrdata.nfloat = nfloat;
-   
-    /* get the mask for the bit X column  
-        for column other than the X, it always 255 
-        for Column nX, it will be 000...111, where # of 0 is n%8, 
-        # of 1 is 8 - n%8. 
+
+    /* get the mask for the bit X column
+        for column other than the X, it always 255
+        for Column nX, it will be 000...111, where # of 0 is n%8,
+        # of 1 is 8 - n%8.
     */
 
-    if(nnum > 0) usrdata.mask = 
+    if(nnum > 0) usrdata.mask =
             (unsigned char *)calloc(nnum,sizeof( unsigned char));
-    if(nnum > 0) usrdata.indatatyp = 
+    if(nnum > 0) usrdata.indatatyp =
             (int *)calloc(nnum,sizeof( int));
     for (i=0; i< nnum; i++){
-        j = fits_iter_get_colnum(&(iter_col[i]));  
-        if(fits_get_coltype(infits, j, &datatype, &repeat, NULL, &status)){ 
+        j = fits_iter_get_colnum(&(iter_col[i]));
+        if(fits_get_coltype(infits, j, &datatype, &repeat, NULL, &status)){
            sprintf(errmes,"Column #%d: ",i);
  	   wrtferr(out,errmes, &status,2);
-        } 
+        }
         usrdata.indatatyp[i] = datatype;
         usrdata.mask[i] = 255;
-        if(datatype == TBIT) { 
+        if(datatype == TBIT) {
             repeat = repeat%8;
             usrdata.mask[i] = (usrdata.mask[i])>>repeat;
             if(!repeat) usrdata.mask[i] = 0;
         }
-    }       
-     
+    }
 
-    if(niter > 0) {  
-	if(fits_iterate_data(niter, iter_col, offset,rows_per_loop, iterdata, 
-            &usrdata,&status)){ 
+
+    if(niter > 0) {
+	if(fits_iterate_data(niter, iter_col, offset,rows_per_loop, iterdata,
+            &usrdata,&status)){
             wrtserr(out,"When Reading data, ",&status,2);
         }
     }
-      
+
     if(niter>0) free(iter_col);
     free(numlist);
     free(floatlist);
@@ -271,15 +271,15 @@ void test_data(fitsfile *infits, 	/* input fits file   */
     if(nnum > 0) free(usrdata.mask);
     if(nnum > 0) free(usrdata.indatatyp);
     if(nnum > 0 || ncmp > 0) {
-          free(usrdata.datamax); 
+          free(usrdata.datamax);
           free(usrdata.datamin);
     }
     free(usrdata.tnull);
-    if(!ndesc ) { 
-	goto data_end; 
-    } 
+    if(!ndesc ) {
+	goto data_end;
+    }
 
-    /* ------------read the variable length vectors -------------------*/ 
+    /* ------------read the variable length vectors -------------------*/
     usrdata.datamax  = (double *)calloc(ndesc, sizeof(double));
     usrdata.datamin  = (double *)calloc(ndesc, sizeof(double));
     usrdata.tnull  = (double *)calloc(ndesc, sizeof(double));
@@ -295,74 +295,74 @@ void test_data(fitsfile *infits, 	/* input fits file   */
   /* There is no point in reading the other columns because the other datatypes */
   /* have no possible invalid values.  */
 
-    for (i = 0; i < ndesc; i++) { 
-        icol = desclist[i]; 
+    for (i = 0; i < ndesc; i++) {
+        icol = desclist[i];
         parse_vtform(infits,out,hduptr,icol,&datatype,&maxlen[i],&isVarQFormat[i]);
-	dflag[i] = 4; 
-        switch (datatype) { 
+	dflag[i] = 4;
+        switch (datatype) {
           case -TBIT:
               dflag[i] = 1;
               perbyte[i] = -8;
-              break; 
+              break;
           case -TBYTE:
               perbyte[i] = 1;
-              break; 
+              break;
           case -TLOGICAL:
               dflag[i] = 3;
               perbyte[i] = 1;
-              break; 
+              break;
           case -TSTRING:
               dflag[i] = 0;
               perbyte[i] = 1;
-              break; 
-          case -TSHORT: 
+              break;
+          case -TSHORT:
               perbyte[i] = 2;
-              break; 
-          case -TLONG: 
+              break;
+          case -TLONG:
               perbyte[i] = 4;
-              break; 
-          case -TFLOAT: 
+              break;
+          case -TFLOAT:
               perbyte[i] = 4;
-              break; 
-          case -TDOUBLE: 
+              break;
+          case -TDOUBLE:
               perbyte[i] = 8;
-              break; 
-          case -TCOMPLEX: 
+              break;
+          case -TCOMPLEX:
               dflag[i] = 2;
               perbyte[i] = 8;
-              break; 
-          case -TDBLCOMPLEX: 
+              break;
+          case -TDBLCOMPLEX:
               dflag[i] = 2;
               perbyte[i] = 16;
-              break; 
+              break;
           default:
               break;
         }
     }
 
-    maxmax = maxlen[0]; 
-    for (i = 1; i < ndesc; i++) { 
+    maxmax = maxlen[0];
+    for (i = 1; i < ndesc; i++) {
 	if(maxmax < maxlen[i]) maxmax = maxlen[i];
-    } 
+    }
     if(maxmax < 0) maxmax = 100;
-    ndata = (double *)malloc(2*maxmax*sizeof(double)); 
+    ndata = (double *)malloc(2*maxmax*sizeof(double));
     cdata = (char *)malloc((maxmax+1) *sizeof(char));
     idata = (int *)malloc(maxmax *sizeof(int));
 
-	    
-    for (jl = 1; jl <= totalrows; jl++) { 
-        for (i = 0; i < ndesc; i++) { 
-            icol = desclist[i]; 
+
+    for (jl = 1; jl <= totalrows; jl++) {
+        for (i = 0; i < ndesc; i++) {
+            icol = desclist[i];
 
             /* read and check the descriptor length and offset values */
             if(fits_read_descriptll(infits, icol ,jl,&length,
-		   &toffset, &status)){ 
-                
+		   &toffset, &status)){
+
                 sprintf(errtmp,"Row #%ld Col.#%d: ",jl,icol);
 	        wrtferr(out,errtmp,&status,2);
             }
             if (!isVarQFormat[i])
-            { 
+            {
                if (!largeVarLengthWarned && length > 2147483647)
                {
                   strcpy(errmes,"Var row length exceeds maximum 32-bit signed int.  ");
@@ -380,34 +380,34 @@ void test_data(fitsfile *infits, 	/* input fits file   */
                   largeVarOffsetWarned = 1;
                }
             }
-            
-	    if(length > maxlen[i] && maxlen[i] > -1 ) { 
-	        sprintf(errmes, "Descriptor of Column #%d at Row %ld: ", 
+
+	    if(length > maxlen[i] && maxlen[i] > -1 ) {
+	        sprintf(errmes, "Descriptor of Column #%d at Row %ld: ",
                      icol, jl);
                 sprintf(errtmp,"nelem(%ld) > maxlen(%ld) given by TFORM%d.",
                     (long) length,maxlen[i],icol);
                 strcat(errmes,errtmp);
-                wrterr(out,errmes,1); 
-            } 
+                wrterr(out,errmes,1);
+            }
 
-            if( perbyte[i] < 0)  
-                 bytelength = length/8; 
-            else 
-                 bytelength = length*perbyte[i]; 
+            if( perbyte[i] < 0)
+                 bytelength = length/8;
+            else
+                 bytelength = length*perbyte[i];
 
-            if(toffset + bytelength > hduptr->pcount ) { 
-	        sprintf(errmes, "Descriptor of Column #%d at Row %ld: ", 
+            if(toffset + bytelength > hduptr->pcount ) {
+	        sprintf(errmes, "Descriptor of Column #%d at Row %ld: ",
                      icol, jl);
-	        sprintf(errtmp, 
-                    " offset of first element(%ld) + nelem(%ld)", 
-                     (long) toffset, (long) length); 
+	        sprintf(errtmp,
+                    " offset of first element(%ld) + nelem(%ld)",
+                     (long) toffset, (long) length);
                 strcat(errmes,errtmp);
-                if(perbyte[i] < 0) 
+                if(perbyte[i] < 0)
 	            sprintf(errtmp, "/8 >  total heap area  = %ld.",
-		       (long) hduptr->pcount); 
-                else 
+		       (long) hduptr->pcount);
+                else
 	            sprintf(errtmp, "*%d >  total heap area  = %ld.",
-		       perbyte[i], (long) hduptr->pcount); 
+		       perbyte[i], (long) hduptr->pcount);
                 strcat(errmes,errtmp);
                 wrterr(out,errmes,2);
             }
@@ -423,31 +423,31 @@ void test_data(fitsfile *infits, 	/* input fits file   */
 
 /*  NOT YET IMPLEMENTED:  This code should test that the fill bits that
     pad out the last byte are all zero.  Currently this test is applied
-    to fixed length logical arrays, but has not yet been done for 
+    to fixed length logical arrays, but has not yet been done for
     the variable length logical array case.  It is probably safe to assume
     that not many FITS files will contain variable length Logical columns,
     to adding this test is not a high priority.
 
-	        if(fits_read_col(infits, TDOUBLE, icol , jl, 1, 
-	            nelem, &nullval, ndata, &anynul, &status)) { 
+	        if(fits_read_col(infits, TDOUBLE, icol , jl, 1,
+	            nelem, &nullval, ndata, &anynul, &status)) {
 	       	    wrtferr(out,"",&status,2);
                 }
 */
             }
 
             else if(dflag[i] == 0) { /* read String column */
-	        if(fits_read_col(infits, TSTRING, icol, jl, 1, 
-		    rlength, NULL, &cdata, &anynul, &status)) { 
+	        if(fits_read_col(infits, TSTRING, icol, jl, 1,
+		    rlength, NULL, &cdata, &anynul, &status)) {
                     sprintf(errtmp,"Row #%ld Col.#%d: ",jl,icol);
 	            wrtferr(out,errtmp,&status,2);
-                } 
+                }
                 else {
                   j = 0;
                   while (cdata[j] != 0) {
 
                     if ((cdata[j] > 126) || (cdata[j] < 32) ) {
-                      sprintf(errmes, 
-                      "String in row #%ld, and column #%d contains non-ASCII text.", jl,icol); 
+                      sprintf(errmes,
+                      "String in row #%ld, and column #%d contains non-ASCII text.", jl,icol);
                       wrterr(out,errmes,1);
                         strcpy(errmes,
             "             (This error is reported only once; other rows may have errors).");
@@ -459,22 +459,22 @@ void test_data(fitsfile *infits, 	/* input fits file   */
                 }
             }
             else if(dflag[i] == 3) { /* read Logical column */
-	        if(fits_read_col(infits, TLOGICAL, icol, jl, 1, 
-		    rlength, &lnull, cdata, &anynul, &status)) { 
+	        if(fits_read_col(infits, TLOGICAL, icol, jl, 1,
+		    rlength, &lnull, cdata, &anynul, &status)) {
                     sprintf(errtmp,"Row #%ld Col.#%d: ",jl,icol);
 	            wrtferr(out,errtmp,&status,2);
                 }
                 else {
 		  for (k = 0; k < rlength; k++) {
                     if (cdata[k] > 2) {
-                      sprintf(errmes, 
-                      "Logical value in row #%ld, column #%d not equal to 'T', 'F', or 0", 
-                         jl, icol); 
+                      sprintf(errmes,
+                      "Logical value in row #%ld, column #%d not equal to 'T', 'F', or 0",
+                         jl, icol);
                        wrterr(out,errmes,1);
                        strcpy(errmes,
            "             (This error is reported only once; other rows may have errors).");
                        print_fmt(out,errmes,13);
-                       break; 
+                       break;
                     }
                   }
                 }
@@ -485,7 +485,7 @@ void test_data(fitsfile *infits, 	/* input fits file   */
     free(cdata);
     free(idata);
 
-    free(usrdata.datamax); 
+    free(usrdata.datamax);
     free(usrdata.datamin);
     free(usrdata.tnull);
     free(maxminflag);
@@ -494,7 +494,7 @@ void test_data(fitsfile *infits, 	/* input fits file   */
     free(perbyte);
     free(isVarQFormat);
 
-data_end: 
+data_end:
     free(desclist);
     for ( i = 0; i< ncols; i++) {
 	(hduptr->datamax[i])[12] = '\0';
@@ -503,20 +503,20 @@ data_end:
     }
 
     return;
-} 
+}
 
 /***********************************************************************/
 /* iterator work function */
 
-    int iterdata(long totaln, 
-		 long offset, 
+    int iterdata(long totaln,
+		 long offset,
 		 long firstn,
 		 long nrows,
 		 int narray,
 		 iteratorCol *iter_col,
 		 void *usrdata
 		 )
-{ 
+{
     static UserIter *usrpt;
 /*
     static FitsHdu  *hdupt;
@@ -528,11 +528,11 @@ data_end:
     static int *flag_minmax = 0;			/* define the initial min and max value */
     static long *repeat;
     static int *datatype;
-    static int find_badbit = 0; 
-    static int find_baddot = 0; 
-    static int find_badspace = 0; 
-    static int find_badchar = 0; 
-    static int find_badlog = 0; 
+    static int find_badbit = 0;
+    static int find_baddot = 0;
+    static int find_badspace = 0;
+    static int find_badchar = 0;
+    static int find_badlog = 0;
 
     double  *data;
     unsigned char *ldata;
@@ -543,7 +543,7 @@ data_end:
     /* bit column working space */
     static unsigned char bdata;
 
-    int i; 
+    int i;
     long j,k,l;
     long nelem;
 
@@ -559,23 +559,23 @@ data_end:
 	flag_minmax = (int *)calloc(nnum+ncmp, sizeof(int));
 	repeat   = (long *)calloc(narray,sizeof(long));
 	datatype = (int *)calloc(narray,sizeof(int));
-        for (i=0; i < narray; i++) {  
+        for (i=0; i < narray; i++) {
 	    repeat[i] = fits_iter_get_repeat(&(iter_col[i]));
-	    datatype[i] = fits_iter_get_datatype(&(iter_col[i])); 
+	    datatype[i] = fits_iter_get_datatype(&(iter_col[i]));
         }
-        find_badbit = 0; 
-        find_baddot = 0; 
-        find_badspace = 0; 
-        find_badchar = 0; 
-        find_badlog = 0; 
+        find_badbit = 0;
+        find_baddot = 0;
+        find_badspace = 0;
+        find_badchar = 0;
+        find_badlog = 0;
     }
 
-    /* columns from  1 to nnum are scalar numerical columns. 
+    /* columns from  1 to nnum are scalar numerical columns.
        columns from  nnum+1 to  nnum+ncmp are complex columns. (not used any more)
        columns from  nnum+ncmp are text columns */
 
     /* deal with the numerical column */
-    for (i=0; i < nnum+ncmp; i++) { 
+    for (i=0; i < nnum+ncmp; i++) {
 	data = (double *) fits_iter_get_array(&(iter_col[i]));
 	j = 1;
 	nelem = nrows * repeat[i];
@@ -584,19 +584,19 @@ data_end:
         find_badbit = 0;
 
         /* check for the bit jurisfication  */
-        if(!find_badbit && usrpt->indatatyp[i] == TBIT ) { 
+        if(!find_badbit && usrpt->indatatyp[i] == TBIT ) {
             for (k = 0; k < nrows; k++) {
                j = (k+1)*repeat[i];
-               bdata = (unsigned char)data[j]; 
-               if( bdata & usrpt->mask[i] ) { 
-                  sprintf(errmes, 
-                    "Row #%ld, and Column #%d: X vector ", firstn+k, 
-                      fits_iter_get_colnum(&(iter_col[i]))); 
+               bdata = (unsigned char)data[j];
+               if( bdata & usrpt->mask[i] ) {
+                  sprintf(errmes,
+                    "Row #%ld, and Column #%d: X vector ", firstn+k,
+                      fits_iter_get_colnum(&(iter_col[i])));
                   for (l = 1; l<= repeat[i]; l++) {
                      sprintf(comm, "0x%02x ", (unsigned char) data[k*repeat[i]+l]);
-                     strcat(errmes,comm); 
+                     strcat(errmes,comm);
                   }
-                  strcat(errmes,"is not left justified."); 
+                  strcat(errmes,"is not left justified.");
                   wrterr(usrpt->out,errmes,2);
                   strcpy(errmes,
           "             (Other rows may have errors).");
@@ -605,11 +605,11 @@ data_end:
                   break;
                }
             }
-        }  
+        }
     }
 
     /* deal with character and logical columns */
-    for (i = nnum + ncmp; i < nnum + ncmp + ntxt; i++) { 
+    for (i = nnum + ncmp; i < nnum + ncmp + ntxt; i++) {
         if(datatype[i] == TSTRING ) {	/* character */
             nelem = nrows;
 	    if(nelem == 0) continue;
@@ -624,9 +624,9 @@ data_end:
                 while (ucdata[j] != 0) {
 
                   if ((ucdata[j] > 126) || (ucdata[j] < 32)) {
-                    sprintf(errmes, 
-                    "String in row #%ld, column #%d contains non-ASCII text.", firstn+k, 
-                      fits_iter_get_colnum(&(iter_col[i]))); 
+                    sprintf(errmes,
+                    "String in row #%ld, column #%d contains non-ASCII text.", firstn+k,
+                      fits_iter_get_colnum(&(iter_col[i])));
                       wrterr(usrpt->out,errmes,1);
                       strcpy(errmes,
           "             (Other rows may have errors).");
@@ -650,23 +650,23 @@ data_end:
             if (!find_badlog) {
                 for(j = 1; j <= nrows * repeat[i]; j++) {
                   if (ldata[j] > 2) {
-                    sprintf(errmes, 
-                    "Logical value in row #%ld, column #%d not equal to 'T', 'F', or 0", 
-                       (firstn+j - 2)/repeat[i] +1, 
-                       fits_iter_get_colnum(&(iter_col[i]))); 
+                    sprintf(errmes,
+                    "Logical value in row #%ld, column #%d not equal to 'T', 'F', or 0",
+                       (firstn+j - 2)/repeat[i] +1,
+                       fits_iter_get_colnum(&(iter_col[i])));
                        wrterr(usrpt->out,errmes,1);
                        strcpy(errmes,
          "             (Other rows may have similar errors).");
                        print_fmt(usrpt->out,errmes,13);
                        find_badlog = 1;
-                       break; 
+                       break;
                   }
                 }
             }
         }
     }
 
-    for (i = nnum + ncmp +ntxt; i < nnum + ncmp + ntxt + nfloat; i++) { 
+    for (i = nnum + ncmp +ntxt; i < nnum + ncmp + ntxt + nfloat; i++) {
             nelem = nrows;
 	    if(nelem == 0) continue;
 	    cdata = (char **) fits_iter_get_array(&(iter_col[i]));
@@ -683,10 +683,10 @@ data_end:
 		        floatvalue++;
 
                   if (strlen(floatvalue)) {  /* ignore completely blank fields */
-		  
-                    sprintf(errmes, 
-                     "Number in row #%ld, column #%d has no decimal point:", firstn+k, 
-                     fits_iter_get_colnum(&(iter_col[i]))); 
+
+                    sprintf(errmes,
+                     "Number in row #%ld, column #%d has no decimal point:", firstn+k,
+                     fits_iter_get_colnum(&(iter_col[i])));
                      wrterr(usrpt->out,errmes,1);
                      strcpy(errmes, floatvalue);
                      strcat(errmes,
@@ -714,9 +714,9 @@ data_end:
 		    }
 
                     if (strchr(floatvalue, ' ') ) {
-                      sprintf(errmes, 
-                       "Number in row #%ld, column #%d has embedded space:", firstn+k, 
-                         fits_iter_get_colnum(&(iter_col[i]))); 
+                      sprintf(errmes,
+                       "Number in row #%ld, column #%d has embedded space:", firstn+k,
+                         fits_iter_get_colnum(&(iter_col[i])));
                          wrterr(usrpt->out,errmes,1);
                          strcpy(errmes, floatvalue);
                          strcat(errmes,
@@ -730,27 +730,27 @@ data_end:
           }
     }
 
-    if(firstn + nrows - 1 == totaln) { 
+    if(firstn + nrows - 1 == totaln) {
 	free(flag_minmax);
 	free(datatype);
-	free(repeat); 
+	free(repeat);
     }
-    return 0; 
+    return 0;
 }
 
 /*************************************************************
 *
-*      test_agap 
+*      test_agap
 *
-*   Test the bytes between the ASCII table column. 
+*   Test the bytes between the ASCII table column.
 *
-*	
+*
 *************************************************************/
-void test_agap(fitsfile *infits, 	/* input fits file   */ 
+void test_agap(fitsfile *infits, 	/* input fits file   */
 	      FILE	*out,		/* output ascii file */
 	      FitsHdu    *hduptr	/* fits hdu pointer  */
             )
-{ 
+{
     int ncols;
     LONGLONG nrows;
     long irows;
@@ -772,12 +772,12 @@ void test_agap(fitsfile *infits, 	/* input fits file   */
 
     if(hduptr->hdutype != ASCII_TBL) return;
     ncols = hduptr->ncols;
-    fits_get_num_rowsll(infits,&nrows,&status); 
-    status = 0; 
+    fits_get_num_rowsll(infits,&nrows,&status);
+    status = 0;
 
     fits_get_rowsize(infits, &irows, &status);
-    status = 0; 
-    rowlen = hduptr->naxes[0];  
+    status = 0;
+    rowlen = hduptr->naxes[0];
     data = (unsigned char*)malloc(rowlen*sizeof(unsigned char)*irows);
 
     /* Create a template row with data fields filled with 1s.
@@ -786,7 +786,7 @@ void test_agap(fitsfile *infits, 	/* input fits file   */
 
     temp = (int*)malloc(rowlen * sizeof(int));
     for (m = 0; m<rowlen; m++ ) temp[m]=0;
-    for (k = 1; k<=ncols; k++ ) { 
+    for (k = 1; k<=ncols; k++ ) {
 	sprintf(keyname, "TFORM%d",k);
 	fits_read_key_str(infits, keyname, tform, comment, &status);
 	if (fits_ascii_tform(tform, &typecode, &width, &decimals, &status))
@@ -796,52 +796,52 @@ void test_agap(fitsfile *infits, 	/* input fits file   */
 	for (t = tbcol; t < tbcol+width; t++) temp[t-1]=1;
     }
 
-    i = nrows; 
-    while( i > 0) { 
-	if( i > irows)  
-	    ntodo = irows; 
+    i = nrows;
+    while( i > 0) {
+	if( i > irows)
+	    ntodo = irows;
         else
-	    ntodo = i; 
-        
+	    ntodo = i;
+
         p = data;
-        if(fits_read_tblbytes(infits,firstrow,1, rowlen*ntodo, 
-	    data, &status)){  
+        if(fits_read_tblbytes(infits,firstrow,1, rowlen*ntodo,
+	    data, &status)){
 	    wrtferr(out,"",&status,1);
-        } 
-        for (j = 0; j<rowlen*ntodo; j++ ) { 
+        }
+        for (j = 0; j<rowlen*ntodo; j++ ) {
             if(!isascii(*p))  {
-	        if(!nerr) { 
+	        if(!nerr) {
 #if (USE_LL_SUFFIX == 1)
-		     sprintf(errmes, 
-			"row %lld contains non-ASCII characters.", j/rowlen+1); 
+		     sprintf(errmes,
+			"row %lld contains non-ASCII characters.", j/rowlen+1);
 #else
-		     sprintf(errmes, 
-			"row %ld contains non-ASCII characters.", j/rowlen+1); 
+		     sprintf(errmes,
+			"row %ld contains non-ASCII characters.", j/rowlen+1);
 #endif
                      wrterr(out,errmes,1);
-                } 
+                }
                 nerr++;
             } else if(isascii(*p) && !isprint(*p))  {
-	        if(temp[j%rowlen]) { 
-	             if(!nerr) { 
+	        if(temp[j%rowlen]) {
+	             if(!nerr) {
 #if (USE_LL_SUFFIX == 1)
-		          sprintf(errmes, 
-			     "row %lld data contains non-ASCII-text characters.", j/rowlen+1); 
+		          sprintf(errmes,
+			     "row %lld data contains non-ASCII-text characters.", j/rowlen+1);
 #else
-		          sprintf(errmes, 
-			     "row %ld data contains non-ASCII-text characters.", j/rowlen+1); 
+		          sprintf(errmes,
+			     "row %ld data contains non-ASCII-text characters.", j/rowlen+1);
 #endif
                           wrterr(out,errmes,1);
-                     } 
+                     }
                      nerr++;
-                } 
-            } 
+                }
+            }
 	    p++;
         }
 	firstrow += ntodo;
 	i -=ntodo;
-    } 
-    if(nerr) { 
+    }
+    if(nerr) {
 	sprintf(errmes,
 	    "This ASCII table contains %ld non-ASCII-text characters",nerr);
         wrterr(out,errmes,1);
@@ -850,21 +850,21 @@ void test_agap(fitsfile *infits, 	/* input fits file   */
     free(temp);
     return;
 }
-	    
+
 
 /*************************************************************
 *
-*      test_checksum 
+*      test_checksum
 *
-*   Test the checksum of the hdu 
+*   Test the checksum of the hdu
 *
-*	
+*
 *************************************************************/
-void test_checksum(fitsfile *infits, 	/* input fits file   */ 
+void test_checksum(fitsfile *infits, 	/* input fits file   */
 	      FILE	*out		/* output ascii file */
             )
-{ 
-    int status = 0; 
+{
+    int status = 0;
     int dataok, hduok;
 
     if (fits_verify_chksum(infits, &dataok, &hduok, &status))
@@ -873,15 +873,15 @@ void test_checksum(fitsfile *infits, 	/* input fits file   */
         return;
     }
 
-    if(dataok == -1)  
+    if(dataok == -1)
 	wrtwrn(out,
         "Data checksum is not consistent with  the DATASUM keyword",0);
 
-    if(hduok == -1 )  { 
-	if(dataok == 1) { 
+    if(hduok == -1 )  {
+	if(dataok == 1) {
 	   wrtwrn(out,
   "Invalid CHECKSUM means header has been modified. (DATASUM is OK) ",0);
-        } 
+        }
 	else {
 	   wrtwrn(out, "HDU checksum is not in agreement with CHECKSUM.",0);
         }

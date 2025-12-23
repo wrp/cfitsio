@@ -143,7 +143,7 @@ int ffp3dd(fitsfile *fptr,   /* I - FITS file pointer                     */
 
         fits_write_compressed_img(fptr, TDOUBLE, fpixel, lpixel,
             0,  array, NULL, status);
-    
+
         return(*status);
     }
 
@@ -193,7 +193,7 @@ int ffpssd(fitsfile *fptr,   /* I - FITS file pointer                       */
   Write a subsection of pixels to the primary array or image.
   A subsection is defined to be any contiguous rectangular
   array of pixels within the n-dimensional FITS data file.
-  Data conversion and scaling will be performed if necessary 
+  Data conversion and scaling will be performed if necessary
   (e.g, if the datatype of the FITS array is not the same as
   the array being written).
 */
@@ -214,7 +214,7 @@ int ffpssd(fitsfile *fptr,   /* I - FITS file pointer                       */
 
         fits_write_compressed_img(fptr, TDOUBLE, fpixel, lpixel,
             0,  array, NULL, status);
-    
+
         return(*status);
     }
 
@@ -232,7 +232,7 @@ int ffpssd(fitsfile *fptr,   /* I - FITS file pointer                       */
     }
 
     for (ii = 0; ii < naxis; ii++)
-    {    
+    {
       fpix[ii]=fpixel[ii];
       irange[ii]=lpixel[ii]-fpixel[ii]+1;
       dimen[ii]=naxes[ii];
@@ -289,7 +289,7 @@ int ffpssd(fitsfile *fptr,   /* I - FITS file pointer                       */
            pstart += off2;
          }
          st2 = st20;
-         st3 = st3+off3;    
+         st3 = st3+off3;
         }
         st3 = st30;
         st4 = st4+off4;
@@ -342,7 +342,7 @@ int ffpcld( fitsfile *fptr,  /* I - FITS file pointer                       */
             int  *status)    /* IO - error status                           */
 /*
   Write an array of values to a column in the current FITS HDU.
-  The column number may refer to a real column in an ASCII or binary table, 
+  The column number may refer to a real column in an ASCII or binary table,
   or it may refer to a virtual column in a 1 or more grouped FITS primary
   array.  FITSIO treats a primary array as a binary table
   with 2 vector columns: the first column contains the group parameters (often
@@ -350,7 +350,7 @@ int ffpcld( fitsfile *fptr,  /* I - FITS file pointer                       */
   Each row of the table represents a group in the case of multigroup FITS
   images.
 
-  The input array of values will be converted to the datatype of the column 
+  The input array of values will be converted to the datatype of the column
   and will be inverse-scaled by the FITS TSCALn and TZEROn values if necessary.
 */
 {
@@ -382,7 +382,7 @@ int ffpcld( fitsfile *fptr,  /* I - FITS file pointer                       */
         return(*status);
     maxelem = maxelem2;
 
-    if (tcode == TSTRING)   
+    if (tcode == TSTRING)
          ffcfmt(tform, cform);     /* derive C format for writing strings */
 
     /*
@@ -392,7 +392,7 @@ int ffpcld( fitsfile *fptr,  /* I - FITS file pointer                       */
       we must convert the raw values into the scaled and/or machine dependent
       format in a temporary buffer that has been allocated for this purpose.
     */
-    if (scale == 1. && zero == 0. && 
+    if (scale == 1. && zero == 0. &&
        CFITSIO_MACHINE == NATIVE && tcode == TDOUBLE)
     {
         writeraw = 1;
@@ -421,14 +421,14 @@ int ffpcld( fitsfile *fptr,  /* I - FITS file pointer                       */
            will fit in the buffer space or to the number of pixels that remain
            in the current vector, which ever is smaller.
         */
-        ntodo = (long) minvalue(remain, maxelem);      
+        ntodo = (long) minvalue(remain, maxelem);
         ntodo = (long) minvalue(ntodo, (repeat - elemnum));
 
         wrtptr = startpos + ((LONGLONG)rownum * rowlen) + (elemnum * incre);
 
         ffmbyt(fptr, wrtptr, IGNORE_EOF, status); /* move to write position */
 
-        switch (tcode) 
+        switch (tcode)
         {
             case (TDOUBLE):
               if (writeraw)
@@ -454,15 +454,15 @@ int ffpcld( fitsfile *fptr,  /* I - FITS file pointer                       */
                 break;
 
             case (TBYTE):
- 
-                ffr8fi1(&array[next], ntodo, scale, zero, 
+
+                ffr8fi1(&array[next], ntodo, scale, zero,
                         (unsigned char *) buffer, status);
                 ffpi1b(fptr, ntodo, incre, (unsigned char *) buffer, status);
                 break;
 
             case (TSHORT):
 
-                ffr8fi2(&array[next], ntodo, scale, zero, 
+                ffr8fi2(&array[next], ntodo, scale, zero,
                        (short *) buffer, status);
                 ffpi2b(fptr, ntodo, incre, (short *) buffer, status);
                 break;
@@ -565,7 +565,7 @@ int ffpclm( fitsfile *fptr,   /* I - FITS file pointer                       */
 /*
   Write an array of double complex values to a column in the current FITS HDU.
   Each complex number if interpreted as a pair of float values.
-  The column number may refer to a real column in an ASCII or binary table, 
+  The column number may refer to a real column in an ASCII or binary table,
   or it may refer to a virtual column in a 1 or more grouped FITS primary
   array.  FITSIO treats a primary array as a binary table
   with 2 vector columns: the first column contains the group parameters (often
@@ -583,7 +583,7 @@ int ffpclm( fitsfile *fptr,   /* I - FITS file pointer                       */
 {
     /* simply multiply the number of elements by 2, and call ffpcld */
 
-    ffpcld(fptr, colnum, firstrow, (firstelem - 1) * 2 + 1, 
+    ffpcld(fptr, colnum, firstrow, (firstelem - 1) * 2 + 1,
             nelem * 2, array, status);
     return(*status);
 }
@@ -599,9 +599,9 @@ int ffpcnd( fitsfile *fptr,  /* I - FITS file pointer                       */
 /*
   Write an array of elements to the specified column of a table.  Any input
   pixels equal to the value of nulvalue will be replaced by the appropriate
-  null value in the output FITS file. 
+  null value in the output FITS file.
 
-  The input array of values will be converted to the datatype of the column 
+  The input array of values will be converted to the datatype of the column
   and will be inverse-scaled by the FITS TSCALn and TZEROn values if necessary
 */
 {
@@ -639,16 +639,16 @@ int ffpcnd( fitsfile *fptr,  /* I - FITS file pointer                       */
         repeat *= 2;
     }
 
-    /* if variable length array, first write the whole input vector, 
+    /* if variable length array, first write the whole input vector,
        then go back and fill in the nulls */
     if (tcode < 0) {
       if (ffpcld(fptr, colnum, firstrow, firstelem, nelem, array, status) > 0) {
-	if (*status == NUM_OVERFLOW) 
+	if (*status == NUM_OVERFLOW)
 	{
 	  /* ignore overflows, which are possibly the null pixel values */
 	  /*  overflow = 1;   */
 	  *status = 0;
-	} else { 
+	} else {
           return(*status);
 	}
       }
@@ -688,7 +688,7 @@ int ffpcnd( fitsfile *fptr,  /* I - FITS file pointer                       */
             if (tcode > 0) {  /* variable length arrays have already been written */
               if (ffpcld(fptr, colnum, fstrow, fstelm, ngood, &array[ii-ngood],
                 status) > 0) {
-		if (*status == NUM_OVERFLOW) 
+		if (*status == NUM_OVERFLOW)
 		{
 		  overflow = 1;
 		  *status = 0;
@@ -748,7 +748,7 @@ int ffr8fi1(double *input,         /* I - array of values to be converted  */
     double dvalue;
 
     if (scale == 1. && zero == 0.)
-    {       
+    {
         for (ii = 0; ii < ntodo; ii++)
         {
             if (input[ii] < DUCHAR_MIN)
@@ -803,7 +803,7 @@ int ffr8fi2(double *input,     /* I - array of values to be converted  */
     double dvalue;
 
     if (scale == 1. && zero == 0.)
-    {       
+    {
         for (ii = 0; ii < ntodo; ii++)
         {
             if (input[ii] < DSHRT_MIN)
@@ -863,7 +863,7 @@ int ffr8fi4(double *input,     /* I - array of values to be converted  */
     double dvalue;
 
     if (scale == 1. && zero == 0.)
-    {       
+    {
         for (ii = 0; ii < ntodo; ii++)
         {
             if (input[ii] < DINT_MIN)
@@ -923,7 +923,7 @@ int ffr8fi8(double *input,     /* I - array of values to be converted  */
     double dvalue;
 
     if (scale == 1. && zero ==  9223372036854775808.)
-    {       
+    {
         /* Writing to unsigned long long column. Input values must not be negative */
         /* Instead of subtracting 9223372036854775808, it is more efficient */
         /* and more precise to just flip the sign bit with the XOR operator */
@@ -943,7 +943,7 @@ int ffr8fi8(double *input,     /* I - array of values to be converted  */
         }
     }
     else if (scale == 1. && zero == 0.)
-    {       
+    {
         for (ii = 0; ii < ntodo; ii++)
         {
             if (input[ii] < DLONGLONG_MIN)
@@ -1002,7 +1002,7 @@ int ffr8fr4(double *input,     /* I - array of values to be converted  */
     long ii;
 
     if (scale == 1. && zero == 0.)
-    {       
+    {
         for (ii = 0; ii < ntodo; ii++)
                 output[ii] = (float) input[ii];
     }
@@ -1028,7 +1028,7 @@ int ffr8fr8(double *input,     /* I - array of values to be converted  */
     long ii;
 
     if (scale == 1. && zero == 0.)
-    {       
+    {
       memcpy(output, input, ntodo * sizeof(double) ); /* copy input to output */
     }
     else
@@ -1055,11 +1055,11 @@ int ffr8fstr(double *input,     /* I - array of values to be converted  */
     long ii;
     double dvalue;
     char *cptr;
-    
+
     cptr = output;
 
     if (scale == 1. && zero == 0.)
-    {       
+    {
         for (ii = 0; ii < ntodo; ii++)
         {
            snprintf(output, DBUFFSIZE, cform, input[ii]);
@@ -1084,6 +1084,6 @@ int ffr8fstr(double *input,     /* I - array of values to be converted  */
 
     /* replace any commas with periods (e.g., in French locale) */
     while ((cptr = strchr(cptr, ','))) *cptr = '.';
-    
+
     return(*status);
 }

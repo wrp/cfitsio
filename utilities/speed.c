@@ -11,7 +11,7 @@
   Every program which uses the CFITSIO interface must include the
   the fitsio.h header file.  This contains the prototypes for all
   the routines and defines the error status values and other symbolic
-  constants used in the interface.  
+  constants used in the interface.
 */
 #include "fitsio.h"
 
@@ -100,7 +100,7 @@ int main()
         printf("write error \n");
 
     fflush(diskfile);  /* flush all buffers to disk */
-    
+
     gettime(&elapse, &elapcpu, &status);
 
     cpufrac = elapcpu / elapse * 100.;
@@ -128,42 +128,42 @@ int main()
     fclose(diskfile);
     remove(filename);
 
-    status = 0;     
+    status = 0;
     fptr = 0;
 
     if (fits_create_file(&fptr, filename, &status)) /* create new FITS file */
-       printerror( status);          
-   
-    if (writesimage(fptr, &status))
-       printerror( status);     
+       printerror( status);
 
-    if (fits_close_file(fptr, &status))     
+    if (writesimage(fptr, &status))
+       printerror( status);
+
+    if (fits_close_file(fptr, &status))
          printerror( status );
 
     remove(filename);               /* Delete old file if it already exists */
 
     if (fits_create_file(&fptr, filename, &status)) /* create new FITS file */
-       printerror( status);          
+       printerror( status);
 
     if (writeimage(fptr, &status))
-       printerror( status);     
+       printerror( status);
 
     if (writebintable(fptr, &status))
-       printerror( status);     
+       printerror( status);
 
     if (writeasctable(fptr, &status))
-       printerror( status);     
+       printerror( status);
 
     if (readimage(fptr, &status))
-       printerror( status);     
+       printerror( status);
 
     if (readbtable(fptr, &status))
-       printerror( status);     
+       printerror( status);
 
     if (readatable(fptr, &status))
-       printerror( status);     
+       printerror( status);
 
-    if (fits_close_file(fptr, &status))     
+    if (fits_close_file(fptr, &status))
          printerror( status );
 
     #ifndef _MSC_VER
@@ -189,12 +189,12 @@ int writeimage(fitsfile *fptr, int *status)
 
     /* initialize FITS image parameters */
     int bitpix   =  32;   /* 32-bit  signed integer pixel values       */
-    long naxis    =   2;  /* 2-dimensional image                            */    
+    long naxis    =   2;  /* 2-dimensional image                            */
     long naxes[2] = {XSIZE, YSIZE }; /* image size */
 
     /* write the required keywords for the primary array image */
     if ( fits_create_img(fptr, bitpix, naxis, naxes, status) )
-         printerror( *status );          
+         printerror( *status );
 
     printf("\nWrite %dx%d I*4 image, %d pixels/loop:   ",XSIZE,YSIZE,SHTSIZE);
     marktime(status);
@@ -229,12 +229,12 @@ int writesimage(fitsfile *fptr, int *status)
 
     /* initialize FITS image parameters */
     int bitpix   =  16;   /* 16-bit  signed integer pixel values       */
-    long naxis    =   2;  /* 2-dimensional image                            */    
+    long naxis    =   2;  /* 2-dimensional image                            */
     long naxes[2] = {XSIZE, YSIZE }; /* image size */
 
     /* write the required keywords for the primary array image */
     if ( fits_create_img(fptr, bitpix, naxis, naxes, status) )
-         printerror( *status );          
+         printerror( *status );
 
     printf("\nWrite %dx%d I*2 image, %d pixels/loop:   ",XSIZE,YSIZE,SHTSIZE);
     marktime(status);
@@ -378,7 +378,7 @@ int readimage( fitsfile *fptr, int *status )
     double elapse;
 
     /* move to the primary array */
-    if ( fits_movabs_hdu(fptr, 1, &hdutype, status) ) 
+    if ( fits_movabs_hdu(fptr, 1, &hdutype, status) )
          printerror( *status );
 
     printf("\nRead back image                                 ");
@@ -414,14 +414,14 @@ int readbtable( fitsfile *fptr, int *status )
     double elapse;
 
     /* move to the table */
-    if ( fits_movrel_hdu(fptr, 1, &hdutype, status) ) 
+    if ( fits_movrel_hdu(fptr, 1, &hdutype, status) )
            printerror( *status );
 
     /* get table row size and optimum number of rows to read per loop */
     fits_get_rowsize(fptr, &nrows, status);
     nrows = minvalue(nrows, SHTSIZE);
-    
-    /*  read the columns */  
+
+    /*  read the columns */
     nremain = BROWS;
 
     printf("Read back BINTABLE                              ");
@@ -434,7 +434,7 @@ int readbtable( fitsfile *fptr, int *status )
                      lnull, sarray, &anynull, status);
       ffgcvj(fptr, 2, firstrow, firstelem, ntodo,
                      lnull, sarray, &anynull, status);
-      firstrow += ntodo; 
+      firstrow += ntodo;
       nremain  -= ntodo;
     }
 
@@ -462,14 +462,14 @@ int readatable( fitsfile *fptr, int *status )
     double elapse;
 
     /* move to the table */
-    if ( fits_movrel_hdu(fptr, 1, &hdutype, status) ) 
+    if ( fits_movrel_hdu(fptr, 1, &hdutype, status) )
            printerror( *status );
 
     /* get table row size and optimum number of rows to read per loop */
     fits_get_rowsize(fptr, &nrows, status);
     nrows = minvalue(nrows, SHTSIZE);
- 
-    /*  read the columns */  
+
+    /*  read the columns */
     nremain = AROWS;
 
     printf("Read back ASCII Table                           ");
@@ -503,7 +503,7 @@ void printerror( int status)
     /*****************************************************/
 
     char status_str[FLEN_STATUS], errmsg[FLEN_ERRMSG];
-  
+
     if (status)
       fprintf(stderr, "\n*** Error occurred during program execution ***\n");
 
@@ -511,7 +511,7 @@ void printerror( int status)
     fprintf(stderr, "\nstatus = %d: %s\n", status, status_str);
 
     /* get first message; null if stack is empty */
-    if ( fits_read_errmsg(errmsg) ) 
+    if ( fits_read_errmsg(errmsg) )
     {
          fprintf(stderr, "\nError message stack:\n");
          fprintf(stderr, " %s\n", errmsg);
@@ -584,7 +584,7 @@ int gettime(double *elapse, float *elapscpu, int *status)
 #else
 /* set the elapsed time the same as the CPU time on Windows machines */
     *elapscpu = (float) ((ecpu - scpu) * 1.0 / CLOCKTICKS);
-    *elapse = *elapscpu;  
+    *elapse = *elapscpu;
 #endif
     return( *status );
 }

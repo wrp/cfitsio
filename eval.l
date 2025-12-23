@@ -115,7 +115,7 @@ static int expr_read( ParseData *lParse, char *buf, int nbytes );
 #define HEX_F "1111"
 #define HEX_X "xxxx"
 
-/* 
+/*
    MJT - 13 June 1996
    read from buffer instead of stdin
    (as per old ftools.skel)
@@ -348,7 +348,7 @@ nl		\n
 		  return( LONG );
 		}
 
-                  
+
 {integer}	{
                   yylval->lng = atol(yytext);
 		  return( LONG );
@@ -381,7 +381,7 @@ nl		\n
 		  } else if( !fits_strcasecmp(yytext,"#SNULL") ) {
 		     return( SNULLREF );
 		  } else {
-                     int len; 
+                     int len;
 		     int result;
                      if (yytext[1] == '$') {
                         len = strlen(yytext) - 3;
@@ -419,7 +419,7 @@ nl		\n
 		    strncpy(yylval->str,&yytext[1],len);
 		    yylval->str[len] = '\0';
 		    yytext = yylval->str;
-		 } 
+		 }
 		 type = fits_parser_yyGetVariable(yylParse, yytext, (yylval));
 		 return( type );
 		}
@@ -429,11 +429,11 @@ nl		\n
                   fname = &(yylval->str[0]);
 		  while( (fname[len]=toupper(yytext[len])) ) len++;
 
-                  if(      FSTRCMP(fname,"BOX(")==0 
-                        || FSTRCMP(fname,"CIRCLE(")==0 
-                        || FSTRCMP(fname,"ELLIPSE(")==0 
-                        || FSTRCMP(fname,"NEAR(")==0 
-                        || FSTRCMP(fname,"ISNULL(")==0 
+                  if(      FSTRCMP(fname,"BOX(")==0
+                        || FSTRCMP(fname,"CIRCLE(")==0
+                        || FSTRCMP(fname,"ELLIPSE(")==0
+                        || FSTRCMP(fname,"NEAR(")==0
+                        || FSTRCMP(fname,"ISNULL(")==0
                          )
                      /* Return type is always boolean  */
 		     return( BFUNCTION );
@@ -453,7 +453,7 @@ nl		\n
                   else if( FSTRCMP(fname,"STRSTR(")==0 )
                      return( IFUNCTION );  /* Returns integer */
 
-                  else 
+                  else
 		     return( FUNCTION  );
 		}
 {intcast}	{ return( INTCAST ); }
@@ -478,13 +478,13 @@ int yywrap(yyscan_t scanner)
   /* MJT -- 13 June 1996
      Supplied for compatibility with
      pre-2.5.1 versions of flex which
-     do not recognize %option noyywrap 
+     do not recognize %option noyywrap
   */
   return(1);
 }
 
-/* 
-   expr_read is lifted from old ftools.skel. 
+/*
+   expr_read is lifted from old ftools.skel.
    Now we can use any version of flex with
    no .skel file necessary! MJT - 13 June 1996
 
@@ -496,7 +496,7 @@ int yywrap(yyscan_t scanner)
 static int expr_read(ParseData *lParse, char *buf, int nbytes)
 {
  int n;
- 
+
  n = 0;
  if( !lParse->is_eobuf ) {
      do {
@@ -548,7 +548,7 @@ int fits_parser_yyGetVariable( ParseData *lParse, char *varName, FITS_PARSER_YYS
 static int find_variable(ParseData *lParse, char *varName)
 {
    int i;
- 
+
    if( lParse->nCols )
       for( i=0; i<lParse->nCols; i++ ) {
          if( ! fits_strncasecmp(lParse->varData[i].name,varName,MAXVARNAME) ) {

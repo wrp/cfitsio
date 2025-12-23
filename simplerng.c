@@ -1,4 +1,4 @@
-/* 
+/*
    Simple Random Number Generators
        - getuniform - uniform deviate [0,1]
        - getnorm    - gaussian (normal) deviate (mean=0, stddev=1)
@@ -100,7 +100,7 @@ unsigned int simplerng_getuint()
      a scalar to make the uint in the [0,UINT_MAX] range */
   return simplerng_getuint_pr(&m_u, &m_v);
 }
-    
+
 /* Get normal (Gaussian) random sample with mean=0, stddev=1 */
 double simplerng_getnorm()
 {
@@ -131,15 +131,15 @@ double simplerng_getnorm()
 
 /* Poisson deviate for expected mean value lambda.
    lambda should be in the range [0, infinity]
-   
+
    For small lambda, a simple rejection method is used
    For large lambda, an approximation is used
 */
 int simplerng_getpoisson(double lambda)
 {
   if (lambda < 0) lambda = 0;
-  return ((lambda < 15.0) 
-	  ? simplerng_poisson_small(lambda) 
+  return ((lambda < 15.0)
+	  ? simplerng_poisson_small(lambda)
 	  : simplerng_poisson_large(lambda));
 }
 

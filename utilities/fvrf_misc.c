@@ -1,10 +1,10 @@
 /******************************************************************************
 * Function
-*      wrtout: print messages in the streams of stdout and out.  
-*      wrterr: print erro messages  in the streams of stderr and out.  
-*      wrtferr: print cfitsio erro messages in the streams of stderr and out.  
-*      wrtwrn: print warning messages in the streams of stdout and out.  
-*      wrtsep: print seperators.  
+*      wrtout: print messages in the streams of stdout and out.
+*      wrterr: print erro messages  in the streams of stderr and out.
+*      wrtferr: print cfitsio erro messages in the streams of stderr and out.
+*      wrtwrn: print warning messages in the streams of stdout and out.
+*      wrtsep: print seperators.
 *      num_err_wrn: Return the number of errors and  warnings.
 *
 *******************************************************************************/
@@ -13,18 +13,18 @@ static int nwrns = 0;
 static int nerrs = 0;
 static char temp[512];
 
-void num_err_wrn(int *num_err, int *num_wrn) 
-{ 
+void num_err_wrn(int *num_err, int *num_wrn)
+{
     *num_wrn = nwrns;
     *num_err = nerrs;
     return;
 }
 
-void reset_err_wrn() 
-{ 
-    nwrns = 0; 
+void reset_err_wrn()
+{
+    nwrns = 0;
     nerrs = 0;
-    return; 
+    return;
 }
 
 int wrtout(FILE *out, char *mess)
@@ -36,7 +36,7 @@ int wrtout(FILE *out, char *mess)
 
 int wrtwrn(FILE *out, char *mess, int isheasarc)
 {
-    if(err_report) return 0;           /* Don't print the warnings */    
+    if(err_report) return 0;           /* Don't print the warnings */
     if(!heasarc_conv && isheasarc) return 0;  /* heasarc warnings  but with
                                                  heasarc convention turns off */
     nwrns++;
@@ -44,9 +44,9 @@ int wrtwrn(FILE *out, char *mess, int isheasarc)
     strcat(temp,mess);
     if(isheasarc) strcat(temp," (HEASARC Convention)");
     print_fmt(out,temp,13);
-/*    if(nwrns > MAXWRNS ) { 
+/*    if(nwrns > MAXWRNS ) {
 	 fprintf(stderr,"??? Too many Warnings! I give up...\n");
-          
+
     }  */
     return nwrns;
 }
@@ -54,9 +54,9 @@ int wrtwrn(FILE *out, char *mess, int isheasarc)
 int wrterr(FILE *out, char *mess, int severity )
 {
 
-    if(severity < err_report) { 
+    if(severity < err_report) {
         fits_clear_errmsg();
-        return 0; 
+        return 0;
     }
     nerrs++;
 
@@ -75,7 +75,7 @@ int wrterr(FILE *out, char *mess, int severity )
 #endif
     }
 
-    if(nerrs > MAXERRORS ) { 
+    if(nerrs > MAXERRORS ) {
 
 #ifdef ERR2OUT
 	 fprintf(stdout,"??? Too many Errors! I give up...\n");
@@ -94,9 +94,9 @@ int wrtferr(FILE *out, char* mess, int *status, int severity)
 {
     char ttemp[255];
 
-    if(severity < err_report) { 
+    if(severity < err_report) {
         fits_clear_errmsg();
-        return 0; 
+        return 0;
     }
     nerrs++;
 
@@ -119,7 +119,7 @@ int wrtferr(FILE *out, char* mess, int *status, int severity)
 
     *status = 0;
     fits_clear_errmsg();
-    if(nerrs > MAXERRORS ) { 
+    if(nerrs > MAXERRORS ) {
 #ifdef ERR2OUT
 	 fprintf(stdout,"??? Too many Errors! I give up...\n");
 #else
@@ -129,7 +129,7 @@ int wrtferr(FILE *out, char* mess, int *status, int severity)
          exit(1);
     }
     return nerrs;
-} 
+}
 
 int wrtserr(FILE *out, char* mess, int *status, int severity)
 /* dump the cfitsio stack */
@@ -139,9 +139,9 @@ int wrtserr(FILE *out, char* mess, int *status, int severity)
     char tmp[20][80];
     int nstack = 0;
 
-    if(severity < err_report) { 
+    if(severity < err_report) {
         fits_clear_errmsg();
-        return 0; 
+        return 0;
     }
     nerrs++;
 
@@ -156,7 +156,7 @@ int wrtserr(FILE *out, char* mess, int *status, int severity)
     }
 
     if(out !=NULL) {
-        if ((out!=stdout) && (out!=stderr)) { 
+        if ((out!=stdout) && (out!=stderr)) {
            print_fmt(out,temp,13);
            for(i=0; i<=nstack; i++) fprintf(out,errfmt,tmp[i]);
          }
@@ -172,7 +172,7 @@ int wrtserr(FILE *out, char* mess, int *status, int severity)
 
     *status = 0;
     fits_clear_errmsg();
-    if(nerrs > MAXERRORS ) { 
+    if(nerrs > MAXERRORS ) {
 #ifdef ERR2OUT
 	 fprintf(stdout,"??? Too many Errors! I give up...\n");
 #else
@@ -185,97 +185,97 @@ int wrtserr(FILE *out, char* mess, int *status, int severity)
 }
 
 void print_fmt(FILE *out, char *temp, int nprompt)
-/* Print output of messages in a 80 character record.  
-    Continue lines are aligned. */ 
-{ 
-     
+/* Print output of messages in a 80 character record.
+    Continue lines are aligned. */
+{
+
     char *p;
-    int i,j;  
+    int i,j;
     int clen;
-    char tmp[81]; 
+    char tmp[81];
     static char cont_fmt[80];
     static int save_nprompt = 0;
 
     if (out == NULL) return;
 
-    if(nprompt != save_nprompt) { 
+    if(nprompt != save_nprompt) {
         for (i = 0; i < nprompt; i++) cont_fmt[i] = ' ';
-        strcat(cont_fmt,"%.67s\n"); 
+        strcat(cont_fmt,"%.67s\n");
         save_nprompt = nprompt;
     }
 
     i = strlen(temp) - 80;
-    if(i <= 0) {  
-        fprintf(out,"%.80s\n",temp); 
-    } 
-    else{ 
-        p = temp; 
+    if(i <= 0) {
+        fprintf(out,"%.80s\n",temp);
+    }
+    else{
+        p = temp;
         clen = 80 -nprompt;
-        strncpy(tmp,p,80); 
+        strncpy(tmp,p,80);
         tmp[80] = '\0';
-        if(isprint((int)*(p+79)) && isprint((int)*(p+80)) && *(p+80) != '\0') { 
-           j = 79; 
-           while(*(p+j) != ' ' && j > 0) j--; 
+        if(isprint((int)*(p+79)) && isprint((int)*(p+80)) && *(p+80) != '\0') {
+           j = 79;
+           while(*(p+j) != ' ' && j > 0) j--;
            p += j;
            while( *p == ' ')p++;
-           tmp[j] = '\0';  
-        } 
-        else if( *(p+80) == ' ') { 
-             j = 80; 
-             while( *(p+j) == ' ') j++; 
-             p +=  j; 
-        } 
+           tmp[j] = '\0';
+        }
+        else if( *(p+80) == ' ') {
+             j = 80;
+             while( *(p+j) == ' ') j++;
+             p +=  j;
+        }
         else {
              p += 80;
         }
-        fprintf(out,"%.80s\n",tmp); 
-        while(*p != '\0' && i > 0) { 
-            strncpy(tmp,p,clen); 
+        fprintf(out,"%.80s\n",tmp);
+        while(*p != '\0' && i > 0) {
+            strncpy(tmp,p,clen);
             tmp[clen] = '\0';
             i = strlen(p)- clen;
-            if(i > 0 && isprint((int)*(p+clen-1)) 
-                     && isprint((int)*(p+clen)) 
-                     && *(p+clen) != '\0') {  
-                j = clen; 
-                while(*(p+j)!= ' ' && j > 0) j--; 
+            if(i > 0 && isprint((int)*(p+clen-1))
+                     && isprint((int)*(p+clen))
+                     && *(p+clen) != '\0') {
+                j = clen;
+                while(*(p+j)!= ' ' && j > 0) j--;
                 p += j;
                 while( *p == ' ')p++;
-                tmp[j] = '\0';  
+                tmp[j] = '\0';
             }
-            else if(i> 0 &&  *(p+clen) == ' ') { 
-                 j = clen; 
-                 while( *(p+j) == ' ') j++; 
-                 p += j; 
+            else if(i> 0 &&  *(p+clen) == ' ') {
+                 j = clen;
+                 while( *(p+j) == ' ') j++;
+                 p += j;
             }
             else if(i> 0)  {
                  p+= clen;
             }
             fprintf(out,cont_fmt,tmp);
-        } 
-    } 
+        }
+    }
     if(out==stdout) fflush(stdout);
     return;
 }
 void wrtsep(FILE *out,char fill, char *title, int nchar)
 /* print a line of char fill with string title in the middle */
 {
-    int ntitle; 
-    char *line; 
+    int ntitle;
+    char *line;
     char *p;
     int first_end;
     int i = 0;
 
-    ntitle = strlen(title); 
+    ntitle = strlen(title);
     if(ntitle > nchar) nchar = ntitle;
-    if(nchar <= 0) return; 
-    line = (char *)malloc((nchar+1)*sizeof(char)); 
+    if(nchar <= 0) return;
+    line = (char *)malloc((nchar+1)*sizeof(char));
     p = line;
-    if(ntitle < 1) { 
-        for (i=0; i < nchar; i++) {*p = fill; p++;}	
+    if(ntitle < 1) {
+        for (i=0; i < nchar; i++) {*p = fill; p++;}
 	*p = '\0';
     }
-    else { 
-	first_end = ( nchar - ntitle)/2; 
+    else {
+	first_end = ( nchar - ntitle)/2;
 	for (i = 0; i < first_end; i++) { *p = fill; p++;}
 	*p = '\0';
 	strcat(line, title);
@@ -288,7 +288,7 @@ void wrtsep(FILE *out,char fill, char *title, int nchar)
     free (line);
     return ;
 }
-	
+
 
 /* comparison function for the FitsKey structure array */
    int compkey (const void *key1, const void *key2)

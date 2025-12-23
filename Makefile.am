@@ -183,7 +183,7 @@ BISON =		bison
 
 # Tested with bison 3.8 and flex 2.6.4
 eval:		# Rebuild eval_* files from flex/bison source
-		${FLEX} -o eval_l.c eval.l 
+		${FLEX} -o eval_l.c eval.l
 		${BISON} -o eval_y.c --header=eval_tab.h eval.y
 
 # Distribution: ==========================================================

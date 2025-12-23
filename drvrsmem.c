@@ -24,7 +24,7 @@
 #include <fcntl.h>
 
 #if defined(unix) || defined(__unix__)  || defined(__unix) || defined(HAVE_UNISTD_H)
-#include <unistd.h> 
+#include <unistd.h>
 #endif
 
 
@@ -53,7 +53,7 @@ static  int shared_detach_process(int sem);
 static  int shared_get_free_entry(int newhandle);       /* get free entry in shared_key, or -1, entry is set rw locked */
 static  int shared_get_hash(long size, int idx);/* return hash value for malloc */
 static  long shared_adjust_size(long size);     /* size must be >= 0 !!! */
-static  int shared_check_locked_index(int idx); /* verify that given idx is valid */ 
+static  int shared_check_locked_index(int idx); /* verify that given idx is valid */
 static  int shared_map(int idx);                /* map all tables for given idx, check for validity */
 static  int shared_validate(int idx, int mode); /* use intrnally inside crit.sect !!! */
 
@@ -100,7 +100,7 @@ void    shared_cleanup(void)                    /* this must (should) be called 
           if (-1 != shared_lt[i].lkcnt) continue;  /* seg not R/W locked by us, skip this ... */
 
           r = shared_destroy_entry(i);          /* destroy unconditionally sema & segment */
-          if (shared_debug) 
+          if (shared_debug)
             { if (SHARED_OK == r) printf(" [%d]", i);
               else printf(" [error on %d !!!!]", i);
 
@@ -133,7 +133,7 @@ void    shared_cleanup(void)                    /* this must (should) be called 
                  { if (ds.shm_nattch <= 1) oktodelete = 1; /* if only one (we), then it is safe (but see text 4 lines later) to unlink */
                  }
            }
-       }  
+       }
        shmdt((char *)shared_gt);                /* detach global table */
        if (oktodelete)                          /* delete global table from system, if no shm seg present */
          { shmctl(shared_gt_h, IPC_RMID, 0);    /* there is a race condition here - time window between shmdt and shmctl */
@@ -156,7 +156,7 @@ void    shared_cleanup(void)                    /* this must (should) be called 
        shared_fd = SHARED_INVALID;
      }
 
-   
+
    shared_kbase = 0;
    shared_maxseg = 0;
    shared_range = 0;
@@ -174,7 +174,7 @@ int     shared_init(int debug_msgs)             /* initialize shared memory stuf
 
    shared_init_called = 1;                      /* tell everybody no need to call us for the 2nd time */
    shared_debug = debug_msgs;                   /* set required debug mode */
-   
+
    if (shared_debug) printf("shared_init:");
 
    shared_kbase = 0;                            /* adapt to current env. settings */
@@ -186,7 +186,7 @@ int     shared_init(int debug_msgs)             /* initialize shared memory stuf
    if (NULL != (p = getenv(SHARED_ENV_MAXSEG))) shared_maxseg = atoi(p);
    if (0 == shared_maxseg) shared_maxseg = SHARED_MAXSEG;
    if (shared_debug) printf(" maxseg=%d", shared_maxseg);
-   
+
    shared_range = 3 * shared_maxseg;
 
    if (SHARED_INVALID == shared_fd)             /* create rw locking file (this file is never deleted) */
@@ -338,7 +338,7 @@ static int shared_process_count(int sem)                /* valid only for time o
 
 static int shared_delta_process(int sem, int delta)     /* change number of processes hanging on segment */
  { struct sembuf sb;
- 
+
    if (SHARED_INVALID == sem) return(SHARED_BADARG);    /* semaphore not attached */
    sb.sem_num = 0;
    sb.sem_op = delta;
@@ -396,7 +396,7 @@ int     shared_malloc(long size, int mode, int newhandle)               /* retur
  { int h, i, r, idx, key;
    union semun filler = {0};
    BLKHEAD *bp;
-   
+
    if (0 == shared_init_called)                 /* delayed initialization */
      { if (SHARED_OK != (r = shared_init(0))) return(r);
      }
@@ -484,7 +484,7 @@ int     shared_attach(int idx)
 
 
 
-static int      shared_check_locked_index(int idx)      /* verify that given idx is valid */ 
+static int      shared_check_locked_index(int idx)      /* verify that given idx is valid */
  { int r;
 
    if (0 == shared_init_called)                         /* delayed initialization */
@@ -494,7 +494,7 @@ static int      shared_check_locked_index(int idx)      /* verify that given idx
    if ((idx < 0) || (idx >= shared_maxseg)) return(SHARED_BADARG);
    if (NULL == shared_lt[idx].p) return(SHARED_BADARG); /* NULL pointer, not attached ?? */
    if (0 == shared_lt[idx].lkcnt) return(SHARED_BADARG); /* not locked ?? */
-   if ((SHARED_ID_0 != (shared_lt[idx].p)->s.ID[0]) || (SHARED_ID_1 != (shared_lt[idx].p)->s.ID[1]) || 
+   if ((SHARED_ID_0 != (shared_lt[idx].p)->s.ID[0]) || (SHARED_ID_1 != (shared_lt[idx].p)->s.ID[1]) ||
        (BLOCK_SHARED != (shared_lt[idx].p)->s.tflag))   /* invalid data in segment */
      return(SHARED_BADARG);
    return(SHARED_OK);
@@ -530,7 +530,7 @@ static  int     shared_validate(int idx, int mode)      /* use intrnally inside 
    if (SHARED_OK != (r = shared_mux(idx, mode)))  return(r);            /* idx checked by shared_mux */
    if (NULL == shared_lt[idx].p)
      if (SHARED_OK != (r = shared_map(idx)))
-       { shared_demux(idx, mode); 
+       { shared_demux(idx, mode);
          return(r);
        }
    if ((SHARED_ID_0 != (shared_lt[idx].p)->s.ID[0]) || (SHARED_ID_1 != (shared_lt[idx].p)->s.ID[1]) || (BLOCK_SHARED != (shared_lt[idx].p)->s.tflag))
@@ -614,12 +614,12 @@ SHARED_P shared_lock(int idx, int mode)         /* lock given segment for exclus
    if (shared_mux(idx, mode))  return(NULL);    /* idx checked by shared_mux */
    if (0 != shared_lt[idx].lkcnt)               /* are we already locked ?? */
      if (SHARED_OK != (r = shared_map(idx)))
-       { shared_demux(idx, mode); 
+       { shared_demux(idx, mode);
          return(NULL);
        }
    if (NULL == shared_lt[idx].p)                /* stupid pointer ?? */
      if (SHARED_OK != (r = shared_map(idx)))
-       { shared_demux(idx, mode); 
+       { shared_demux(idx, mode);
          return(NULL);
        }
    if ((SHARED_ID_0 != (shared_lt[idx].p)->s.ID[0]) || (SHARED_ID_1 != (shared_lt[idx].p)->s.ID[1]) || (BLOCK_SHARED != (shared_lt[idx].p)->s.tflag))
@@ -745,12 +745,12 @@ int     shared_getaddr(int id, char **address)
 
    if (NULL == shared_gt) return(SHARED_NOTINIT);       /* not initialized */
    if (NULL == shared_lt) return(SHARED_NOTINIT);       /* not initialized */
- 
+
    strcpy(segname,"h");
    snprintf(segname+1,9,"%d", id);
- 
+
    if (smem_open(segname,0,&i)) return(SHARED_BADARG);
- 
+
    *address = ((char *)(((DAL_SHM_SEGHEAD *)(shared_lt[i].p + 1)) + 1));
  /*  smem_close(i); */
    return(SHARED_OK);
@@ -771,7 +771,7 @@ int     shared_uncond_delete(int id)
           continue;
         }
       printf("handle %d:", i);
-      if (NULL == shared_lock(i, SHARED_RDWRITE | SHARED_NOWAIT)) 
+      if (NULL == shared_lock(i, SHARED_RDWRITE | SHARED_NOWAIT))
         { printf(" cannot lock in RW mode, not deleted\n");
           continue;
         }
@@ -860,7 +860,7 @@ int     smem_create(char *filename, int *driverhandle)
    nitems = sscanf(filename, "h%d", &h);
    if (1 != nitems) return(SHARED_BADARG);
 
-   if (SHARED_INVALID == (h = shared_malloc(sz = 2880 + sizeof(DAL_SHM_SEGHEAD), 
+   if (SHARED_INVALID == (h = shared_malloc(sz = 2880 + sizeof(DAL_SHM_SEGHEAD),
                         SHARED_RESIZE | SHARED_PERSIST, h)))
      return(SHARED_NOMEM);
 
@@ -875,7 +875,7 @@ int     smem_create(char *filename, int *driverhandle)
    sp->nodeidx = -1;
 
    *driverhandle = h;
-   
+
    return(0);
  }
 

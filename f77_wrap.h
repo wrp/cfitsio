@@ -20,7 +20,7 @@
     ||  defined (__powerpc64__)\
     ||  defined (__s390x__)\
     || (defined(__arm64__) && defined(__APPLE__)) \
-    ||  defined(__aarch64__) 
+    ||  defined(__aarch64__)
 
 #define   LONG8BYTES_INT4BYTES
 

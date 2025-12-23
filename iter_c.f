@@ -213,7 +213,7 @@ C     open the file and move to the table containing the X and Y columns
       call ftopen(iunit,fname,0,blocksize,status)
       call ftmnhd(iunit, BINARY_TBL, 'EVENTS', 0, status)
       if (status) return
-   
+
 C     both the columns are in the same FITS file
       units(1) = iunit
       units(2) = iunit
@@ -234,7 +234,7 @@ C     define whether columns are input, input/output, or output only
 C     Both input
       iotype(1) = InputCol
       iotype(1) = InputCol
- 
+
 C     take default number of rows per iteration
       rows_per_loop = 0
       rowoffset = 0
@@ -255,7 +255,7 @@ C   Iterator work function that calculates values for the 2D histogram.
 C
 C--------------------------------------------------------------------------
       subroutine calchisto(totalrows, offset, firstrow, nrows, ncols,
-     &     units, colnum, datatype, iotype, repeat, status, 
+     &     units, colnum, datatype, iotype, repeat, status,
      &     histogram, xcol, ycol )
 
       integer totalrows,offset,firstrow,nrows,ncols,status
@@ -306,7 +306,7 @@ C**********************************************************************
       if (status .ne. 0) return
 
 C    --------------------------------------------------------
-C      Initialization procedures: execute on the first call  
+C      Initialization procedures: execute on the first call
 C    --------------------------------------------------------
       if (firstrow .eq. 1) then
 C     do sanity checking of input values
@@ -331,7 +331,7 @@ C     initialize the histogram image pixels = 0, including null value
       endif
 
 C     ------------------------------------------------------------------
-C       Main loop: increment the 2D histogram at position of each event 
+C       Main loop: increment the 2D histogram at position of each event
 C     ------------------------------------------------------------------
 
       do 20 ii=2,nrows+1

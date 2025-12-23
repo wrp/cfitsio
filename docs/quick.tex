@@ -112,9 +112,9 @@ the CFITSIO library and include files should be installed via the later
 >  ./configure --prefix=/usr1/local
 \end{verbatim}
 
-will cause the 'make install' command to copy the CFITSIO libcfitsio file 
+will cause the 'make install' command to copy the CFITSIO libcfitsio file
 to /usr1/local/lib and the necessary include files to /usr1/local/include
-(assuming of course that the  process has permission to write to these 
+(assuming of course that the  process has permission to write to these
 directories).
 
 Pre-compiled versions of the CFITSIO DLL library are available for
@@ -153,14 +153,14 @@ fits\_}, so it should be reasonably clear what this program does:
 
     int main(int argc, char *argv[])
     {
-2:      fitsfile *fptr;         
-        char card[FLEN_CARD]; 
+2:      fitsfile *fptr;
+        char card[FLEN_CARD];
 3:      int status = 0,  nkeys, ii;  /* MUST initialize status */
 
 4:      fits_open_file(&fptr, argv[1], READONLY, &status);
         fits_get_hdrspace(fptr, &nkeys, NULL, &status);
 
-        for (ii = 1; ii <= nkeys; ii++)  { 
+        for (ii = 1; ii <= nkeys; ii++)  {
           fits_read_record(fptr, ii, card, &status); /* read keyword */
           printf("%s\n", card);
         }
@@ -180,7 +180,7 @@ Some other points to notice about the program are:
 \begin{enumerate}
 
 \item
-The {\tt fitsio.h} header file must be included to define the 
+The {\tt fitsio.h} header file must be included to define the
 various routines and symbols used in CFITSIO.
 
 \item
@@ -205,7 +205,7 @@ check the status value after every single CFITSIO routine call.
 Generally you should check the status after an especially important or
 complicated routine has been called, or after a block of
 closely related CFITSIO calls.  This example program has taken this
-feature to the extreme and only checks the status value at the 
+feature to the extreme and only checks the status value at the
 very end of the program.
 
 \item
@@ -231,7 +231,7 @@ first explicitly move to that HDU (see the {\tt fits\_movabs\_hdu} and
 \item
 
 The {\tt fits\_report\_error} routine provides a convenient way to print out
-diagnostic messages about any error that may have occurred. 
+diagnostic messages about any error that may have occurred.
 
 \end{enumerate}
 
@@ -352,7 +352,7 @@ capabilities.
 In {\tt fits\_create\_file},  the {\tt filename} is simply the root name of
 the file to be created.  You can overwrite an existing file by
 prefixing the name with a `!' character (on the Unix command line this
-must be prefixed with a backslash, as in \verb+`\!file.fit'+).  
+must be prefixed with a backslash, as in \verb+`\!file.fit'+).
 If the file name ends with {\tt .gz} the file will be compressed
 using the gzip algorithm.  If the
 filename is {\tt stdout} or {\tt "-"} (a single dash character)
@@ -427,7 +427,7 @@ current}, and {\tt following}, respectively.  For example,
   fits_copy_file(infptr, outfptr, 0, 1, 1, &status);
 \end{verbatim}
 will copy the current HDU and any HDUs that follow it from the input
-to the output file, but it will not copy any HDUs preceding the 
+to the output file, but it will not copy any HDUs preceding the
 current HDU.
 
 
@@ -450,7 +450,7 @@ int fits_get_img_param(fitsfile *fptr, int maxdim,  int *bitpix,
 
 Get information about the currently opened image HDU. The first routine
 returns the datatype of the image as (defined by the {\tt BITPIX}
-keyword), which can have the following symbolic constant values: 
+keyword), which can have the following symbolic constant values:
 \begin{verbatim}
     BYTE_IMG      =   8   ( 8-bit byte pixels, 0 - 255)
     SHORT_IMG     =  16   (16 bit integer pixels)
@@ -470,7 +470,7 @@ array)
 
 \begin{verbatim}
 __________________________________________________________
-int fits_create_img(fitsfile *fptr, int bitpix, int naxis, 
+int fits_create_img(fitsfile *fptr, int bitpix, int naxis,
                     long *naxes, int *status)
 \end{verbatim}
 
@@ -492,15 +492,15 @@ int fits_write_pix(fitsfile *fptr, int datatype, long *fpixel,
 int fits_write_pixnull(fitsfile *fptr, int datatype, long *fpixel,
                long nelements, void *array, void *nulval, int *status);
 
-int fits_read_pix(fitsfile *fptr, int  datatype, long *fpixel, 
-                  long nelements, void *nulval, void *array, 
+int fits_read_pix(fitsfile *fptr, int  datatype, long *fpixel,
+                  long nelements, void *nulval, void *array,
                   int *anynul, int *status)
 \end{verbatim}
 
 Read or write all or part of the FITS image.  There are 2 different
 'write' pixel routines:  The first simply writes the input array of pixels
 to the FITS file.  The second is similar, except that it substitutes
-the appropriate null pixel value in the FITS file for any pixels 
+the appropriate null pixel value in the FITS file for any pixels
 which have a value equal to {\tt *nulval} (note that this parameter
 gives the address of the null pixel value, not the value itself).
 Similarly,  when reading an image, CFITSIO will substitute the value
@@ -562,11 +562,11 @@ other pixel in the entire 2D image, set
 \begin{verbatim}
     fpixel[0] = fpixel[1] = 1
     lpixel[0] = {NAXIS1}
-    lpixel[1] = {NAXIS2}  
-    inc[0] = inc[1] = 2  
+    lpixel[1] = {NAXIS2}
+    inc[0] = inc[1] = 2
 \end{verbatim}
 
-Or, to read the 8th row of a 2D image, set 
+Or, to read the 8th row of a 2D image, set
 \begin{verbatim}
     fpixel[0] = 1
     fpixel[1] = 8
@@ -602,7 +602,7 @@ parameter gives the number of columns in the table (maximum = 999).
 The {\tt
 ttype, tform}, and {\tt tunit} parameters give the name, datatype, and
 physical units of each column, and {\tt extname} gives the name for the
-table (the value of the {\tt EXTNAME} keyword).  
+table (the value of the {\tt EXTNAME} keyword).
 The FITS Standard recommends that only
 letters, digits, and the underscore character be used in column names
 with no embedded spaces.  It is recommended that all the column names
@@ -646,10 +646,10 @@ and in binary tables:
         signed bytes.
 
 \end{verbatim}
-  
+
 The {\tt tunit} and {\tt extname} parameters are optional and
 may be set to NULL
-if they are not needed.  
+if they are not needed.
 
 Note that it may be easier to create a new table by copying the
 header from another existing table with {\tt fits\_copy\_header} rather
@@ -735,10 +735,10 @@ the syntax TFORM = 'rAw' where 'r' is the total number of
 characters (= the width of the column) and 'w' is the width of a
 unit string within the column.  Thus if the column has TFORM =
 '60A12' then this means that each row of the table contains
-5 12-character substrings within the 60-character field, and thus 
+5 12-character substrings within the 60-character field, and thus
 in this case this routine will return typecode = TSTRING, repeat =
 60, and width = 12.  The number of substings in any binary table
-character string field can be calculated by (repeat/width). 
+character string field can be calculated by (repeat/width).
 A null pointer may be given for any of the output parameters that
  are not needed.
 
@@ -789,20 +789,20 @@ int fits_copy_col(fitsfile *infptr, fitsfile *outfptr, int incolnum,
 Copy a column from one table HDU to another.  If {\tt create\_col} = TRUE (i.e., not equal to zero),
 then a new column will be inserted in the output table at position
 {\tt outcolumn}, otherwise the values in the existing output column will be
-overwritten. 
+overwritten.
 
 \begin{verbatim}
 __________________________________________________________________________
 int fits_write_col(fitsfile *fptr, int datatype, int colnum, long firstrow,
                   long firstelem, long nelements, void *array, int *status)
-int fits_write_colnull(fitsfile *fptr, int datatype, int colnum, 
-                  long firstrow, long firstelem, long nelements, 
+int fits_write_colnull(fitsfile *fptr, int datatype, int colnum,
+                  long firstrow, long firstelem, long nelements,
                   void *array, void *nulval, int *status)
 int fits_write_col_null(fitsfile *fptr, int colnum, long firstrow,
                   long firstelem, long nelements, int *status)
 
 int fits_read_col(fitsfile *fptr, int datatype, int colnum, long firstrow,
-       long firstelem, long nelements, void *nulval, void *array, 
+       long firstelem, long nelements, void *nulval, void *array,
        int *anynul, int *status)
 
 \end{verbatim}
@@ -866,7 +866,7 @@ _____________________________________________________________________
 int fits_select_rows(fitsfile *infptr, fitsfile *outfptr, char *expr,
                      int *status)
 int fits_calculator(fitsfile *infptr, char *expr, fitsfile *outfptr,
-                    char *colname, char *tform, int *status) 
+                    char *colname, char *tform, int *status)
 \end{verbatim}
 
 These are 2 of the most powerful routines in the CFITSIO library.  (See
@@ -889,7 +889,7 @@ the input table as shown in these examples:
 Row Selection Expressions:
    counts > 0                          uses COUNTS column value
    sqrt( X**2 + Y**2) < 10.            uses X and Y column values
-   (X > 10) || (X < -10) && (Y == 0)   used 'or' and 'and' operators  
+   (X > 10) || (X < -10) && (Y == 0)   used 'or' and 'and' operators
    gtifilter()                         filter on Good Time Intervals
    regfilter("myregion.reg")           filter using a region file
    @select.txt                         reads expression from a text file
@@ -916,7 +916,7 @@ document for more discussion of the expression syntax.
 {\tt gtifilter} is a special function which tests whether the {\tt
 TIME} column value in the input table falls within one or more Good
 Time Intervals.  By default, this function looks for a 'GTI' extension
-in the same file as the input table.  The 'GTI' table contains {\tt START} 
+in the same file as the input table.  The 'GTI' table contains {\tt START}
 and {\tt STOP} columns which define the range of
 each good time interval. See section 5.4.3 for more details.
 
@@ -991,7 +991,7 @@ int fits_read_key(fitsfile *fptr, int datatype, char *keyname,
 int fits_find_nextkey(fitsfile *fptr, char **inclist, int ninc,
                       char **exclist, int nexc, char *card, int *status)
 
-int fits_read_key_unit(fitsfile *fptr, char *keyname, char *unit, 
+int fits_read_key_unit(fitsfile *fptr, char *keyname, char *unit,
                        int *status)
 \end{verbatim}
 
@@ -1000,7 +1000,7 @@ routine reads keyword number {\tt keynum} (where the first keyword is
 at position 1).  This routine is most commonly used when sequentially
 reading every record in the header from beginning to end.  The 2nd and
 3rd routines read the named keyword and return either the whole
-record, or the keyword value and comment string.  In each case any 
+record, or the keyword value and comment string.  In each case any
 non-significant trailing blank characters in the strings are truncated.
 
 Wild card characters (*, ?, and \#) may be used when specifying the name
@@ -1031,7 +1031,7 @@ The units are recorded at the beginning of the keyword comment field
 enclosed in square brackets.
 \begin{verbatim}
 _______________________________________________________________
-int fits_write_key(fitsfile *fptr, int datatype, char *keyname, 
+int fits_write_key(fitsfile *fptr, int datatype, char *keyname,
         void *value, char *comment, int *status)
 int fits_update_key(fitsfile *fptr, int datatype, char *keyname,
         void *value, char *comment, int *status)
@@ -1317,14 +1317,14 @@ this character is omitted then the array is assumed to have the native
 byte order of the local machine.  These datatype characters are then
 followed by a series of one or more integer values separated by commas
 which define the size of each dimension of the raw array.  Arrays with
-up to 5 dimensions are currently supported.  
+up to 5 dimensions are currently supported.
 
 Finally, a byte offset to the position of the first pixel in the data
 file may be specified by separating it with a ':' from the last
 dimension value.  If omitted, it is assumed that the offset = 0.  This
 parameter may be used to skip over any header information in the file
 that precedes the binary data.  Further examples:
- 
+
 \begin{verbatim}
   raw.dat[b10000]          1-dimensional 10000 pixel byte array
   raw.dat[rb400,400,12]    3-dimensional floating point big-endian array
@@ -1399,7 +1399,7 @@ original FITS table and only sees the image in the new temporary file
 
 The table binning specifier is enclosed in square brackets following
 the root filename and table extension name or number and begins with
-the keyword 'bin', as in: \newline  
+the keyword 'bin', as in: \newline
 {\tt 'myfile.fits[events][bin (X,Y)]'}. In
 this case, the X and Y columns in the 'events' table extension are
 binned up to create the image.  The size of the image is usually
@@ -1441,7 +1441,7 @@ more details on these advanced features.
 The column or keyword filtering specifier is used to modify the
 column structure and/or the header keywords in the HDU that was
 selected with the previous HDU location specifier.   It can
-be used to perform the following types of operations. 
+be used to perform the following types of operations.
 
 \begin{itemize}
 \item
@@ -1534,7 +1534,7 @@ table where the GRADE column value is equal to 50).
 
 The row filtering  expression can be an arbitrarily  complex series of
 operations performed  on constants,  keyword values,  and column data
-taken from the specified FITS TABLE extension.  The expression 
+taken from the specified FITS TABLE extension.  The expression
 also can be written into a text file and then used by giving the
 filename preceded by a '@' character, as in
 {\tt '[@rowfilt.txt]'}.
@@ -1581,7 +1581,7 @@ Trigonometric  functions use  radians,  not degrees.  The  following
 arithmetic  operators and  functions  can be  used in the expression
 (function names are case insensitive):
 
- 
+
 \begin{verbatim}
     "addition"           +          "subtraction"          -
     "multiplication"     *          "division"             /
@@ -1611,7 +1611,7 @@ usage. Also, the integer to real casts values to double precision:
 Several constants are built in  for  use  in  numerical
 expressions:
 
- 
+
 \begin{verbatim}
         #pi              3.1415...      #e             2.7182...
         #deg             #pi/180        #row           current row number
@@ -1638,7 +1638,7 @@ When  a  NULL, or undefined, value is encountered in the FITS table,
 the expression will evaluate to NULL unless the undefined  value  is
 not   actually   required  for  evaluation,  e.g. "TRUE  .or.  NULL"
 evaluates to TRUE. The  following  two  functions  allow  some  NULL
-detection  and  handling:  
+detection  and  handling:
 
 \begin{verbatim}
                    ISNULL(x)
@@ -1653,7 +1653,7 @@ returns  the value of y.
 Bit  masks can be used to select out rows from bit columns ({\tt TFORMn =
 \#X}) in FITS files. To represent the mask,  binary,  octal,  and  hex
 formats are allowed:
- 
+
 \begin{verbatim}
                  binary:   b0110xx1010000101xxxx0001
                  octal:    o720x1 -> (b111010000xxx001)
@@ -1671,7 +1671,7 @@ if you had a 7 bit column named flags in a  FITS  table  and  wanted
 all  rows  having  the bit pattern 0010011, the selection expression
 would be:
 
- 
+
 \begin{verbatim}
                             flags == b0010011
     or
@@ -1682,7 +1682,7 @@ It is also possible to test if a range of bits is  less  than,  less
 than  equal,  greater  than  and  greater than equal to a particular
 boolean value:
 
- 
+
 \begin{verbatim}
                             flags <= bxxx010xx
                             flags .gt. bxxx100xx
@@ -1700,7 +1700,7 @@ more  bit  fields  using  the  '\&'(AND),  '$|$'(OR),  and the '!'(NOT)
 operators. All of these operators result in a bit  field  which  can
 then be used with the equal operator. For example:
 
- 
+
 \begin{verbatim}
                           (!flags) == b1101100
                           (flags & b1000001) == bx000001
@@ -1722,7 +1722,7 @@ can be concatenated this way, too.
     each row of the input table  and returns TRUE  or FALSE depending
     whether the row is inside or outside the  good time interval.  The
     syntax is
- 
+
 \begin{verbatim}
       gtifilter( [ "gtifile" [, expr [, "STARTCOL", "STOPCOL" ] ] ] )
 \end{verbatim}
@@ -1743,7 +1743,7 @@ can be concatenated this way, too.
 
     In  its  simplest form, no parameters need to be provided -- default
     values will be used.  The expression {\tt "gtifilter()"} is equivalent to
- 
+
 \begin{verbatim}
        gtifilter( "", TIME, "*START*", "*STOP*" )
 \end{verbatim}
@@ -1762,7 +1762,7 @@ can be concatenated this way, too.
     Another common  filtering method selects rows based on whether the
     spatial position associated with each row is located within a given
     2-dimensional region.  The syntax for this high-level filter is
- 
+
 \begin{verbatim}
        regfilter( "regfilename" [ , Xexpr, Yexpr [ , "wcs cols" ] ] )
 \end{verbatim}
@@ -1783,7 +1783,7 @@ can be concatenated this way, too.
     determine if each row is inside or outside the area specified in
     the region file.  Alternate position column names, or expressions,
     may be entered if needed, as in
- 
+
 \begin{verbatim}
         regfilter("region.reg", XPOS, YPOS)
 \end{verbatim}
@@ -1811,7 +1811,7 @@ can be concatenated this way, too.
     generated from this image (in image pixel units) to filter the
     ROSAT events file, then the X and Y column values must be converted
     to corresponding pixel units as in:
- 
+
 \begin{verbatim}
         regfilter("rosat.reg", X/32.+.5, Y/32.+.5)
 \end{verbatim}
@@ -1830,7 +1830,7 @@ can be concatenated this way, too.
     used, otherwise an error will be returned.
 
     These region shapes are supported (names are case insensitive):
- 
+
 \begin{verbatim}
        Point         ( X1, Y1 )               <- One pixel square region
        Line          ( X1, Y1, X2, Y2 )       <- One pixel wide region
@@ -1871,10 +1871,10 @@ can be concatenated this way, too.
     details of the region file format.
 
 \subsubsection{Example Row Filters}
- 
+
 \begin{verbatim}
     [double && mag <= 5.0]        -  Extract all double stars brighter
-                                     than  fifth magnitude 
+                                     than  fifth magnitude
 
     [#row >= 125 && #row <= 175]   - Extract row numbers 125 through 175
 
@@ -1975,7 +1975,7 @@ table.
 fitscopy 'ftp://heasarc.gsfc.nasa.gov/rosat.fit[events][bin (X,Y)=16]' img.fit
 \end{verbatim}
 
-This example bins the X and Y columns of the hypothetical ROSAT file 
+This example bins the X and Y columns of the hypothetical ROSAT file
 at the HEASARC ftp site to create the output image.
 
 \begin{verbatim}
@@ -2010,13 +2010,13 @@ improve the readability of their code.
  READONLY_FILE     112    Cannot write to readonly file
  MEMORY_ALLOCATION 113    Could not allocate memory
  BAD_FILEPTR       114    invalid fitsfile pointer
- NULL_INPUT_PTR    115    NULL input pointer to routine 
- SEEK_ERROR        116    error seeking position in file 
+ NULL_INPUT_PTR    115    NULL input pointer to routine
+ SEEK_ERROR        116    error seeking position in file
 
- BAD_URL_PREFIX     121   invalid URL prefix on file name 
- TOO_MANY_DRIVERS   122   tried to register too many IO drivers 
- DRIVER_INIT_FAILED 123   driver initialization failed 
- NO_MATCHING_DRIVER 124   matching driver is not registered 
+ BAD_URL_PREFIX     121   invalid URL prefix on file name
+ TOO_MANY_DRIVERS   122   tried to register too many IO drivers
+ DRIVER_INIT_FAILED 123   driver initialization failed
+ NO_MATCHING_DRIVER 124   matching driver is not registered
  URL_PARSE_ERROR    125   failed to parse input file URL
 
  SHARED_BADARG     151    bad argument in shared memory driver
@@ -2032,7 +2032,7 @@ improve the readability of their code.
  HEADER_NOT_EMPTY  201    header already contains keywords
  KEY_NO_EXIST      202    keyword not found in header
  KEY_OUT_BOUNDS    203    keyword record number is out of bounds
- VALUE_UNDEFINED   204    keyword value field is blank 
+ VALUE_UNDEFINED   204    keyword value field is blank
  NO_QUOTE          205    string is missing the closing quote
  BAD_KEYCHAR       207    illegal character in keyword name or card
  BAD_ORDER         208    required keywords out of order
@@ -2134,22 +2134,22 @@ improve the readability of their code.
  BAD_DATATYPE      410    illegal datatype code value
  BAD_DECIM         411    bad number of decimal places specified
  NUM_OVERFLOW      412    overflow during datatype conversion
- DATA_COMPRESSION_ERR   413  error compressing image 
- DATA_DECOMPRESSION_ERR 414  error uncompressing image 
+ DATA_COMPRESSION_ERR   413  error compressing image
+ DATA_DECOMPRESSION_ERR 414  error uncompressing image
 
- BAD_DATE          420    error in date or time conversion 
+ BAD_DATE          420    error in date or time conversion
 
- PARSE_SYNTAX_ERR  431    syntax error in parser expression 
- PARSE_BAD_TYPE    432    expression did not evaluate to desired type 
- PARSE_LRG_VECTOR  433    vector result too large to return in array 
- PARSE_NO_OUTPUT   434    data parser failed not sent an out column 
- PARSE_BAD_COL     435    bad data encounter while parsing column 
- PARSE_BAD_OUTPUT  436    Output file not of proper type          
+ PARSE_SYNTAX_ERR  431    syntax error in parser expression
+ PARSE_BAD_TYPE    432    expression did not evaluate to desired type
+ PARSE_LRG_VECTOR  433    vector result too large to return in array
+ PARSE_NO_OUTPUT   434    data parser failed not sent an out column
+ PARSE_BAD_COL     435    bad data encounter while parsing column
+ PARSE_BAD_OUTPUT  436    Output file not of proper type
 
- ANGLE_TOO_BIG     501    celestial angle too large for projection 
- BAD_WCS_VAL       502    bad celestial coordinate or pixel value 
- WCS_ERROR         503    error in celestial coordinate calculation  
- BAD_WCS_PROJ      504    unsupported type of celestial projection 
+ ANGLE_TOO_BIG     501    celestial angle too large for projection
+ BAD_WCS_VAL       502    bad celestial coordinate or pixel value
+ WCS_ERROR         503    error in celestial coordinate calculation
+ BAD_WCS_PROJ      504    unsupported type of celestial projection
  NO_WCS_KEY        505    celestial coordinate keywords not found
  APPROX_WCS_KEY    506    approximate wcs keyword values were returned
 \end{verbatim}

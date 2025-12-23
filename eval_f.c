@@ -89,7 +89,7 @@ int fffrow( fitsfile *fptr,         /* I - Input FITS file                   */
    ParseData lParse;
 
    if( *status ) return( *status );
-   memset(&Info, 0, sizeof(Info));   
+   memset(&Info, 0, sizeof(Info));
 
    if( ffiprs( fptr, 0, expr, MAXDIMS, &Info.datatype, &nelem, &naxis,
                naxes, &lParse, status ) ) {
@@ -175,7 +175,7 @@ int ffsrow( fitsfile *infptr,   /* I - Input FITS file                      */
 
    if( *status ) return( *status );
 
-   memset(&Info, 0, sizeof(Info));   
+   memset(&Info, 0, sizeof(Info));
    memset(&inExt, 0, sizeof(inExt));
    memset(&outExt, 0, sizeof(outExt));
 
@@ -252,7 +252,7 @@ int ffsrow( fitsfile *infptr,   /* I - Input FITS file                      */
       ffcprs(&lParse);
       return( *status = MEMORY_ALLOCATION );
    }
-   
+
    /* make sure array is zero terminated */
    ((char*)Info.dataPtr)[inExt.numRows] = 0;
 
@@ -291,7 +291,7 @@ int ffsrow( fitsfile *infptr,   /* I - Input FITS file                      */
          outloc = inloc;
       } else {
          outloc = (long) (outExt.numRows + 1);
-         if (outloc > 1) 
+         if (outloc > 1)
             ffirow( outfptr, outExt.numRows, nGood, status );
       }
 
@@ -431,7 +431,7 @@ int ffcrow( fitsfile *fptr,      /* I - Input FITS file                      */
 
    if( *status ) return( *status );
 
-   memset(&Info, 0, sizeof(Info));   
+   memset(&Info, 0, sizeof(Info));
 
    if( ffiprs( fptr, 0, expr, MAXDIMS, &Info.datatype, &nelem1, &naxis,
                naxes, &lParse, status ) ) {
@@ -454,7 +454,7 @@ int ffcrow( fitsfile *fptr,      /* I - Input FITS file                      */
    Info.nullPtr = nulval;
    Info.maxRows = nelements / nelem1;
    Info.parseData = &lParse;
-   
+
    if( ffiter( lParse.nCols, lParse.colData, firstrow-1, 0,
                fits_parser_workfn, (void*)&Info, status ) == -1 )
       *status=0;  /* -1 indicates exitted without error before end... OK */
@@ -517,7 +517,7 @@ int ffcalc_rng( fitsfile *infptr,   /* I - Input FITS file                  */
 
    if( *status ) return( *status );
 
-   memset(&Info, 0, sizeof(Info));   
+   memset(&Info, 0, sizeof(Info));
 
    if( ffiprs( infptr, 0, expr, MAXDIMS, &Info.datatype, &nelem, &naxis,
                naxes, &lParse, status ) ) {
@@ -537,7 +537,7 @@ int ffcalc_rng( fitsfile *infptr,   /* I - Input FITS file                  */
    colNo = 0;
    ffpmrk(); /* prevent lack of column name from sullying the stack */
    ffgcno( outfptr, CASEINSEN, parName, &colNo, status );
-   ffcmsg();   
+   ffcmsg();
    if( *status ) {
 
       /*  Output column doesn't exist.  Test for keyword. */
@@ -600,7 +600,7 @@ int ffcalc_rng( fitsfile *infptr,   /* I - Input FITS file                  */
                   return( *status = NOT_BTABLE );
                case TLONG:     strcpy(tform,"I11");     break;
                case TDOUBLE:   strcpy(tform,"D23.15");  break;
-               case TSTRING:   
+               case TSTRING:
                case TBIT:      snprintf(tform,16,"A%ld",nelem);  break;
                }
             }
@@ -637,7 +637,7 @@ int ffcalc_rng( fitsfile *infptr,   /* I - Input FITS file                  */
                }
                else if( typecode==TLONGLONG )
                   nullVal = LONGLONG_MIN;
-		  
+
                if( nullVal ) {
                   ffpkyj( outfptr, nullKwd, nullVal, "Null value", status );
                   fits_set_btblnull( outfptr, colNo, nullVal, status );
@@ -858,8 +858,8 @@ int ffiprs( fitsfile *fptr,      /* I - Input FITS file                     */
    {
       /* this might be a 1D or null image with no NAXIS2 keyword */
       lParse->totalRows = 0;
-   } 
-   
+   }
+
 
    /*  Copy expression into parser... read from file if necessary  */
 
@@ -878,7 +878,7 @@ int ffiprs( fitsfile *fptr,      /* I - Input FITS file                     */
 
    /*  Parse the expression, building the Nodes and determing  */
    /*  which columns are needed and what data type is returned  */
-   
+
    fits_parser_yylex_init_extra(lParse, &yylex_scanner);
    fits_parser_yyrestart(NULL, yylex_scanner);
    *status = fits_parser_yyparse(yylex_scanner, lParse);
@@ -900,7 +900,7 @@ int ffiprs( fitsfile *fptr,      /* I - Input FITS file                     */
        ffpmsg("memory allocation failed (ffiprs)");
        return( *status = MEMORY_ALLOCATION );
      }
-     /* This allows iterator to know value of */ 
+     /* This allows iterator to know value of */
      /* fptr when no columns are referenced   */
      memset(lParse->colData, 0, sizeof(iteratorCol));
      lParse->colData[0].fptr = fptr;
@@ -1087,8 +1087,8 @@ int fits_parser_workfn( long    totalrows,     /* I - Total rows to be processed
 */
        } else {
 
-	  /* This clause applies if the user is passing user-allocated 
-	     data arrays, which is where the data will be placed.  This 
+	  /* This clause applies if the user is passing user-allocated
+	     data arrays, which is where the data will be placed.  This
 	     means they should also be passing null values */
           (pv->Data) = (pv->userInfo)->dataPtr;
           (pv->Null) = ((pv->userInfo)->nullPtr ? (pv->userInfo)->nullPtr : zeros);
@@ -1284,7 +1284,7 @@ int fits_parser_workfn( long    totalrows,     /* I - Total rows to be processed
                          ( result->value.data.strptr[kk][jj]=='1' );
                    }
              }
-             break; 
+             break;
           case TSTRING:
              if( constant ) {
                 for( jj=0; jj<ntodo; jj++ ) {
@@ -1349,11 +1349,11 @@ int fits_parser_workfn( long    totalrows,     /* I - Total rows to be processed
 
     /* If a TemporaryCol output is used, we want to inform the caller
        what the null value is expected to be */
-    if (pv->Null != outcol->array && 
+    if (pv->Null != outcol->array &&
 	(Data0) == (char*) outcol->array + (pv->datasize)) {
       if( (pv->userInfo)->datatype == TSTRING )
 	memcpy( outcol->array, *(char **)(pv->Null), 2 );
-      else 
+      else
 	memcpy( outcol->array, (pv->Null), (pv->datasize) );
     }
 
@@ -1365,7 +1365,7 @@ int fits_parser_workfn( long    totalrows,     /* I - Total rows to be processed
     else if( pv->Null == outcol->array ) {
        if( (pv->userInfo)->datatype == TSTRING )
           memcpy( *(char **)(pv->Null), zeros, 2 );
-       else 
+       else
           memcpy( (pv->Null), zeros, (pv->datasize) );
     }
 
@@ -1491,7 +1491,7 @@ static void Setup_DataArrays( ParseData *lParse, int nCols, iteratorCol *cols,
 	   }
 	 }
          while( len-- ) {
-            varData->undef[len] = 
+            varData->undef[len] =
                ( barray[0]!=0 && barray[0]==barray[len+1] );
          }
          varData->data  = barray + 1;
@@ -1509,7 +1509,7 @@ static void Setup_DataArrays( ParseData *lParse, int nCols, iteratorCol *cols,
 	   }
 	 }
          while( len-- ) {
-            varData->undef[len] = 
+            varData->undef[len] =
                ( iarray[0]!=0L && iarray[0]==iarray[len+1] );
          }
          varData->data  = iarray + 1;
@@ -1527,7 +1527,7 @@ static void Setup_DataArrays( ParseData *lParse, int nCols, iteratorCol *cols,
 	   }
 	 }
          while( len-- ) {
-            varData->undef[len] = 
+            varData->undef[len] =
                ( rarray[0]!=0.0 && rarray[0]==rarray[len+1]);
          }
          varData->data  = rarray + 1;
@@ -1647,7 +1647,7 @@ int ffcvtn( int   inputType,  /* I - Data type of input array               */
                   *status = OVERFLOW_ERR;
                   ((unsigned char*)output)[i] = UCHAR_MAX;
                } else
-                  ((unsigned char*)output)[i] = 
+                  ((unsigned char*)output)[i] =
                      (unsigned char) ((long*)input)[i];
             }
          }
@@ -1929,7 +1929,7 @@ int fffrwc( fitsfile *fptr,        /* I - Input FITS file                    */
 
    if( *status ) return( *status );
 
-   memset(&Info, 0, sizeof(Info));   
+   memset(&Info, 0, sizeof(Info));
 
    if( ffiprs( fptr, 1, expr, MAXDIMS, &Info.datatype, &nelem,
                &naxis, naxes, &lParse, status ) ) {
@@ -1941,7 +1941,7 @@ int fffrwc( fitsfile *fptr,        /* I - Input FITS file                    */
    fits_get_colnum( fptr, CASEINSEN, parCol,  &lParse.parCol , status );
    fits_get_colnum( fptr, CASEINSEN, valCol,  &lParse.valCol, status );
    if( *status ) return( *status );
-   
+
    if( nelem<0 ) {
       constant = 1;
       nelem = -nelem;
@@ -1959,7 +1959,7 @@ int fffrwc( fitsfile *fptr,        /* I - Input FITS file                    */
    /*******************************************/
    /* Allocate data arrays for each parameter */
    /*******************************************/
-   
+
    parNo = lParse.nCols;
    while( parNo-- ) {
       switch( lParse.colData[parNo].datatype ) {
@@ -2008,11 +2008,11 @@ int fffrwc( fitsfile *fptr,        /* I - Input FITS file                    */
          return( *status );
       }
    }
-   
+
    /**********************************************************************/
    /* Read data from columns needed for the expression and then parse it */
    /**********************************************************************/
-   
+
    if( !fits_uncompress_hkdata( &lParse, fptr, ntimes, times, status ) ) {
       if( constant ) {
          result = lParse.Nodes[lParse.resultNode].value.data.log;
@@ -2026,18 +2026,18 @@ int fffrwc( fitsfile *fptr,        /* I - Input FITS file                    */
                                      lParse.colData, (void*)&Info );
       }
    }
-   
+
    /************/
    /* Clean up */
    /************/
-   
+
    parNo = lParse.nCols;
    while ( parNo-- ) {
       if( lParse.colData[parNo].datatype==TSTRING )
          FREE( ((char **)lParse.colData[parNo].array)[0] );
       FREE( lParse.colData[parNo].array );
    }
-   
+
    if( constant ) lParse.nCols = nCol;
 
    ffcprs(&lParse);
@@ -2052,7 +2052,7 @@ int fits_parser_set_temporary_col(ParseData *lParse,
 				  int *status)
 {
   int col_cnt;
-  /* Setup iterator column and parser information to be ready to compute 
+  /* Setup iterator column and parser information to be ready to compute
      temporary calculator expression */
 
   if (*status) return *status;
@@ -2060,7 +2060,7 @@ int fits_parser_set_temporary_col(ParseData *lParse,
   col_cnt = lParse->nCols;
 
   if( fits_parser_allocateCol( lParse, col_cnt, status ) ) return *status;
-	
+
   /* Set important variables for TemporaryCol where calculated results end up */
   fits_iter_set_by_num( &(lParse->colData[col_cnt]), 0, 0, TDOUBLE, TemporaryCol);
   lParse->colData[col_cnt].repeat = lParse->nElements;
@@ -2167,7 +2167,7 @@ int fits_uncompress_hkdata( ParseData *lParse,
    parNo = lParse->nCols;
    while( parNo-- )
       if( !found[parNo] ) {
-         snprintf( parName, 256, "Parameter not found: %-30s", 
+         snprintf( parName, 256, "Parameter not found: %-30s",
                   lParse->varData[parNo].name );
          ffpmsg( parName );
          *status = PARSE_SYNTAX_ERR;
@@ -2412,7 +2412,7 @@ else { /* HDU holds a table */
          lParse->status = status;
          return pERROR;
       }
-   
+
    if( fits_get_coltype( fptr, colnum, &typecode,
                          &repeat, &width, &status ) ) {
       lParse->status = status;
@@ -2441,19 +2441,19 @@ if (lParse->hdutype != IMAGE_HDU) {
    case TBYTE:
    case TSHORT:
    case TLONG:
-      /* The datatype of column with TZERO and TSCALE keywords might be 
-         float or double. 
+      /* The datatype of column with TZERO and TSCALE keywords might be
+         float or double.
       */
       snprintf(temp,80,"TZERO%d",colnum);
       istatus = 0;
       if(fits_read_key(fptr,TDOUBLE,temp,&tzero,NULL,&istatus)) {
           tzero = 0.0;
-      } 
+      }
       snprintf(temp,80,"TSCAL%d",colnum);
       istatus = 0;
       if(fits_read_key(fptr,TDOUBLE,temp,&tscale,NULL,&istatus)) {
           tscale = 1.0;
-      } 
+      }
       if (tscale == 1.0 && (tzero == 0.0 || tzero == 32768.0 )) {
           varInfo->type     = LONG;
           colIter->datatype = TLONG;
@@ -2471,7 +2471,7 @@ if (lParse->hdutype != IMAGE_HDU) {
       }
       type = COLUMN;
       break;
-/* 
+/*
   For now, treat 8-byte integer columns as type double.
   This can lose precision, so the better long term solution
   will be to add support for TLONGLONG as a separate datatype.
@@ -2551,7 +2551,7 @@ static int find_keywd(ParseData *lParse, char *keyname, void *itslval )
       lParse->status = status;
       return( pERROR );
    }
-      
+
    if( fits_get_keytype( keyvalue, &dtype, &status ) ) {
       lParse->status = status;
       return( pERROR );
@@ -2639,7 +2639,7 @@ static int load_column( ParseData *lParse, int varNum, long fRow, long nRows,
     if (DEBUG_PIXFILTER)
         printf("load_column: IMAGE_HDU fRow=%ld, nRows=%ld => %d\n",
                         fRow, nRows, status);
-  } else { 
+  } else {
 
    nelem = nRows * var->repeat;
 
@@ -2717,7 +2717,7 @@ int fits_pixel_filter (PixelFilter * filter, int * status)
 
    DEBUG_PIXFILTER = getenv("DEBUG_PIXFILTER") ? 1 : 0;
 
-   memset(&Info, 0, sizeof(Info));   
+   memset(&Info, 0, sizeof(Info));
 
    if (*status)
       return (*status);

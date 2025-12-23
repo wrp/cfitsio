@@ -6,7 +6,7 @@
 /*
   This program illustrates how to use the CFITSIO iterator function.
   It reads the input 'vari.fits' file, moves to the binary
-  table in the "COMPRESSED_IMAGE" extension, and prints the 
+  table in the "COMPRESSED_IMAGE" extension, and prints the
   float-values in the column COMPRESSED_DATA.
 */
 int main(int argc, char *argv[])
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     int status, nkeys, keypos, hdutype, ii, jj;
     char filename[]  = "vari.fits";     /* name of rate FITS file */
 
-    status = 0; 
+    status = 0;
 
     fits_open_file(&fptr, filename, READWRITE, &status); /* open file */
 
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 }
 /*--------------------------------------------------------------------------*/
 int flux_rate(long totalrows, long offset, long firstrow, long nrows,
-             int ncols, iteratorCol *cols, void *user_strct ) 
+             int ncols, iteratorCol *cols, void *user_strct )
 
 /*
    Sample iterator function that prints the values (assumed to be

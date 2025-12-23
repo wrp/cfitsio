@@ -3,7 +3,7 @@
 #include "fverify.h"
 
 /* prototypes for PIL interface routines, that are not actually needed
-   for this standalone version of fverify 
+   for this standalone version of fverify
 */
 #define PIL_LINESIZE 1024
 int PILGetFname(char *parname, char *filename);
@@ -13,7 +13,7 @@ int PILPutInt(char *parname, int intvalue);
 
 
 /*
-   This file contains the main fverify routine, and dummy version of 
+   This file contains the main fverify routine, and dummy version of
    various other headas system routines.  This is used for the stand
    alone version of fverify.
 */
@@ -54,7 +54,7 @@ printf("    of the Flexible Image Transport System (FITS), Version 3.0, availabl
 printf("    online  at http://fits.gsfc.nasa.gov/.  The input filename template may\n");
 printf("    contain wildcard characters, in which case all matching files will be \n");
 printf("    tested.  Alternatively, the name of an ASCII text file containing a list\n");
-printf("    of file names, one per line, may be entered preceded by an '@' character.\n"); 
+printf("    of file names, one per line, may be entered preceded by an '@' character.\n");
 printf("    The following error or warning conditions will be reported:\n");
 printf("    \n");
 printf("    ERROR CONDITIONS\n");
@@ -134,12 +134,12 @@ printf("    should be submitted to http://heasarc.gsfc.nasa.gov/cgi-bin/ftoolshe
 
     /* check for flags on the command line */
     for (ii = 1; ii < argc; ii++)
-    {	 
+    {
         if ((*argv[ii] != '-') || !strcmp(argv[ii],"-") ){
             file1 = ii;
             break;
         }
-	    
+
         if (!strcmp(argv[ii],"-l")) {
            prhead = 1;
         } else if (!strcmp(argv[ii],"-H")) {
@@ -175,11 +175,11 @@ printf("    should be submitted to http://heasarc.gsfc.nasa.gov/cgi-bin/ftoolshe
       return(0);
     }
 
-    /* 
+    /*
          call work function to verify that infile conforms to the FITS
          standard and write report to the output file.
     */
-    for (ii = file1; ii < argc; ii++) 
+    for (ii = file1; ii < argc; ii++)
     {
        status = ftverify_work(
          argv[ii],    /* name of file to verify */

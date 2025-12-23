@@ -151,7 +151,7 @@ C**********************************************************************
       if (status .ne. 0) return
 
 C    --------------------------------------------------------
-C      Initialization procedures: execute on the first call  
+C      Initialization procedures: execute on the first call
 C    --------------------------------------------------------
       if (firstrow .eq. 1) then
          if (ncols .ne. 3) then
@@ -188,10 +188,10 @@ C     bad deadtime value
 C    --------------------------------------------
 C      Main loop: process all the rows of data
 C    --------------------------------------------
-      
+
 C     NOTE: 1st element of array is the null pixel value!
 C     Loop over elements 2 to nrows+1, not 1 to nrows.
-      
+
 C     this version ignores null values
 
 C     set the output null value to zero to ignore nulls */
@@ -208,7 +208,7 @@ C     Nonsensical negative time interval
  10   continue
 
 C    -------------------------------------------------------
-C      Clean up procedures:  after processing all the rows  
+C      Clean up procedures:  after processing all the rows
 C    -------------------------------------------------------
 
       if (firstrow + nrows - 1 .eq. totalrows) then
@@ -219,6 +219,6 @@ C     update the LIVETIME keyword value
          print *,'livetime = ', livetime
 
       endif
- 
+
       return
       end

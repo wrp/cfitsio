@@ -312,7 +312,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[void d( int , double) ]])],[PROTO=yes
 if test $ANSI_HEADER = no -o $PROTO = no; then
      echo "   *********** WARNING: CFITSIO CONFIGURE FAILURE ************  "
      echo "cfitsio: ANSI C environment NOT found. Aborting cfitsio configure."
-     if test $ANSI_HEADER = no; then 
+     if test $ANSI_HEADER = no; then
         echo "cfitsio: You're missing a needed ANSI header file."
      fi
      if test $PROTO = no; then
@@ -359,7 +359,7 @@ case $host in
 	if test "x$CFORTRANFLAGS" = x ; then
 		CFORTRANFLAGS="-Dappendus"
 	fi
-	CFLAGS="$CFLAGS -DPG_PPU" 
+	CFLAGS="$CFLAGS -DPG_PPU"
 	LIBPRE="-Wl,"
 	;;
     *irix*)
@@ -515,7 +515,7 @@ AC_MSG_RESULT(yes)
 # ---------------------------------------------------------
 # some systems define long long for 64-bit ints
 # ---------------------------------------------------------
- 
+
 AC_MSG_CHECKING(whether long long is defined)
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdlib.h>
 ]], [[
@@ -564,7 +564,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/fcntl.h>
 flock_t filler;
 ]])],[
 AC_DEFINE(HAVE_FLOCK_T)
-AC_MSG_RESULT(yes) 
+AC_MSG_RESULT(yes)
 ],[AC_MSG_RESULT(no) ])
 
 if test "$HAVE_FLOCK_T" != 1; then
@@ -574,7 +574,7 @@ if test "$HAVE_FLOCK_T" != 1; then
    flock_t filler;
    ]])],[
    AC_DEFINE(HAVE_FLOCK_T)
-   AC_MSG_RESULT(yes) 
+   AC_MSG_RESULT(yes)
    ],[AC_MSG_RESULT(no) ])
 fi
 
@@ -604,7 +604,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/ipc.h>
 ]], [[
 union semun filler;
 ]])],[
-AC_DEFINE(HAVE_UNION_SEMUN)   
+AC_DEFINE(HAVE_UNION_SEMUN)
 AC_MSG_RESULT(yes)
 ],[AC_MSG_RESULT(no) ])
 

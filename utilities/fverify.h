@@ -8,8 +8,8 @@
 #include <math.h>
 #include <limits.h>
 #include "fitsio.h"
-#define MAXERRORS  200		
-#define MAXWRNS  200		
+#define MAXERRORS  200
+#define MAXWRNS  200
 
 static char errmes[256];
 static char comm[FLEN_FILENAME+6];
@@ -23,9 +23,9 @@ extern int heasarc_conv;
 extern int testhierarch;
 extern int prstat;
 /********************************
-*				*   
+*				*
 *       Keywords 		*
-*				*   
+*				*
 ********************************/
 
 typedef enum  {      STR_KEY,   /* string   key */
@@ -38,10 +38,10 @@ typedef enum  {      STR_KEY,   /* string   key */
 		     UNKNOWN	/* Unknown types */
 		     } kwdtyp;
 /* error number masks of  the keyword test */
-#define 	BAD_STR			0X0001 
+#define 	BAD_STR			0X0001
 #define		NO_TRAIL_QUOTE		0X0002
-#define		BAD_NUM			0X0004 
-#define		LOWCASE_EXPO		0X0008 
+#define		BAD_NUM			0X0004
+#define		LOWCASE_EXPO		0X0008
 #define		NO_TRAIL_PAREN		0X0010
 #define		NO_COMMA		0X0020
 #define		TOO_MANY_COMMA		0X0040
@@ -56,8 +56,8 @@ typedef enum  {      STR_KEY,   /* string   key */
 /* 1 for the primary + 26 for [A-Z] suffix. */
 #define NWCSDESCR  27
 
-/* keyword structure */ 
-typedef struct { 
+/* keyword structure */
+typedef struct {
     char kname[FLEN_KEYWORD];	/* fits keyword name */
     kwdtyp ktype;		/* fits keyword type */
     char kvalue[FLEN_VALUE];	/* fits keyword name */
@@ -86,21 +86,21 @@ void pr_kval_err(FILE *out, int pos, char *keyname, char *keyval,
       unsigned long stat);
 
 /********************************
-*				*   
+*				*
 *       Headers  		*
-*				*   
+*				*
 ********************************/
-typedef struct { 
+typedef struct {
     int	 hdutype; 		/* hdutype */
     int	 hdunum; 		/* hdunum  */
-    int  isgroup;		/* random group flag */ 
-    int  istilecompressed;	/* tile compressed image */ 
+    int  isgroup;		/* random group flag */
+    int  istilecompressed;	/* tile compressed image */
     int  gcount;		/* gcount  */
     LONGLONG  pcount;		/* pcount  */
     int  bitpix;		/* pix number */
     int  naxis;			/* number of the axis,used for image array*/
     LONGLONG *naxes;		/* dimension of each axis,used for image array*/
-    int  ncols;			/* number of the columns, used for image only*/ 
+    int  ncols;			/* number of the columns, used for image only*/
     char extname[FLEN_VALUE];		/* EXTENSION NAME */
     int extver;			/* extension version */
     char **datamax;		/* strings for the maximum of the data in a column */
@@ -109,16 +109,16 @@ typedef struct {
     int  nkeys; 		/* number of keys */
     int  tkeys; 		/* total of the keys tested*/
     int  heap;			/* heap */
-    FitsKey **kwds;		/* keywords list starting from the 
-				   last NAXISn keyword. The array 
-				   is sorted in the ascending alphabetical 
-				   order of keyword names. The last keyword END 
-				   and commentary keywords are  excluded. 
-				   The total number of element, tkey, is 
+    FitsKey **kwds;		/* keywords list starting from the
+				   last NAXISn keyword. The array
+				   is sorted in the ascending alphabetical
+				   order of keyword names. The last keyword END
+				   and commentary keywords are  excluded.
+				   The total number of element, tkey, is
 				   nkeys - 4 - naxis - ncomm. */
     int use_longstr;		/* flag indicates that the long string
                                    convention is used */
-}FitsHdu;   
+}FitsHdu;
 
 typedef struct {
      char * name;
@@ -139,10 +139,10 @@ void test_img_ext(fitsfile *infits, FILE *out, FitsHdu *hduptr);
 void test_asc_ext(fitsfile *infits, FILE *out, FitsHdu *hduptr);
 void test_bin_ext(fitsfile *infits, FILE *out, FitsHdu *hduptr);
 void test_header(fitsfile *infits, FILE *out, FitsHdu *hduptr);
-void key_match(char **strs, int nstr, char **pattern, int exact, 
+void key_match(char **strs, int nstr, char **pattern, int exact,
 	       int *ikey, int *mkey);
 void test_colnam(FILE *out, FitsHdu *hduptr);
-void parse_vtform(fitsfile *infits, FILE *out, FitsHdu *hduptr, 
+void parse_vtform(fitsfile *infits, FILE *out, FitsHdu *hduptr,
 	     int colnum, int *datacode, long *maxlen, int *isQFormat);
 int  parse_wcskey_suffix(char *fullname, char* rootname, int* axis, int* alt);
 void print_title(FILE* out, int hdunum, int hdutype);
@@ -152,29 +152,29 @@ void close_hdu(FitsHdu *hduptr);
 
 
 /********************************
-*				*   
+*				*
 *       Data 	  		*
-*				*   
+*				*
 ********************************/
 
 void test_data(fitsfile *infits, FILE *out, FitsHdu *hduptr);
 void test_agap(fitsfile *infits, FILE *out, FitsHdu *hduptr);
 void test_checksum(fitsfile *infits, FILE *out);
-int iterdata(long totaln, long offset, long firstn, long nrows, 
+int iterdata(long totaln, long offset, long firstn, long nrows,
 	     int narrays, iteratorCol *iter_col, void *usrdata);
 /********************************
-*				*   
+*				*
 *       Files   		*
-*				*   
+*				*
 ********************************/
-typedef struct { 
+typedef struct {
     int	 hdutype; 		/* hdutype */
     int	 hdunum; 		/* hdunum  */
     char extname[FLEN_VALUE];	/* extension name, used for extension*/
     int	 extver; 		/* extension version, used for extension */
     int  errnum;			/* number of errors in this hdu */
     int  wrnno;			/* number of warnning in this hdu */
-}HduName;    
+}HduName;
 int get_total_warn();
 int get_total_err();
 void init_hduname();
@@ -192,9 +192,9 @@ void update_parfile(int numerr, int numwrn);
 
 
 /********************************
-*				*   
+*				*
 *       Miscellaneous	 	*
-*				*   
+*				*
 ********************************/
 void print_fmt(FILE *out, char *temp, int nprompt);
 int wrtout (FILE *out,char *comm);

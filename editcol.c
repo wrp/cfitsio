@@ -21,7 +21,7 @@ int ffrsim(fitsfile *fptr,      /* I - FITS file pointer           */
 {
     LONGLONG tnaxes[99];
     int ii;
-    
+
     if (*status > 0)
         return(*status);
 
@@ -58,7 +58,7 @@ int ffrsimll(fitsfile *fptr,    /* I - FITS file pointer           */
     }
          /* rescan header if data structure is undefined */
     else if ((fptr->Fptr)->datastart == DATA_UNDEFINED)
-        if ( ffrdef(fptr, status) > 0)               
+        if ( ffrdef(fptr, status) > 0)
             return(*status);
 
     /* get current image size parameters */
@@ -68,7 +68,7 @@ int ffrsimll(fitsfile *fptr,    /* I - FITS file pointer           */
 
     longbitpix = bitpix;
 
-    /* test for the 4 special cases that represent unsigned integers 
+    /* test for the 4 special cases that represent unsigned integers
        or signed bytes */
     if (longbitpix == USHORT_IMG)
         longbitpix = SHORT_IMG;
@@ -81,7 +81,7 @@ int ffrsimll(fitsfile *fptr,    /* I - FITS file pointer           */
 
     /* test that the new values are legal */
 
-    if (longbitpix != BYTE_IMG && longbitpix != SHORT_IMG && 
+    if (longbitpix != BYTE_IMG && longbitpix != SHORT_IMG &&
         longbitpix != LONG_IMG && longbitpix != LONGLONG_IMG &&
         longbitpix != FLOAT_IMG && longbitpix != DOUBLE_IMG)
     {
@@ -125,7 +125,7 @@ int ffrsimll(fitsfile *fptr,    /* I - FITS file pointer           */
     {
         oldsize = 1;
         for (ii = 0; ii < onaxis; ii++)
-            oldsize *= onaxes[ii];  
+            oldsize *= onaxes[ii];
         oldsize = (oldsize + pcount) * gcount * (abs(obitpix) / 8);
     }
 
@@ -137,13 +137,13 @@ int ffrsimll(fitsfile *fptr,    /* I - FITS file pointer           */
     if (newsize > oldsize)   /* have to insert new blocks for image */
     {
         nblocks = (long) (newsize - oldsize);
-        if (ffiblk(fptr, nblocks, 1, status) > 0)  
+        if (ffiblk(fptr, nblocks, 1, status) > 0)
             return(*status);
     }
     else if (oldsize > newsize)  /* have to delete blocks from image */
     {
         nblocks = (long) (oldsize - newsize);
-        if (ffdblk(fptr, nblocks, status) > 0)  
+        if (ffdblk(fptr, nblocks, status) > 0)
             return(*status);
     }
 
@@ -163,7 +163,7 @@ int ffrsimll(fitsfile *fptr,    /* I - FITS file pointer           */
     }
 
     /* modify the existing NAXISn keywords */
-    nmodify = minvalue(naxis, onaxis); 
+    nmodify = minvalue(naxis, onaxis);
     for (ii = 0; ii < nmodify; ii++)
     {
         ffkeyn("NAXIS", ii+1, keyname, status);
@@ -172,7 +172,7 @@ int ffrsimll(fitsfile *fptr,    /* I - FITS file pointer           */
 
     if (naxis > onaxis)  /* insert additional NAXISn keywords */
     {
-        strcpy(comment,"length of data axis");  
+        strcpy(comment,"length of data axis");
         for (ii = onaxis; ii < naxis; ii++)
         {
             ffkeyn("NAXIS", ii+1, keyname, status);
@@ -250,7 +250,7 @@ int ffirow(fitsfile *fptr,  /* I - FITS file pointer                        */
     }
          /* rescan header if data structure is undefined */
     else if ((fptr->Fptr)->datastart == DATA_UNDEFINED)
-        if ( ffrdef(fptr, status) > 0)               
+        if ( ffrdef(fptr, status) > 0)
             return(*status);
 
     if ((fptr->Fptr)->hdutype == IMAGE_HDU)
@@ -339,7 +339,7 @@ int ffdrow(fitsfile *fptr,  /* I - FITS file pointer                        */
     }
         /* rescan header if data structure is undefined */
     else if ((fptr->Fptr)->datastart == DATA_UNDEFINED)
-        if ( ffrdef(fptr, status) > 0)               
+        if ( ffrdef(fptr, status) > 0)
             return(*status);
 
     if ((fptr->Fptr)->hdutype == IMAGE_HDU)
@@ -391,7 +391,7 @@ int ffdrow(fitsfile *fptr,  /* I - FITS file pointer                        */
     nblock = (long) ((nshift + freespace) / 2880);   /* number of blocks */
 
     /* delete integral number blocks */
-    if (nblock > 0) 
+    if (nblock > 0)
         ffdblk(fptr, nblock, status);
 
     /* update the heap starting address */
@@ -427,7 +427,7 @@ and gives a list of rows or row ranges separated by commas.
     int nranges, nranges2, ii;
     long *minrow, *maxrow, nrows, *rowarray, jj, kk;
     LONGLONG naxis2;
-    
+
     if (*status > 0)
         return(*status);
 
@@ -437,7 +437,7 @@ and gives a list of rows or row ranges separated by commas.
     }
         /* rescan header if data structure is undefined */
     else if ((fptr->Fptr)->datastart == DATA_UNDEFINED)
-        if ( ffrdef(fptr, status) > 0)               
+        if ( ffrdef(fptr, status) > 0)
             return(*status);
 
     if ((fptr->Fptr)->hdutype == IMAGE_HDU)
@@ -453,7 +453,7 @@ and gives a list of rows or row ranges separated by commas.
     cptr = ranges;
     for (nranges = 1; (cptr = strchr(cptr, ',')); nranges++)
         cptr++;
- 
+
     minrow = calloc(nranges, sizeof(long));
     maxrow = calloc(nranges, sizeof(long));
 
@@ -497,7 +497,7 @@ and gives a list of rows or row ranges separated by commas.
 
     /* delete the rows */
     ffdrws(fptr, rowarray, nrows, status);
-    
+
     free(rowarray);
     free(maxrow);
     free(minrow);
@@ -525,7 +525,7 @@ int ffdrws(fitsfile *fptr,  /* I - FITS file pointer                        */
 
     /* rescan header if data structure is undefined */
     if ((fptr->Fptr)->datastart == DATA_UNDEFINED)
-        if ( ffrdef(fptr, status) > 0)               
+        if ( ffrdef(fptr, status) > 0)
             return(*status);
 
     if ((fptr->Fptr)->hdutype == IMAGE_HDU)
@@ -579,7 +579,7 @@ int ffdrws(fitsfile *fptr,  /* I - FITS file pointer                        */
     /* work through the list of rows to delete */
     for (ii = 1; ii < nrows; nextrow++, nextrowpos += naxis1)
     {
-        if (nextrow < rownum[ii])  
+        if (nextrow < rownum[ii])
         {   /* keep this row, so copy it to the new position */
 
             ffmbyt(fptr, nextrowpos, REPORT_EOF, status);
@@ -619,17 +619,17 @@ int ffdrws(fitsfile *fptr,  /* I - FITS file pointer                        */
         }
         insertpos  += naxis1;
         nextrowpos += naxis1;
-        nextrow++; 
+        nextrow++;
     }
     free(buffer);
-    
+
     /* now delete the empty rows at the end of the table */
     ffdrow(fptr, naxis2 - nrows + 1, nrows, status);
 
     /* Update the heap data, if any.  This will remove any orphaned data */
     /* that was only pointed to by the rows that have been deleted */
     ffcmph(fptr, status);
-    
+
     return(*status);
 }
 /*--------------------------------------------------------------------------*/
@@ -654,7 +654,7 @@ int ffdrwsll(fitsfile *fptr, /* I - FITS file pointer                        */
 
     /* rescan header if data structure is undefined */
     if ((fptr->Fptr)->datastart == DATA_UNDEFINED)
-        if ( ffrdef(fptr, status) > 0)               
+        if ( ffrdef(fptr, status) > 0)
             return(*status);
 
     if ((fptr->Fptr)->hdutype == IMAGE_HDU)
@@ -708,7 +708,7 @@ int ffdrwsll(fitsfile *fptr, /* I - FITS file pointer                        */
     /* work through the list of rows to delete */
     for (ii = 1; ii < nrows; nextrow++, nextrowpos += naxis1)
     {
-        if (nextrow < rownum[ii])  
+        if (nextrow < rownum[ii])
         {   /* keep this row, so copy it to the new position */
 
             ffmbyt(fptr, nextrowpos, REPORT_EOF, status);
@@ -748,17 +748,17 @@ int ffdrwsll(fitsfile *fptr, /* I - FITS file pointer                        */
         }
         insertpos  += naxis1;
         nextrowpos += naxis1;
-        nextrow++; 
+        nextrow++;
     }
     free(buffer);
-    
+
     /* now delete the empty rows at the end of the table */
     ffdrow(fptr, naxis2 - nrows + 1, nrows, status);
 
     /* Update the heap data, if any.  This will remove any orphaned data */
     /* that was only pointed to by the rows that have been deleted */
     ffcmph(fptr, status);
-    
+
     return(*status);
 }
 /*--------------------------------------------------------------------------*/
@@ -773,12 +773,12 @@ int ffrwrg(
 {
 /*
    parse the input list of row ranges, returning the number of ranges,
-   and the min and max row value in each range. 
+   and the min and max row value in each range.
 
-   The only characters allowed in the input rowlist are 
-       decimal digits, minus sign, and comma (and non-significant spaces) 
+   The only characters allowed in the input rowlist are
+       decimal digits, minus sign, and comma (and non-significant spaces)
 
-   Example:  
+   Example:
 
      list = "10-20, 30-35,50"
 
@@ -803,7 +803,7 @@ int ffrwrg(
     *numranges = 0;
 
     while (*next == ' ')next++;   /* skip spaces */
-   
+
     while (*next != '\0') {
 
       /* find min value of next range; *next must be '-' or a digit */
@@ -911,12 +911,12 @@ int ffrwrgll(
 {
 /*
    parse the input list of row ranges, returning the number of ranges,
-   and the min and max row value in each range. 
+   and the min and max row value in each range.
 
-   The only characters allowed in the input rowlist are 
-       decimal digits, minus sign, and comma (and non-significant spaces) 
+   The only characters allowed in the input rowlist are
+       decimal digits, minus sign, and comma (and non-significant spaces)
 
-   Example:  
+   Example:
 
      list = "10-20, 30-35,50"
 
@@ -942,7 +942,7 @@ int ffrwrgll(
     *numranges = 0;
 
     while (*next == ' ')next++;   /* skip spaces */
-   
+
     while (*next != '\0') {
 
       /* find min value of next range; *next must be '-' or a digit */
@@ -1100,7 +1100,7 @@ int fficls(fitsfile *fptr,  /* I - FITS file pointer                        */
     }
         /* rescan header if data structure is undefined */
     else if ((fptr->Fptr)->datastart == DATA_UNDEFINED)
-        if ( ffrdef(fptr, status) > 0)               
+        if ( ffrdef(fptr, status) > 0)
             return(*status);
 
     if ((fptr->Fptr)->hdutype == IMAGE_HDU)
@@ -1153,7 +1153,7 @@ int fficls(fitsfile *fptr,  /* I - FITS file pointer                        */
         }
     }
 
-    if (*status > 0) 
+    if (*status > 0)
         return(*status);
 
     /* get the current size of the table */
@@ -1240,11 +1240,11 @@ int fficls(fitsfile *fptr,  /* I - FITS file pointer                        */
         ffupch(tfm);         /* make sure format is in upper case */
         ffkeyn("TFORM", colnum, keyname, status);
 
-        if (abs(datacode) == TSBYTE) 
+        if (abs(datacode) == TSBYTE)
         {
            /* Replace the 'S' with an 'B' in the TFORMn code */
            cptr = tfm;
-           while (*cptr != 'S') 
+           while (*cptr != 'S')
               cptr++;
 
            *cptr = 'B';
@@ -1260,11 +1260,11 @@ int fficls(fitsfile *fptr,  /* I - FITS file pointer                        */
            strcpy(comm, "data are not scaled");
            ffpkyg(fptr, keyname, 1., 0, comm, status);
         }
-        else if (abs(datacode) == TUSHORT) 
+        else if (abs(datacode) == TUSHORT)
         {
            /* Replace the 'U' with an 'I' in the TFORMn code */
            cptr = tfm;
-           while (*cptr != 'U') 
+           while (*cptr != 'U')
               cptr++;
 
            *cptr = 'I';
@@ -1280,11 +1280,11 @@ int fficls(fitsfile *fptr,  /* I - FITS file pointer                        */
            strcpy(comm, "data are not scaled");
            ffpkyg(fptr, keyname, 1., 0, comm, status);
         }
-        else if (abs(datacode) == TULONG) 
+        else if (abs(datacode) == TULONG)
         {
            /* Replace the 'V' with an 'J' in the TFORMn code */
            cptr = tfm;
-           while (*cptr != 'V') 
+           while (*cptr != 'V')
               cptr++;
 
            *cptr = 'J';
@@ -1300,11 +1300,11 @@ int fficls(fitsfile *fptr,  /* I - FITS file pointer                        */
            strcpy(comm, "data are not scaled");
            ffpkyg(fptr, keyname, 1., 0, comm, status);
         }
-        else if (abs(datacode) == TULONGLONG) 
-        {	   
+        else if (abs(datacode) == TULONGLONG)
+        {
            /* Replace the 'W' with an 'K' in the TFORMn code */
            cptr = tfm;
-           while (*cptr != 'W') 
+           while (*cptr != 'W')
               cptr++;
 
            *cptr = 'K';
@@ -1372,7 +1372,7 @@ int ffmvec(fitsfile *fptr,  /* I - FITS file pointer                        */
     }
         /* rescan header if data structure is undefined */
     else if ((fptr->Fptr)->datastart == DATA_UNDEFINED)
-        if ( ffrdef(fptr, status) > 0)               
+        if ( ffrdef(fptr, status) > 0)
             return(*status);
 
     if ((fptr->Fptr)->hdutype != BINARY_TBL)
@@ -1470,7 +1470,7 @@ int ffmvec(fitsfile *fptr,  /* I - FITS file pointer                        */
 
       /* delete elements from the vector */
       ffcdel(fptr, naxis1, naxis2, -delbyte, firstcol, status);
- 
+
       /* abs heap pos */
       firstbyte = (fptr->Fptr)->datastart + (fptr->Fptr)->heapstart;
       ndelete = (LONGLONG)delbyte * naxis2; /* size of shift (negative) */
@@ -1522,7 +1522,7 @@ int ffmvec(fitsfile *fptr,  /* I - FITS file pointer                        */
     /* write as a double value because the LONGLONG conversion */
     /* character in snprintf is platform dependent ( %lld, %ld, %I64d ) */
 
-    snprintf(tfm,FLEN_VALUE,"%.0f%s",(double) newveclen, tcode); 
+    snprintf(tfm,FLEN_VALUE,"%.0f%s",(double) newveclen, tcode);
 
     ffkeyn("TFORM", colnum, keyname, status);  /* Keyword name */
     ffmkys(fptr, keyname, tfm, "&", status);   /* modify TFORM keyword */
@@ -1567,7 +1567,7 @@ int ffcpcl(fitsfile *infptr,    /* I - FITS file pointer to input file  */
     else if ((infptr->Fptr)->datastart == DATA_UNDEFINED)
         ffrdef(infptr, status);                /* rescan header */
     inHduType = (infptr->Fptr)->hdutype;
-    
+
     if (outfptr->HDUposition != (outfptr->Fptr)->curhdu)
     {
         ffmahd(outfptr, (outfptr->HDUposition) + 1, NULL, status);
@@ -1575,7 +1575,7 @@ int ffcpcl(fitsfile *infptr,    /* I - FITS file pointer to input file  */
     else if ((outfptr->Fptr)->datastart == DATA_UNDEFINED)
         ffrdef(outfptr, status);               /* rescan header */
     outHduType = (outfptr->Fptr)->hdutype;
-    
+
     if (*status > 0)
         return(*status);
 
@@ -1610,7 +1610,7 @@ int ffcpcl(fitsfile *infptr,    /* I - FITS file pointer to input file  */
         ffkeyn("TTYPE", incol, keyname, &tstatus);
         ffgkys(infptr, keyname, ttype, ttype_comm, &tstatus);
         ffkeyn("TFORM", incol, keyname, &tstatus);
-    
+
         if (ffgkys(infptr, keyname, tform, tform_comm, &tstatus) )
         {
           ffpmsg
@@ -1829,18 +1829,18 @@ int ffcpcl(fitsfile *infptr,    /* I - FITS file pointer to input file  */
 
         /* read from input table */
         if (typecode == TLOGICAL)
-            ffgcl(infptr, incol, firstrow, firstelem, ntodo, 
+            ffgcl(infptr, incol, firstrow, firstelem, ntodo,
                        lvalues, status);
         else if (typecode == TSTRING)
             ffgcvs(infptr, incol, firstrow, firstelem, ntodo,
                        nulstr, strarray, &anynull, status);
 
-        else if (typecode == TCOMPLEX)  
-            ffgcvc(infptr, incol, firstrow, firstelem, ntodo, fnull, 
+        else if (typecode == TCOMPLEX)
+            ffgcvc(infptr, incol, firstrow, firstelem, ntodo, fnull,
                    fvalues, &anynull, status);
 
         else if (typecode == TDBLCOMPLEX)
-            ffgcvm(infptr, incol, firstrow, firstelem, ntodo, dnull, 
+            ffgcvm(infptr, incol, firstrow, firstelem, ntodo, dnull,
                    dvalues, &anynull, status);
 
 	/* Neither TULONGLONG nor TLONGLONG does null checking.  Whatever
@@ -1851,12 +1851,12 @@ int ffcpcl(fitsfile *infptr,    /* I - FITS file pointer to input file  */
 	  ffgcvujj(infptr, incol, firstrow, firstelem, ntodo, /*nulval*/ 0,
                    ujjvalues, &anynull, status);
 
-	else if (typecode == TLONGLONG && etypecode != TDOUBLE) 
-	  ffgcvjj(infptr, incol, firstrow, firstelem, ntodo, /*nulval*/ 0, 
+	else if (typecode == TLONGLONG && etypecode != TDOUBLE)
+	  ffgcvjj(infptr, incol, firstrow, firstelem, ntodo, /*nulval*/ 0,
                    jjvalues, &anynull, status);
 
         else       /* all numerical types */
-            ffgcvd(infptr, incol, firstrow, firstelem, ntodo, dnull, 
+            ffgcvd(infptr, incol, firstrow, firstelem, ntodo, dnull,
                    dvalues, &anynull, status);
 
         if (*status > 0)
@@ -1870,7 +1870,7 @@ int ffcpcl(fitsfile *infptr,    /* I - FITS file pointer to input file  */
         {
             nullflag = 2;
 
-            ffpcnl(outfptr, colnum, firstrow, firstelem, ntodo, 
+            ffpcnl(outfptr, colnum, firstrow, firstelem, ntodo,
                        lvalues, nullflag, status);
 
         }
@@ -1885,35 +1885,35 @@ int ffcpcl(fitsfile *infptr,    /* I - FITS file pointer to input file  */
                        strarray, status);
         }
 
-        else if (typecode == TCOMPLEX)  
+        else if (typecode == TCOMPLEX)
         {                      /* doesn't support writing nulls */
-            ffpclc(outfptr, colnum, firstrow, firstelem, ntodo, 
+            ffpclc(outfptr, colnum, firstrow, firstelem, ntodo,
                        fvalues, status);
         }
 
-        else if (typecode == TDBLCOMPLEX)  
+        else if (typecode == TDBLCOMPLEX)
         {                      /* doesn't support writing nulls */
-            ffpclm(outfptr, colnum, firstrow, firstelem, ntodo, 
+            ffpclm(outfptr, colnum, firstrow, firstelem, ntodo,
                        dvalues, status);
         }
 
 	else if (typecode == TLONGLONG && etypecode == TULONGLONG)
 	{   /* No null checking because we did none to read */
-            ffpclujj(outfptr, colnum, firstrow, firstelem, ntodo, 
+            ffpclujj(outfptr, colnum, firstrow, firstelem, ntodo,
 		     ujjvalues, status);
 	}
-	else if (typecode == TLONGLONG && etypecode != TDOUBLE) 
+	else if (typecode == TLONGLONG && etypecode != TDOUBLE)
 	{   /* No null checking because we did none to read */
-	    ffpcljj(outfptr, colnum, firstrow, firstelem, ntodo, 
+	    ffpcljj(outfptr, colnum, firstrow, firstelem, ntodo,
 		    jjvalues, status);
 	}
         else  /* all other numerical types */
         {
             if (anynull)
-                ffpcnd(outfptr, colnum, firstrow, firstelem, ntodo, 
+                ffpcnd(outfptr, colnum, firstrow, firstelem, ntodo,
                        dvalues, dnull, status);
             else
-                ffpcld(outfptr, colnum, firstrow, firstelem, ntodo, 
+                ffpcld(outfptr, colnum, firstrow, firstelem, ntodo,
                        dvalues, status);
         }
 
@@ -1985,7 +1985,7 @@ int ffccls(fitsfile *infptr,    /* I - FITS file pointer to input file  */
     else if ((infptr->Fptr)->datastart == DATA_UNDEFINED)
         ffrdef(infptr, status);                /* rescan header */
     inHduType = (infptr->Fptr)->hdutype;
-    
+
     if (outfptr->HDUposition != (outfptr->Fptr)->curhdu)
     {
         ffmahd(outfptr, (outfptr->HDUposition) + 1, NULL, status);
@@ -1993,7 +1993,7 @@ int ffccls(fitsfile *infptr,    /* I - FITS file pointer to input file  */
     else if ((outfptr->Fptr)->datastart == DATA_UNDEFINED)
         ffrdef(outfptr, status);               /* rescan header */
     outHduType = (outfptr->Fptr)->hdutype;
-    
+
     if (*status > 0)
         return(*status);
 
@@ -2034,8 +2034,8 @@ int ffccls(fitsfile *infptr,    /* I - FITS file pointer to input file  */
     colnum = minvalue((int) tfields + 1, outcol); /* output col. number */
 
     /* Collect data about input column (type, repeat, etc) */
-    for (incol1 = incol, outcol1 = colnum, icol = 0; 
-	 icol < ncols; 
+    for (incol1 = incol, outcol1 = colnum, icol = 0;
+	 icol < ncols;
 	 icol++, incol1++, outcol1++)
     {
       ffgtcl(infptr, incol1, &typecode, &repeat, &width, status);
@@ -2053,7 +2053,7 @@ int ffccls(fitsfile *infptr,    /* I - FITS file pointer to input file  */
       ffgkys(infptr, keyname, ttype, ttype_comm, &tstatus);
 
       ffkeyn("TFORM", incol1, keyname, &tstatus);
-    
+
       if (ffgkys(infptr, keyname, tform, tform_comm, &tstatus) )
         {
           ffpmsg
@@ -2093,8 +2093,8 @@ int ffccls(fitsfile *infptr,    /* I - FITS file pointer to input file  */
         }
 
 	/* Copy meta-data strings from input column to output */
-	for (incol1 = incol, outcol1 = colnum, icol = 0; 
-	     icol < ncols; 
+	for (incol1 = incol, outcol1 = colnum, icol = 0;
+	     icol < ncols;
 	     icol++, incol1++, outcol1++)
 	{
 	  /* copy the comment strings from the input file for TTYPE and TFORM */
@@ -2102,14 +2102,14 @@ int ffccls(fitsfile *infptr,    /* I - FITS file pointer to input file  */
 	  ffgkys(infptr, keyname, ttype, ttype_comm, status);
 	  ffkeyn("TTYPE", outcol1, keyname, status);
 	  ffmcom(outfptr, keyname, ttype_comm, status);
-	  
+
 	  ffkeyn("TFORM", incol1, keyname, status);
 	  ffgkys(infptr, keyname, tform, tform_comm, status);
 	  ffkeyn("TFORM", outcol1, keyname, status);
 	  ffmcom(outfptr, keyname, tform_comm, status);
-	  
+
 	  /* copy other column-related keywords if they exist */
-	  
+
 	  ffcpky(infptr, outfptr, incol1, outcol1, "TUNIT", status);
 	  ffcpky(infptr, outfptr, incol1, outcol1, "TSCAL", status);
 	  ffcpky(infptr, outfptr, incol1, outcol1, "TZERO", status);
@@ -2125,7 +2125,7 @@ int ffccls(fitsfile *infptr,    /* I - FITS file pointer to input file  */
 	  ffcpky(infptr, outfptr, incol1, outcol1, "TCRPX", status);
 	  ffcpky(infptr, outfptr, incol1, outcol1, "TCDLT", status);
 	  ffcpky(infptr, outfptr, incol1, outcol1, "TCROT", status);
-	  
+
 	  ffcpky(infptr, outfptr, incol1, outcol1, "TNULL", status);
 
 	}
@@ -2134,11 +2134,11 @@ int ffccls(fitsfile *infptr,    /* I - FITS file pointer to input file  */
 	if (ffrdef(outfptr, status) )
 	  return(*status);
     }
-	
+
     /* Copy columns using standard ffcpcl(); do this in a loop because
        the I/O-intensive column expanding is done */
-    for (incol1 = incol, outcol1 = colnum, icol = 0; 
-	 icol < ncols; 
+    for (incol1 = incol, outcol1 = colnum, icol = 0;
+	 icol < ncols;
 	 icol++, incol1++, outcol1++)
     {
       ffcpcl(infptr, outfptr, incol1, outcol1, 0, status);
@@ -2164,7 +2164,7 @@ int ffcprw(fitsfile *infptr,    /* I - FITS file pointer to input file  */
     long nNewBlocks;
     LONGLONG hrepeat=0, hoffset=0;
     tcolumn *colptr=0;
-    
+
     if (*status > 0)
         return(*status);
 
@@ -2212,21 +2212,21 @@ int ffcprw(fitsfile *infptr,    /* I - FITS file pointer to input file  */
        ffpmsg
        ("Input and output tables do not have same width (ffcprw)");
        return(*status = BAD_ROW_WIDTH);
-    }    
+    }
 
     if (firstrow + nrows - 1 > innaxis2) {
        ffpmsg
        ("Not enough rows in input table to copy (ffcprw)");
        return(*status = BAD_ROW_NUM);
     }
-    
+
     if ((infptr->Fptr)->tfield != (outfptr->Fptr)->tfield)
     {
        ffpmsg
        ("Input and output tables do not have same number of columns (ffcprw)");
        return(*status = BAD_COL_NUM);
     }
-    
+
     /* allocate buffer to hold 1 row of data */
     buffer = malloc( (size_t) innaxis1);
     if (!buffer) {
@@ -2234,7 +2234,7 @@ int ffcprw(fitsfile *infptr,    /* I - FITS file pointer to input file  */
        ("Unable to allocate memory (ffcprw)");
        return(*status = MEMORY_ALLOCATION);
     }
- 
+
     inVarCols = malloc(infptr->Fptr->tfield*sizeof(int));
     outVarCols = malloc(outfptr->Fptr->tfield*sizeof(int));
     fffvcl(infptr, &nInVarCols, inVarCols, status);
@@ -2252,14 +2252,14 @@ int ffcprw(fitsfile *infptr,    /* I - FITS file pointer to input file  */
           }
        }
     }
-    
+
     if (varColDiff)
     {
        ffpmsg("Input and output tables have different variable columns (ffcprw)");
        *status = BAD_COL_NUM;
        goto CLEANUP_RETURN;
     }
-    
+
     jj = outnaxis2 + 1;
     if (nInVarCols)
     {
@@ -2276,11 +2276,11 @@ int ffcprw(fitsfile *infptr,    /* I - FITS file pointer to input file  */
              if (iVarCol < nInVarCols && inVarCols[iVarCol] == icol+1)
              {
                 /* Copy from a variable length column */
-                
+
                 ffgdesll(infptr, icol+1, ii, &hrepeat, &hoffset, status);
                 /* If this is a bit column, hrepeat will be number of
                    bits, not bytes. If it is a string column, hrepeat
-		   is the number of bytes, twidth is the max col width 
+		   is the number of bytes, twidth is the max col width
 		   and can be ignored.*/
                 if (colptr->tdatatype == -TBIT)
 		{
@@ -2304,7 +2304,7 @@ int ffcprw(fitsfile *infptr,    /* I - FITS file pointer to input file  */
 		/* If so, then have to insert more blocks. */
                 if ( !((outfptr->Fptr)->lasthdu) )
                 {
-		   if (outPos+nVarBytes > 
+		   if (outPos+nVarBytes >
 		      (outfptr->Fptr)->headstart[(outfptr->Fptr)->curhdu+1])
 		   {
 		      nNewBlocks = (long)(((outPos+nVarBytes - 1 -
@@ -2322,8 +2322,8 @@ int ffcprw(fitsfile *infptr,    /* I - FITS file pointer to input file  */
 		{
 		   if (nVarBytes > nVarAllocBytes)
 		   {
-		     /* Grow the copy buffer to accomodate the new maximum size. 
-			Note it is safe to call realloc() with null input pointer, 
+		     /* Grow the copy buffer to accomodate the new maximum size.
+			Note it is safe to call realloc() with null input pointer,
 			which is equivalent to malloc(). */
 		     unsigned char *varColBuff1 = (unsigned char *) realloc(varColBuff, nVarBytes);
 		     if (! varColBuff1)
@@ -2351,7 +2351,7 @@ int ffcprw(fitsfile *infptr,    /* I - FITS file pointer to input file  */
        }
     }
     else
-    {    
+    {
        /* copy the rows, 1 at a time */
        for (ii = firstrow; ii < firstrow + nrows; ii++) {
            fits_read_tblbytes (infptr,  ii, 1, innaxis1, buffer, status);
@@ -2389,7 +2389,7 @@ int ffcpsr(fitsfile *infptr,    /* I - FITS file pointer to input file  */
     LONGLONG hrepeat=0, hoffset=0;
     tcolumn *colptr=0;
     LONGLONG n_good_rows = nrows;
-    
+
     if (*status > 0)
         return(*status);
 
@@ -2437,21 +2437,21 @@ int ffcpsr(fitsfile *infptr,    /* I - FITS file pointer to input file  */
        ffpmsg
        ("Input and output tables do not have same width (ffcprw)");
        return(*status = BAD_ROW_WIDTH);
-    }    
+    }
 
     if (firstrow + nrows - 1 > innaxis2) {
        ffpmsg
        ("Not enough rows in input table to copy (ffcprw)");
        return(*status = BAD_ROW_NUM);
     }
-    
+
     if ((infptr->Fptr)->tfield != (outfptr->Fptr)->tfield)
     {
        ffpmsg
        ("Input and output tables do not have same number of columns (ffcprw)");
        return(*status = BAD_COL_NUM);
     }
-    
+
     /* allocate buffer to hold 1 row of data */
     buffer = malloc( (size_t) innaxis1);
     if (!buffer) {
@@ -2459,7 +2459,7 @@ int ffcpsr(fitsfile *infptr,    /* I - FITS file pointer to input file  */
        ("Unable to allocate memory (ffcprw)");
        return(*status = MEMORY_ALLOCATION);
     }
- 
+
     inVarCols = malloc(infptr->Fptr->tfield*sizeof(int));
     outVarCols = malloc(outfptr->Fptr->tfield*sizeof(int));
     fffvcl(infptr, &nInVarCols, inVarCols, status);
@@ -2477,20 +2477,20 @@ int ffcpsr(fitsfile *infptr,    /* I - FITS file pointer to input file  */
           }
        }
     }
-    
+
     if (varColDiff)
     {
        ffpmsg("Input and output tables have different variable columns (ffcprw)");
        *status = BAD_COL_NUM;
        goto CLEANUP_RETURN;
     }
-    
+
     jj = outnaxis2 + 1;
     if (nInVarCols)
     {
       if (row_status) {
 	for (n_good_rows = 0, ii = 0; ii < nrows; ii++) {
-	  if (row_status[ii]) n_good_rows++; 
+	  if (row_status[ii]) n_good_rows++;
 	}
       }
 
@@ -2510,11 +2510,11 @@ int ffcpsr(fitsfile *infptr,    /* I - FITS file pointer to input file  */
              if (iVarCol < nInVarCols && inVarCols[iVarCol] == icol+1)
              {
                 /* Copy from a variable length column */
-                
+
                 ffgdesll(infptr, icol+1, ii, &hrepeat, &hoffset, status);
                 /* If this is a bit column, hrepeat will be number of
                    bits, not bytes. If it is a string column, hrepeat
-		   is the number of bytes, twidth is the max col width 
+		   is the number of bytes, twidth is the max col width
 		   and can be ignored.*/
                 if (colptr->tdatatype == -TBIT)
 		{
@@ -2538,7 +2538,7 @@ int ffcpsr(fitsfile *infptr,    /* I - FITS file pointer to input file  */
 		/* If so, then have to insert more blocks. */
                 if ( !((outfptr->Fptr)->lasthdu) )
                 {
-		   if (outPos+nVarBytes > 
+		   if (outPos+nVarBytes >
 		      (outfptr->Fptr)->headstart[(outfptr->Fptr)->curhdu+1])
 		   {
 		      nNewBlocks = (long)(((outPos+nVarBytes - 1 -
@@ -2556,8 +2556,8 @@ int ffcpsr(fitsfile *infptr,    /* I - FITS file pointer to input file  */
 		{
 		   if (nVarBytes > nVarAllocBytes)
 		   {
-		     /* Grow the copy buffer to accomodate the new maximum size. 
-			Note it is safe to call realloc() with null input pointer, 
+		     /* Grow the copy buffer to accomodate the new maximum size.
+			Note it is safe to call realloc() with null input pointer,
 			which is equivalent to malloc(). */
 		     unsigned char *varColBuff1 = (unsigned char *) realloc(varColBuff, nVarBytes);
 		     if (! varColBuff1)
@@ -2585,7 +2585,7 @@ int ffcpsr(fitsfile *infptr,    /* I - FITS file pointer to input file  */
        }
     }
     else
-    {    
+    {
        /* copy the rows, 1 at a time */
        n_good_rows = 0;
        for (ii = firstrow, i0 = 0; i0 < nrows; i0++, ii++)
@@ -2657,7 +2657,7 @@ int ffdcol(fitsfile *fptr,  /* I - FITS file pointer                        */
     }
     /* rescan header if data structure is undefined */
     else if ((fptr->Fptr)->datastart == DATA_UNDEFINED)
-        if ( ffrdef(fptr, status) > 0)               
+        if ( ffrdef(fptr, status) > 0)
             return(*status);
 
     if ((fptr->Fptr)->hdutype == IMAGE_HDU)
@@ -2760,10 +2760,10 @@ int ffdcol(fitsfile *fptr,  /* I - FITS file pointer                        */
     }
 
     /* update the mandatory keywords */
-    ffmkyj(fptr, "TFIELDS", ((fptr->Fptr)->tfield) - 1, "&", status);        
+    ffmkyj(fptr, "TFIELDS", ((fptr->Fptr)->tfield) - 1, "&", status);
     ffmkyj(fptr,  "NAXIS1",   naxis1 - delbyte, "&", status);
     /*
-      delete the index keywords starting with 'T' associated with the 
+      delete the index keywords starting with 'T' associated with the
       deleted column and subtract 1 from index of all higher keywords
     */
     ffkshf(fptr, colnum, (fptr->Fptr)->tfield, -1, status);
@@ -2814,15 +2814,15 @@ int ffcins(fitsfile *fptr,  /* I - FITS file pointer                        */
         /* If the last row hasn't yet been accessed in full, it's possible
            that logfilesize hasn't been updated to account for it (by way
            of an ffldrc call).  This could cause ffgtbb to return with an
-           EOF error.  To prevent this, we must increase logfilesize here. 
+           EOF error.  To prevent this, we must increase logfilesize here.
         */
-        if ((fptr->Fptr)->logfilesize < (fptr->Fptr)->datastart + 
+        if ((fptr->Fptr)->logfilesize < (fptr->Fptr)->datastart +
                  (fptr->Fptr)->heapstart)
         {
             (fptr->Fptr)->logfilesize = (((fptr->Fptr)->datastart +
                  (fptr->Fptr)->heapstart + 2879)/2880)*2880;
         }
-        
+
         ffgtbb(fptr, naxis2, fbyte, nbytes, &buffer[ninsert], status);
         (fptr->Fptr)->rowlength = newlen; /*  new row length */
 
@@ -2875,7 +2875,7 @@ int ffcins(fitsfile *fptr,  /* I - FITS file pointer                        */
           fbyte = (nseg - 1) * 10000 + bytepos + 1;
           nbytes = naxis1 - (nseg - 1) * 10000;
           for (ii = 0; ii < nseg; ii++)
-          { 
+          {
             /* read the row to be shifted (work backwards thru the table) */
             ffgtbb(fptr, irow, fbyte, nbytes, buffer, status);
             (fptr->Fptr)->rowlength =   newlen;  /* new row length */
@@ -2975,7 +2975,7 @@ int ffcdel(fitsfile *fptr,  /* I - FITS file pointer                        */
 
           nbytes = newlen - (nseg - 1) * 10000;
           for (ii = 0; ii < nseg; ii++)
-          { 
+          {
             ffgtbb(fptr, irow, i2, nbytes, buffer, status); /* read bytes */
             (fptr->Fptr)->rowlength = newlen;  /* new row length */
 
@@ -2998,7 +2998,7 @@ int ffcdel(fitsfile *fptr,  /* I - FITS file pointer                        */
           i2 = i1 + ndelete;
           nbytes = remain - (nseg - 1) * 10000;
           for (ii = 0; ii < nseg; ii++)
-          { 
+          {
             ffgtbb(fptr, naxis2, i2, nbytes, buffer, status);
             (fptr->Fptr)->rowlength = newlen;  /* new row length */
 
@@ -3039,7 +3039,7 @@ int ffkshf(fitsfile *fptr,  /* I - FITS file pointer                        */
     /* go thru header starting with the 9th keyword looking for 'TxxxxNNN' */
 
     for (nrec = 9; nrec <= nkeys; nrec++)
-    {     
+    {
         ffgrec(fptr, nrec, rec, status);
 
         if (rec[0] == 'T')
@@ -3070,7 +3070,7 @@ int ffkshf(fitsfile *fptr,  /* I - FITS file pointer                        */
 
               if (tstatus == 0 && ivalue >= colmin && ivalue <= colmax)
               {
-                if (incre <= 0 && ivalue == colmin)       
+                if (incre <= 0 && ivalue == colmin)
                 {
                   ffdrec(fptr, nrec, status); /* delete keyword */
                   nkeys = nkeys - 1;
@@ -3081,9 +3081,9 @@ int ffkshf(fitsfile *fptr,  /* I - FITS file pointer                        */
                   ivalue = ivalue + incre;
                   q[0] = '\0';
                   strncat(q, rec, i1);
-     
+
                   ffkeyn(q, ivalue, newkey, status);
-		  /* NOTE: because of null termination, it is not 
+		  /* NOTE: because of null termination, it is not
 		     equivalent to use strcpy() for the same calls */
                   strncpy(rec, "        ", 8);    /* erase old keyword name */
                   i1 = strlen(newkey);
@@ -3106,22 +3106,22 @@ int fffvcl(fitsfile *fptr,   /* I - FITS file pointer                       */
    Internal function to identify which columns in a binary table are variable length.
    The colnums array will be filled with nvarcols elements - the 1-based numbers
    of all variable length columns in the table.  This ASSUMES calling function
-   has passed in a colnums array large enough to hold these (colnums==NULL also 
+   has passed in a colnums array large enough to hold these (colnums==NULL also
    allowed).
 */
    int tfields=0,icol;
    tcolumn *colptr=0;
-   
+
    *nvarcols = 0;
    if (*status > 0)
        return(*status);
-       
+
    if ((fptr->Fptr)->hdutype != BINARY_TBL)
    {
       ffpmsg("Var-length column search can only be performed on Binary tables (fffvcl)");
       return(*status = NOT_BTABLE);
    }
-   
+
    if ((fptr->Fptr)->tableptr)
    {
       colptr = (fptr->Fptr)->tableptr;
@@ -3132,10 +3132,10 @@ int fffvcl(fitsfile *fptr,   /* I - FITS file pointer                       */
          if (colptr->tdatatype < 0)
          {
 	    if (colnums) colnums[*nvarcols] = icol + 1;
-	    *nvarcols += 1;            
+	    *nvarcols += 1;
          }
-      }      
-   }   
+      }
+   }
    return(*status);
 }
 

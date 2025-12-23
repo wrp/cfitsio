@@ -4,32 +4,32 @@ image were written by R. White at the STScI and were obtained from the STScI at
 http://www.stsci.edu/software/hcompress.html
 
 This source file is a concatination of the following sources files in the
-original distribution 
- htrans.c 
- digitize.c 
- encode.c 
- qwrite.c 
- doencode.c 
- bit_output.c 
+original distribution
+ htrans.c
+ digitize.c
+ encode.c
+ qwrite.c
+ doencode.c
+ bit_output.c
  qtree_encode.c
 
 The following modifications have been made to the original code:
 
   - commented out redundant "include" statements
-  - added the noutchar global variable 
+  - added the noutchar global variable
   - changed all the 'extern' declarations to 'static', since all the routines are in
     the same source file
   - changed the first parameter in encode (and in lower level routines from a file stream
     to a char array
   - modifid the encode routine to return the size of the compressed array of bytes
   - changed calls to printf and perror to call the CFITSIO ffpmsg routine
-  - modified the mywrite routine, and lower level byte writing routines,  to copy 
+  - modified the mywrite routine, and lower level byte writing routines,  to copy
     the output bytes to a char array, instead of writing them to a file stream
   - replace "exit" statements with "return" statements
   - changed the function declarations to the more modern ANSI C style
 
  ############################################################################  */
- 
+
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -75,12 +75,12 @@ static void output_nnybble(char *outfile, int n, unsigned char array[]);
 #define output_huffman(outfile,c)	output_nbits(outfile,code[c],ncode[c])
 
 /* ---------------------------------------------------------------------- */
-int fits_hcompress(int *a, int ny, int nx, int scale, char *output, 
+int fits_hcompress(int *a, int ny, int nx, int scale, char *output,
                   long *nbytes, int *status)
 {
-  /* 
+  /*
      compress the input image using the H-compress algorithm
-  
+
    a  - input image array
    nx - size of X axis of image
    ny - size of Y axis of image
@@ -97,7 +97,7 @@ int fits_hcompress(int *a, int ny, int nx, int scale, char *output,
   */
 
   int stat;
-  
+
   if (*status > 0) return(*status);
 
   /* H-transform */
@@ -118,17 +118,17 @@ int fits_hcompress(int *a, int ny, int nx, int scale, char *output,
 
   stat = encode(output, nbytes, a, nx, ny, scale);
   FFUNLOCK;
-  
+
   *status = stat;
   return(*status);
 }
 /* ---------------------------------------------------------------------- */
-int fits_hcompress64(LONGLONG *a, int ny, int nx, int scale, char *output, 
+int fits_hcompress64(LONGLONG *a, int ny, int nx, int scale, char *output,
                   long *nbytes, int *status)
 {
-  /* 
+  /*
      compress the input image using the H-compress algorithm
-  
+
    a  - input image array
    nx - size of X axis of image
    ny - size of Y axis of image
@@ -144,7 +144,7 @@ int fits_hcompress64(LONGLONG *a, int ny, int nx, int scale, char *output,
   */
 
   int stat;
-  
+
   if (*status > 0) return(*status);
 
   /* H-transform */
@@ -170,9 +170,9 @@ int fits_hcompress64(LONGLONG *a, int ny, int nx, int scale, char *output,
   return(*status);
 }
 
- 
-/* Copyright (c) 1993 Association of Universities for Research 
- * in Astronomy. All rights reserved. Produced under National   
+
+/* Copyright (c) 1993 Association of Universities for Research
+ * in Astronomy. All rights reserved. Produced under National
  * Aeronautics and Space Administration Contract No. NAS5-26555.
  */
 /* htrans.c   H-transform of NX x NY integer image
@@ -456,11 +456,11 @@ static void
 shuffle(int a[], int n, int n2, int tmp[])
 {
 
-/* 
-int a[];	 array to shuffle					
-int n;		 number of elements to shuffle	
-int n2;		 second dimension					
-int tmp[];	 scratch storage					
+/*
+int a[];	 array to shuffle
+int n;		 number of elements to shuffle
+int n2;		 second dimension
+int tmp[];	 scratch storage
 */
 
 int i;
@@ -501,11 +501,11 @@ static void
 shuffle64(LONGLONG a[], int n, int n2, LONGLONG tmp[])
 {
 
-/* 
-LONGLONG a[];	 array to shuffle					
-int n;		 number of elements to shuffle	
-int n2;		 second dimension					
-LONGLONG tmp[];	 scratch storage					
+/*
+LONGLONG a[];	 array to shuffle
+int n;		 number of elements to shuffle
+int n2;		 second dimension
+LONGLONG tmp[];	 scratch storage
 */
 
 int i;
@@ -543,8 +543,8 @@ LONGLONG *p1, *p2, *pt;
 }
 /* ######################################################################### */
 /* ######################################################################### */
-/* Copyright (c) 1993 Association of Universities for Research 
- * in Astronomy. All rights reserved. Produced under National   
+/* Copyright (c) 1993 Association of Universities for Research
+ * in Astronomy. All rights reserved. Produced under National
  * Aeronautics and Space Administration Contract No. NAS5-26555.
  */
 /* digitize.c	digitize H-transform
@@ -553,7 +553,7 @@ LONGLONG *p1, *p2, *pt;
  */
 
 /* ######################################################################### */
-static void  
+static void
 digitize(int a[], int nx, int ny, int scale)
 {
 int d, *p;
@@ -567,7 +567,7 @@ int d, *p;
 }
 
 /* ######################################################################### */
-static void  
+static void
 digitize64(LONGLONG a[], int nx, int ny, int scale)
 {
 LONGLONG d, *p, scale64;
@@ -583,8 +583,8 @@ LONGLONG d, *p, scale64;
 }
 /* ######################################################################### */
 /* ######################################################################### */
-/* Copyright (c) 1993 Association of Universities for Research 
- * in Astronomy. All rights reserved. Produced under National   
+/* Copyright (c) 1993 Association of Universities for Research
+ * in Astronomy. All rights reserved. Produced under National
  * Aeronautics and Space Administration Contract No. NAS5-26555.
  */
 /* encode.c		encode H-transform and write to outfile
@@ -599,11 +599,11 @@ static char code_magic[2] = { (char)0xDD, (char)0x99 };
 static int encode(char *outfile, long *nlength, int a[], int nx, int ny, int scale)
 {
 
-/* FILE *outfile;  - change outfile to a char array */  
+/* FILE *outfile;  - change outfile to a char array */
 /*
   long * nlength    returned length (in bytes) of the encoded array)
   int a[];								 input H-transform array (nx,ny)
-  int nx,ny;								 size of H-transform array	
+  int nx,ny;								 size of H-transform array
   int scale;								 scale factor for digitization
 */
 int nel, nx2, ny2, i, j, k, q, vmax[3], nsign, bits_to_go;
@@ -678,7 +678,7 @@ int stat;
 	/*
 	 * calculate number of bit planes for 3 quadrants
 	 *
-	 * quadrant 0=bottom left, 1=bottom right or top left, 2=top right, 
+	 * quadrant 0=bottom left, 1=bottom right or top left, 2=top right,
 	 */
 	for (q=0; q<3; q++) {
 		vmax[q] = 0;
@@ -703,10 +703,10 @@ int stat;
 	 */
 
         /* this is a more efficient way to do this, */
- 
- 
+
+
         for (q = 0; q < 3; q++) {
-            for (nbitplanes[q] = 0; vmax[q]>0; vmax[q] = vmax[q]>>1, nbitplanes[q]++) ; 
+            for (nbitplanes[q] = 0; vmax[q]>0; vmax[q] = vmax[q]>>1, nbitplanes[q]++) ;
         }
 
 
@@ -728,7 +728,7 @@ int stat;
 		ffpmsg("encode: output buffer too small");
 		return(DATA_COMPRESSION_ERR);
         }
-	 
+
 	/*
 	 * write coded array
 	 */
@@ -745,27 +745,27 @@ int stat;
 		ffpmsg("encode: output buffer too small");
 		return(DATA_COMPRESSION_ERR);
           }
-	} 
-	
+	}
+
 	free(signbits);
 	*nlength = noutchar;
 
         if (noutchar >= noutmax) {
 		ffpmsg("encode: output buffer too small");
 		return(DATA_COMPRESSION_ERR);
-        }  
-	
-	return(stat); 
+        }
+
+	return(stat);
 }
 /* ######################################################################### */
 static int encode64(char *outfile, long *nlength, LONGLONG a[], int nx, int ny, int scale)
 {
 
-/* FILE *outfile;  - change outfile to a char array */  
+/* FILE *outfile;  - change outfile to a char array */
 /*
   long * nlength    returned length (in bytes) of the encoded array)
   LONGLONG a[];								 input H-transform array (nx,ny)
-  int nx,ny;								 size of H-transform array	
+  int nx,ny;								 size of H-transform array
   int scale;								 scale factor for digitization
 */
 int nel, nx2, ny2, i, j, k, q, nsign, bits_to_go;
@@ -840,7 +840,7 @@ int stat;
 	/*
 	 * calculate number of bit planes for 3 quadrants
 	 *
-	 * quadrant 0=bottom left, 1=bottom right or top left, 2=top right, 
+	 * quadrant 0=bottom left, 1=bottom right or top left, 2=top right,
 	 */
 	for (q=0; q<3; q++) {
 		vmax[q] = 0;
@@ -863,12 +863,12 @@ int stat;
 	/*
 	 * now calculate number of bits for each quadrant
 	 */
-	 
+
         /* this is a more efficient way to do this, */
- 
- 
+
+
         for (q = 0; q < 3; q++) {
-            for (nbitplanes[q] = 0; vmax[q]>0; vmax[q] = vmax[q]>>1, nbitplanes[q]++) ; 
+            for (nbitplanes[q] = 0; vmax[q]>0; vmax[q] = vmax[q]>>1, nbitplanes[q]++) ;
         }
 
 
@@ -891,7 +891,7 @@ int stat;
 		ffpmsg("encode: output buffer too small");
 		return(DATA_COMPRESSION_ERR);
         }
-	 
+
 	/*
 	 * write coded array
 	 */
@@ -908,7 +908,7 @@ int stat;
 		ffpmsg("encode: output buffer too small");
 		return(DATA_COMPRESSION_ERR);
           }
-	} 
+	}
 
 	free(signbits);
 	*nlength = noutchar;
@@ -917,13 +917,13 @@ int stat;
 		ffpmsg("encode64: output buffer too small");
 		return(DATA_COMPRESSION_ERR);
         }
-		
-	return(stat); 
+
+	return(stat);
 }
 /* ######################################################################### */
 /* ######################################################################### */
-/* Copyright (c) 1993 Association of Universities for Research 
- * in Astronomy. All rights reserved. Produced under National   
+/* Copyright (c) 1993 Association of Universities for Research
+ * in Astronomy. All rights reserved. Produced under National
  * Aeronautics and Space Administration Contract No. NAS5-26555.
  */
 /* qwrite.c	Write binary data
@@ -977,7 +977,7 @@ qwrite(char *file, char buffer[], int n){
      */
 
      if (noutchar + n > noutmax) return(0);  /* buffer overflow */
-     
+
      memcpy(&file[noutchar], buffer, n);
      noutchar += n;
 
@@ -985,8 +985,8 @@ qwrite(char *file, char buffer[], int n){
 }
 /* ######################################################################### */
 /* ######################################################################### */
-/* Copyright (c) 1993 Association of Universities for Research 
- * in Astronomy. All rights reserved. Produced under National   
+/* Copyright (c) 1993 Association of Universities for Research
+ * in Astronomy. All rights reserved. Produced under National
  * Aeronautics and Space Administration Contract No. NAS5-26555.
  */
 /* doencode.c	Encode 2-D array and write stream of characters on outfile
@@ -1001,9 +1001,9 @@ static int
 doencode(char *outfile, int a[], int nx, int ny, unsigned char nbitplanes[3])
 {
 /* char *outfile;						 output data stream
-int a[];							 Array of values to encode			
-int nx,ny;							 Array dimensions [nx][ny]			
-unsigned char nbitplanes[3];		 Number of bit planes in quadrants	
+int a[];							 Array of values to encode
+int nx,ny;							 Array dimensions [nx][ny]
+unsigned char nbitplanes[3];		 Number of bit planes in quadrants
 */
 
 int nx2, ny2, stat;
@@ -1032,7 +1032,7 @@ int nx2, ny2, stat;
 	 */
 	output_nybble(outfile, 0);
 	done_outputing_bits(outfile);
-	
+
 	return(stat);
 }
 /* ######################################################################### */
@@ -1040,9 +1040,9 @@ static int
 doencode64(char *outfile, LONGLONG a[], int nx, int ny, unsigned char nbitplanes[3])
 {
 /* char *outfile;						 output data stream
-LONGLONG a[];							 Array of values to encode			
-int nx,ny;							 Array dimensions [nx][ny]			
-unsigned char nbitplanes[3];		 Number of bit planes in quadrants	
+LONGLONG a[];							 Array of values to encode
+int nx,ny;							 Array dimensions [nx][ny]
+unsigned char nbitplanes[3];		 Number of bit planes in quadrants
 */
 
 int nx2, ny2, stat;
@@ -1071,13 +1071,13 @@ int nx2, ny2, stat;
 	 */
 	output_nybble(outfile, 0);
 	done_outputing_bits(outfile);
-	
+
 	return(stat);
 }
 /* ######################################################################### */
 /* ######################################################################### */
-/* Copyright (c) 1993 Association of Universities for Research 
- * in Astronomy. All rights reserved. Produced under National   
+/* Copyright (c) 1993 Association of Universities for Research
+ * in Astronomy. All rights reserved. Produced under National
  * Aeronautics and Space Administration Contract No. NAS5-26555.
  */
 /* BIT OUTPUT ROUTINES */
@@ -1125,7 +1125,7 @@ output_nbits(char *outfile, int bits, int n)
 	        outfile[noutchar] = ((buffer2>>(-bits_to_go2)) & 0xff);
 
 		if (noutchar < noutmax) noutchar++;
-		
+
 		bits_to_go2 += 8;
 	}
 	bitcount += n;
@@ -1148,7 +1148,7 @@ output_nybble(char *outfile, int bits)
 	        outfile[noutchar] = ((buffer2>>(-bits_to_go2)) & 0xff);
 
 		if (noutchar < noutmax) noutchar++;
-		
+
 		bits_to_go2 += 8;
 	}
 	bitcount += 4;
@@ -1185,11 +1185,11 @@ if (bits_to_go2 != 8)
 
 
         /* bits_to_go2 is now in the range 5 - 8 */
-	shift = 8 - bits_to_go2;  
+	shift = 8 - bits_to_go2;
 
 	/* now write out pairs of nybbles; this does not affect value of bits_to_go2 */
 	jj = (n - kk) / 2;
-	
+
 	if (bits_to_go2 == 8) {
 	    /* special case if nybbles are aligned on byte boundary */
 	    /* this actually seems to make very little differnece in speed */
@@ -1218,9 +1218,9 @@ if (bits_to_go2 != 8)
 	bitcount += (8 * (ii - 1));
 
 	/* write out last odd nybble, if present */
-	if (kk != n) output_nybble(outfile, (int) array[n - 1]); 
+	if (kk != n) output_nybble(outfile, (int) array[n - 1]);
 
-	return; 
+	return;
 }
 
 
@@ -1242,8 +1242,8 @@ done_outputing_bits(char *outfile)
 }
 /* ######################################################################### */
 /* ######################################################################### */
-/* Copyright (c) 1993 Association of Universities for Research 
- * in Astronomy. All rights reserved. Produced under National   
+/* Copyright (c) 1993 Association of Universities for Research
+ * in Astronomy. All rights reserved. Produced under National
  * Aeronautics and Space Administration Contract No. NAS5-26555.
  */
 /* qtree_encode.c	Encode values in quadrant of 2-D array using binary
@@ -1284,12 +1284,12 @@ qtree_encode(char *outfile, int a[], int n, int nqx, int nqy, int nbitplanes)
 
 /*
 int a[];
-int n;								 physical dimension of row in a		
-int nqx;							 length of row			
-int nqy;							 length of column (<=n)				
-int nbitplanes;						 number of bit planes to output	
+int n;								 physical dimension of row in a
+int nqx;							 length of row
+int nqy;							 length of column (<=n)
+int nbitplanes;						 number of bit planes to output
 */
-	
+
 int log2n, i, k, bit, b, bmax, nqmax, nqx2, nqy2, nx, ny;
 unsigned char *scratch, *buffer;
 
@@ -1313,7 +1313,7 @@ unsigned char *scratch, *buffer;
 	 * Buffer is used to store string of codes for output.
 	 */
 	scratch = (unsigned char *) malloc(2*bmax);
-	if (scratch == (unsigned char *) NULL) {		
+	if (scratch == (unsigned char *) NULL) {
 		ffpmsg("qtree_encode: insufficient memory");
 		return(DATA_COMPRESSION_ERR);
 	}
@@ -1407,12 +1407,12 @@ qtree_encode64(char *outfile, LONGLONG a[], int n, int nqx, int nqy, int nbitpla
 
 /*
 LONGLONG a[];
-int n;								 physical dimension of row in a		
-int nqx;							 length of row			
-int nqy;							 length of column (<=n)				
-int nbitplanes;						 number of bit planes to output	
+int n;								 physical dimension of row in a
+int nqx;							 length of row
+int nqy;							 length of column (<=n)
+int nbitplanes;						 number of bit planes to output
 */
-	
+
 int log2n, i, k, bit, b, nqmax, nqx2, nqy2, nx, ny;
 int bmax;  /* this potentially needs to be made a 64-bit int to support large arrays */
 unsigned char *scratch, *buffer;
@@ -1561,7 +1561,7 @@ int i;
 /*
  * Do first quadtree reduction step on bit BIT of array A.
  * Results put into B.
- * 
+ *
  */
 static void
 qtree_onebit(int a[], int n, int nx, int ny, unsigned char b[], int bit)
@@ -1586,8 +1586,8 @@ int s10, s00;
 
 /*
  this was not any faster..
- 
-         b[k] = (a[s00]  & b0) ? 
+
+         b[k] = (a[s00]  & b0) ?
 	            (a[s00+1] & b0) ?
 	                (a[s10] & b0)   ?
 		            (a[s10+1] & b0) ? 15 : 14
@@ -1654,7 +1654,7 @@ this alternative way of calculating b[k] was slowwer than the original code
 				else
 					b[k] = 0;
 */
-			
+
 
 
 			b[k] = ( ( a[s10+1]     & b0)
@@ -1702,7 +1702,7 @@ this alternative way of calculating b[k] was slowwer than the original code
 /*
  * Do first quadtree reduction step on bit BIT of array A.
  * Results put into B.
- * 
+ *
  */
 static void
 qtree_onebit64(LONGLONG a[], int n, int nx, int ny, unsigned char b[], int bit)
