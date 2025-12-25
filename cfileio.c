@@ -738,6 +738,7 @@ int ffopen(fitsfile **fptr,      /* O - FITS file pointer                   */
     /*-------------------------------------------------------------------*/
 
     FFLOCK;
+    isopen = 0;
     if (fits_already_open(fptr, url, urltype, infile, extspec, rowfilter,
             binspec, colspec, mode, open_disk_file, &isopen, status) > 0)
     {
