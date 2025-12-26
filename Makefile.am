@@ -210,7 +210,7 @@ EXTRA_DIST = $(F77_WRAPPERS) ${GSIFTP_SRC} \
 
 # check: =================================================================
 
-TESTS = run-test
+TESTS = run-test tests/coverage-test
 AM_TESTS_ENVIRONMENT = srcdir='$(srcdir)'
 
 # clean: =================================================================

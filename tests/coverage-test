@@ -1,0 +1,101 @@
+#!/bin/sh
+
+# Check coverage of various source files.  If configured without --coverage in CFLAGS,
+# this will likely just get skipped.
+# (eg, configure with CFLAGS='--coverage -g -O0' to run this test)
+
+
+RV=0
+
+skip_test() { printf '%s\n' "$*" >&2; test "$RV" = 0 && RV=77; }
+fail_test() { printf '%s\n' "$*" >&2; RV=1; }
+
+while read file threshold; do
+	for prefix in ./ .libs/libcfitsio_la-; do
+		note_file=$prefix$file.gcno
+		test -f "$note_file" && break
+	done
+
+	if ! test -f "$note_file"; then
+		skip_test "Cannot find gcno file for $file"
+		continue
+	fi
+
+	# Expected output of gcov looks like:
+	# File '../cfileio.c'
+	# Lines executed:13.83% of 3609
+	# Creating 'cfileio.c.gcov'
+
+	if !  output=$(gcov "$file" "$note_file"); then
+		skip_test "gcov failed for $file"
+		continue
+	fi
+	coverage_value=$(printf '%s\n' "$output" |
+		awk -F '[: %]' '/Lines executed/{print int($3)}')
+
+	if ! test "$coverage_value" -ge 0; then
+		skip_test "FAIL: unable to evaluate coverage of $file"
+		continue
+	fi >&2
+
+	if ! test "$coverage_value" -ge $threshold 2> /dev/null
+	then
+		fail_test "Coverage of $file is ${coverage_value}%"
+	fi >&2
+done << EOF
+	buffers 59
+	cfileio 13
+	checksum 75
+	drvrfile 41
+	drvrsmem   0
+	editcol   28
+	edithdu   56
+	eval_f   0
+	fits_hcompress   0
+	fits_hdecompress   0
+	fitscore   39
+	getcol   11
+	getcolb   20
+	getcold   40
+	getcole   29
+	getcoli   31
+	getcolj   14
+	getcolk   16
+	getcoll   40
+	getcols   19
+	getcolsb   0
+	getcolui   0
+	getcoluj   0
+	getcoluk   0
+	getkey   46
+	group   4
+	grparser   0
+	histo   0
+	imcompress   0
+	iraffits   0
+	modkey   36
+	pliocomp   0
+	putcol   12
+	putcolb   35
+	putcold   41
+	putcole   39
+	putcoli   59
+	putcolj   17
+	putcolk   32
+	putcoll   67
+	putcols   73
+	putcolsb   0
+	putcolu   65
+	putcolui   0
+	putcoluj   0
+	putcoluk   0
+	putkey   53
+	quantize   0
+	region   0
+	ricecomp   0
+	scalnull   36
+	simplerng   0
+	wcssub   7
+	wcsutil   23
+EOF
+exit $RV

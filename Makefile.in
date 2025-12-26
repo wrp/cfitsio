@@ -881,7 +881,7 @@ EXTRA_DIST = $(F77_WRAPPERS) ${GSIFTP_SRC} \
 # winDumpExts.mak
 
 # check: =================================================================
-TESTS = run-test
+TESTS = run-test tests/coverage-test
 AM_TESTS_ENVIRONMENT = srcdir='$(srcdir)'
 
 # clean: =================================================================
@@ -2067,6 +2067,13 @@ recheck: all
 run-test.log: run-test
 	@p='run-test'; \
 	b='run-test'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/coverage-test.log: tests/coverage-test
+	@p='tests/coverage-test'; \
+	b='tests/coverage-test'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
