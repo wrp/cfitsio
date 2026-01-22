@@ -25,6 +25,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential libtool autoconf automake libcurl4-openssl-dev libbz2-dev
+          sudo apt-get install -y texlive-latex-base texlive-latex-extra texlive-fonts-recommended latex2html pandoc
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'ubuntu-24.04-arm'
 
       - name: Configure all defaults
