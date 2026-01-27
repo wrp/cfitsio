@@ -359,12 +359,9 @@ On HP/UX systems, the environment variable CFLAGS should be set
 to -Ae before running configure to enable "extended ANSI" features.
 
 By default, a set of Fortran-callable wrapper routines are
-also built and included in the CFITSIO library.  If these wrapper
-routines are not needed (i.e., the CFITSIO library will not
-be linked to any Fortran applications which call FITSIO subroutines)
-then they may be omitted from the build by typing 'make all-nofitsio'
-instead of simply typing 'make'.  This will reduce the size
-of the CFITSIO library slightly.
+also built and included in the CFITSIO library if a Fortran
+compiler is detected by configure.  If no Fortran compiler is
+found, the wrapper routines are omitted automatically.
 
 It may not be possible to statically link programs that use CFITSIO on
 some platforms (namely, on Solaris 2.6) due to the network drivers
