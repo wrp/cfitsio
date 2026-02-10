@@ -49,13 +49,12 @@ FITSfile *FptrTable[NMAXFILES];
 int need_to_initialize = 1;
 int no_of_drivers = 0;
 
-static int pixel_filter_helper(fitsfile **fptr, char *outfile,
-				char *expr,  int *status);
-static int find_quote(char **string);
-static int find_doublequote(char **string);
-static int find_paren(char **string);
-static int find_bracket(char **string);
-static int find_curlybracket(char **string);
+static int pixel_filter_helper(fitsfile **, char *, char *,  int *);
+static int find_quote(char **);
+static int find_doublequote(char **);
+static int find_paren(char **);
+static int find_bracket(char **);
+static int find_curlybracket(char **);
 static int standardize_path(char *fullpath, int *status);
 int comma2semicolon(char *string);
 
