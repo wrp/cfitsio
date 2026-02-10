@@ -59,60 +59,56 @@ static int standardize_path(char *fullpath, int *status);
 int comma2semicolon(char *string);
 
 #ifdef _REENTRANT
-
 pthread_mutex_t Fitsio_InitLock = PTHREAD_MUTEX_INITIALIZER;
-
 #endif
 
-/*--------------------------------------------------------------------------*/
-int fitsio_init_lock(void)
+int
+fitsio_init_lock(void)
 {
-  int status = 0;
+	int status = 0;
 
 #ifdef _REENTRANT
+	static int need_to_init = 1;
 
-  static int need_to_init = 1;
+	pthread_mutexattr_t mutex_init;
+	FFLOCK1(Fitsio_InitLock);
 
-  pthread_mutexattr_t mutex_init;
+	/* Init the main fitsio lock here since we need a a recursive lock */
+	if (need_to_init) {
+		status = pthread_mutexattr_init(&mutex_init);
+		if (status) {
+			ffpmsg("pthread_mutexattr_init failed (fitsio_init_lock)");
+			return status;
+		}
 
-  FFLOCK1(Fitsio_InitLock);
-
-  if (need_to_init) {
-
-    /* Init the main fitsio lock here since we need a a recursive lock */
-
-    status = pthread_mutexattr_init(&mutex_init);
-    if (status) {
-        ffpmsg("pthread_mutexattr_init failed (fitsio_init_lock)");
-        return(status);
-    }
-
+		status = pthread_mutexattr_settype(
+			&mutex_init,
 #ifdef __GLIBC__
-    status = pthread_mutexattr_settype(&mutex_init,
-				     PTHREAD_MUTEX_RECURSIVE_NP);
+			PTHREAD_MUTEX_RECURSIVE_NP
 #else
-    status = pthread_mutexattr_settype(&mutex_init,
-				     PTHREAD_MUTEX_RECURSIVE);
+			PTHREAD_MUTEX_RECURSIVE
 #endif
-    if (status) {
-        ffpmsg("pthread_mutexattr_settype failed (fitsio_init_lock)");
-        return(status);
-    }
+		);
 
-    status = pthread_mutex_init(&Fitsio_Lock,&mutex_init);
-    if (status) {
-        ffpmsg("pthread_mutex_init failed (fitsio_init_lock)");
-        return(status);
-    }
+		if (status) {
+			ffpmsg("pthread_mutexattr_settype failed (fitsio_init_lock)");
+			return status;
+		}
 
-    need_to_init = 0;
-  }
+		status = pthread_mutex_init(&Fitsio_Lock,&mutex_init);
+		if (status) {
+			ffpmsg("pthread_mutex_init failed (fitsio_init_lock)");
+			return status;
+		}
 
-  FFUNLOCK1(Fitsio_InitLock);
+		need_to_init = 0;
+	}
+
+	FFUNLOCK1(Fitsio_InitLock);
 
 #endif
 
-    return(status);
+	return status;
 }
 /*--------------------------------------------------------------------------*/
 int ffomem(fitsfile **fptr,      /* O - FITS file pointer                   */
