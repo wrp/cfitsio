@@ -44,11 +44,10 @@ struct fitsdriver
 	int (*write)(int drivehandle, void *buffer, long nbytes);
 } driverTable[MAX_DRIVERS];
 
-FITSfile *FptrTable[NMAXFILES];  /* this table of Fptr pointers is */
-                                 /* used by fits_already_open */
+FITSfile *FptrTable[NMAXFILES];
 
-int need_to_initialize = 1;    /* true if CFITSIO has not been initialized */
-int no_of_drivers = 0;         /* number of currently defined I/O drivers */
+int need_to_initialize = 1;
+int no_of_drivers = 0;
 
 static int pixel_filter_helper(fitsfile **fptr, char *outfile,
 				char *expr,  int *status);
