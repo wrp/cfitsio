@@ -21,27 +21,27 @@
 #define MAX_PREFIX_LEN 20  /* max length of file type prefix (e.g. 'http://') */
 #define MAX_DRIVERS 31     /* max number of file I/O drivers */
 
-typedef struct    /* structure containing pointers to I/O driver functions */ 
-{   char prefix[MAX_PREFIX_LEN];
-    int (*init)(void);
-    int (*shutdown)(void);
-    int (*setoptions)(int option);
-    int (*getoptions)(int *options);
-    int (*getversion)(int *version);
-    int (*checkfile)(char *urltype, char *infile, char *outfile);
-    int (*open)(char *filename, int rwmode, int *driverhandle);
-    int (*create)(char *filename, int *drivehandle);
-    int (*truncate)(int drivehandle, LONGLONG size);
-    int (*close)(int drivehandle);
-    int (*remove)(char *filename);
-    int (*size)(int drivehandle, LONGLONG *size);
-    int (*flush)(int drivehandle);
-    int (*seek)(int drivehandle, LONGLONG offset);
-    int (*read)(int drivehandle, void *buffer, long nbytes);
-    int (*write)(int drivehandle, void *buffer, long nbytes);
-} fitsdriver;
-
-fitsdriver driverTable[MAX_DRIVERS];  /* allocate driver tables */
+/* pointers to I/O driver functions */ 
+struct fitsdriver
+{
+	char prefix[MAX_PREFIX_LEN];
+	int (*init)(void);
+	int (*shutdown)(void);
+	int (*setoptions)(int option);
+	int (*getoptions)(int *options);
+	int (*getversion)(int *version);
+	int (*checkfile)(char *urltype, char *infile, char *outfile);
+	int (*open)(char *filename, int rwmode, int *driverhandle);
+	int (*create)(char *filename, int *drivehandle);
+	int (*truncate)(int drivehandle, LONGLONG size);
+	int (*close)(int drivehandle);
+	int (*remove)(char *filename);
+	int (*size)(int drivehandle, LONGLONG *size);
+	int (*flush)(int drivehandle);
+	int (*seek)(int drivehandle, LONGLONG offset);
+	int (*read)(int drivehandle, void *buffer, long nbytes);
+	int (*write)(int drivehandle, void *buffer, long nbytes);
+} driverTable[MAX_DRIVERS];
 
 FITSfile *FptrTable[NMAXFILES];  /* this table of Fptr pointers is */
                                  /* used by fits_already_open */
