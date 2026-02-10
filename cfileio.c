@@ -9,7 +9,7 @@
 #include <math.h>
 #include <ctype.h>
 #include <errno.h>
-#include <stddef.h>  /* apparently needed to define size_t */
+#include <stddef.h>
 #include <limits.h>
 #ifdef CFITSIO_HAVE_CURL
   #include <curl/curl.h>
