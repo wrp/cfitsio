@@ -128,6 +128,15 @@ init_fits(int *status)
 	return *status ;
 }
 
+static const char *
+first_nonspace(const char *s)
+{
+	while (*s == ' ') {
+		s += 1;
+	}
+	return s;
+}
+
 
 /*
  * Open an existing FITS file in core memory.  This is a specialized version
@@ -161,10 +170,7 @@ ffomem(
 
 	*fptr = 0;
 
-	url = (char *) name;
-	while (*url == ' ') {
-		url += 1;
-	}
+	url = (char *) first_nonspace(name);
 
 	fits_parse_input_url(url, urltype, infile, outfile, extspec,
 		rowfilter, binspec, colspec, status);
@@ -647,9 +653,7 @@ int ffopen(fitsfile **fptr,      /* O - FITS file pointer                   */
     if (*status > 0)
         return(*status);
 
-    url = (char *) name;
-    while (*url == ' ')  /* ignore leading spaces in the filename */
-        url++;
+    url = (char *) first_nonspace(name);
 
     if (*url == '\0')
     {
@@ -2060,18 +2064,13 @@ int ffedit_columns(
     }
 
     /* remove the "col " from the beginning of the column edit expression */
-    cptr = expr + 4;
-
-    while (*cptr == ' ')
-         cptr++;         /* skip leading white space */
+    cptr = (char *) first_nonspace(expr + 4);
 
     /* Check if need to import expression from a file */
 
     if( *cptr=='@' ) {
        if( ffimport_file( cptr+1, &file_expr, status ) ) return(*status);
-       cptr = file_expr;
-       while (*cptr == ' ')
-          cptr++;         /* skip leading white space... again */
+       cptr = (char *)first_nonspace(file_expr);
     }
 
     tstatus = 0;
