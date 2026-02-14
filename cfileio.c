@@ -117,19 +117,33 @@ error:
 
 	return status;
 }
-/*--------------------------------------------------------------------------*/
-int ffomem(fitsfile **fptr,      /* O - FITS file pointer                   */
-           const char *name,     /* I - name of file to open                */
-           int mode,             /* I - 0 = open readonly; 1 = read/write   */
-           void **buffptr,       /* I - address of memory pointer           */
-           size_t *buffsize,     /* I - size of buffer, in bytes            */
-           size_t deltasize,     /* I - increment for future realloc's      */
-           void *(*mem_realloc)(void *p, size_t newsize), /* function       */
-           int *status)          /* IO - error status                       */
+
+
+static int
+init_fits(int *status)
+{
+	if (need_to_initialize && *status <= 0) {
+		*status = fits_init_cfitsio();
+	}
+	return *status ;
+}
+
+
 /*
-  Open an existing FITS file in core memory.  This is a specialized version
-  of ffopen.
-*/
+ * Open an existing FITS file in core memory.  This is a specialized version
+ * of ffopen.
+ */
+int
+ffomem(
+	fitsfile **fptr,      /* O - FITS file pointer                   */
+	const char *name,     /* I - name of file to open                */
+	int mode,             /* I - 0 = open readonly; 1 = read/write   */
+	void **buffptr,       /* I - address of memory pointer           */
+	size_t *buffsize,     /* I - size of buffer, in bytes            */
+	size_t deltasize,     /* I - increment for future realloc's      */
+	void *(*mem_realloc)(void *p, size_t newsize),
+	int *status           /* IO - error status                       */
+)
 {
     int ii, driver, handle, hdutyp, slen, movetotype, extvers, extnum;
     char extname[FLEN_VALUE];
@@ -141,26 +155,19 @@ int ffomem(fitsfile **fptr,      /* O - FITS file pointer                   */
     char *url, errmsg[FLEN_ERRMSG];
     char *hdtype[3] = {"IMAGE", "TABLE", "BINTABLE"};
 
-    if (*status > 0)
-        return(*status);
+	if (init_fits(status) > 0) {
+		return *status ;
+	}
 
-    *fptr = 0;                   /* initialize null file pointer */
+	*fptr = 0;
 
-    if (need_to_initialize)           /* this is called only once */
-    {
-        *status = fits_init_cfitsio();
+	url = (char *) name;
+	while (*url == ' ') {
+		url += 1;
+	}
 
-        if (*status > 0)
-            return(*status);
-    }
-
-    url = (char *) name;
-    while (*url == ' ')  /* ignore leading spaces in the file spec */
-        url++;
-
-        /* parse the input file specification */
-    fits_parse_input_url(url, urltype, infile, outfile, extspec,
-              rowfilter, binspec, colspec, status);
+	fits_parse_input_url(url, urltype, infile, outfile, extspec,
+		rowfilter, binspec, colspec, status);
 
     strcpy(urltype, "memkeep://");   /* URL type for pre-existing memory file */
 
