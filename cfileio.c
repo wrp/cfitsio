@@ -5405,24 +5405,29 @@ int fits_register_driver(char *prefix,
     no_of_drivers++;      /* increment the number of drivers */
     return(0);
  }
-/*--------------------------------------------------------------------------*/
-/* fits_parse_input_url */
-int ffiurl(char *url,               /* input filename */
-           char *urltype,    /* e.g., 'file://', 'http://', 'mem://' */
-           char *infilex,    /* root filename (may be complete path) */
-           char *outfile,    /* optional output file name            */
-           char *extspec,    /* extension spec: +n or [extname, extver]  */
-           char *rowfilterx, /* boolean row filter expression */
-           char *binspec,    /* histogram binning specifier   */
-           char *colspec,    /* column or keyword modifier expression */
-           int *status)
+
 /*
-   parse the input URL into its basic components.
-   This routine does not support the pixfilter or compspec components.
-*/
+ * fits_parse_input_url, a wrapper around ffifile2
+ * parse the input URL into its basic components.
+ * This routine does not support the pixfilter or compspec components.
+ */
+int
+ffiurl(
+	char *url,        /* input filename */
+	char *urltype,    /* e.g., 'file://', 'http://', 'mem://' */
+	char *infilex,    /* root filename (may be complete path) */
+	char *outfile,    /* optional output file name            */
+	char *extspec,    /* extension spec: +n or [extname, extver]  */
+	char *rowfilterx, /* boolean row filter expression */
+	char *binspec,    /* histogram binning specifier   */
+	char *colspec,    /* column or keyword modifier expression */
+	int *status
+)
 {
-	return ffifile2(url, urltype, infilex, outfile,
-               extspec, rowfilterx, binspec, colspec, 0, 0, status);
+	return ffifile2(
+		url, urltype, infilex, outfile,
+		extspec, rowfilterx, binspec, colspec, 0, 0, status
+	);
 }
 /*--------------------------------------------------------------------------*/
 /* fits_parse_input_file */
