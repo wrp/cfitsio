@@ -5452,63 +5452,12 @@ int ffifile(char *url,       /* input filename */
 
 }
 
-
-/*
- * parse the input URL into its basic components.
- * This routine is big and ugly and should be redesigned someday!
- */
-int
-ffifile2(
-	char *url,        /* IO filename */
-	char *urltype,    /* O  eg: 'file://', 'http://', 'mem://' */
-	char *infilex,    /* O root filename (may be complete path) */
-	char *outfile,    /* O optional output file name            */
-	char *extspec,    /* O extension spec: +n or [extname, extver]  */
-	char *rowfilterx, /* O boolean row filter expression */
-	char *binspec,    /* O histogram binning specifier   */
-	char *colspec,    /* O column or keyword modifier expression */
-	char *pixfilter,  /* O pixel filter expression */
-	char *compspec,   /* O image compression specification */
-	int *status       /* IO */
-)
+static int
+get_urltype(char **pptr1, char *urltype)
 {
-    int ii, jj, slen, infilelen, plus_ext = 0, collen;
-    char *ptr1, *ptr2, *ptr3, *ptr4, *tmptr;
-    int hasAt, hasDot, hasOper, followingOper, spaceTerm, rowFilter;
-    int colStart, binStart, pixStart, compStart;
-
-    /* must have temporary variable for these, in case inputs are NULL */
-    char *infile;
-    char *rowfilter;
-    char *tmpstr;
-
-    if (*status > 0)  /* TODO: verify this can be "!=" instead of ">" */
-        return(*status);
-
-    /* Initialize null strings */
-    if (infilex) *infilex  = '\0';
-    if (urltype) *urltype = '\0';
-    if (outfile) *outfile = '\0';
-    if (extspec) *extspec = '\0';
-    if (binspec) *binspec = '\0';
-    if (colspec) *colspec = '\0';
-    if (rowfilterx) *rowfilterx = '\0';
-    if (pixfilter) *pixfilter = '\0';
-    if (compspec) *compspec = '\0';
-    slen = strlen(url);
-
-    if (slen == 0)       /* blank filename ?? */
-        return(*status);
-
-    /* allocate memory for 3 strings, each as long as the input url */
-    infile = (char *) calloc(3,  slen + 1);
-    if (!infile)
-       return(*status = MEMORY_ALLOCATION);
-
-    rowfilter = &infile[slen + 1];
-    tmpstr = &rowfilter[slen + 1];
-
-    ptr1 = url;
+	char *ptr1 = *pptr1, *ptr2, *ptr3;
+	char *infile = NULL;
+	int status[0];
 
     /* -------------------------------------------------------- */
     /*  get urltype (e.g., file://, ftp://, http://, etc.)  */
@@ -5595,6 +5544,71 @@ ffifile2(
                 strcat(urltype, "file://");
         }
     }
+	*pptr1 = ptr1;
+	return 0;
+}
+
+/*
+ * parse the input URL into its basic components.
+ * This routine is big and ugly and should be redesigned someday!
+ */
+int
+ffifile2(
+	char *url,        /* IO filename */
+	char *urltype,    /* O  eg: 'file://', 'http://', 'mem://' */
+	char *infilex,    /* O root filename (may be complete path) */
+	char *outfile,    /* O optional output file name            */
+	char *extspec,    /* O extension spec: +n or [extname, extver]  */
+	char *rowfilterx, /* O boolean row filter expression */
+	char *binspec,    /* O histogram binning specifier   */
+	char *colspec,    /* O column or keyword modifier expression */
+	char *pixfilter,  /* O pixel filter expression */
+	char *compspec,   /* O image compression specification */
+	int *status       /* IO */
+)
+{
+    int ii, jj, slen, infilelen, plus_ext = 0, collen;
+
+    char *ptr1, *ptr2, *ptr3, *ptr4, *tmptr;
+    int hasAt, hasDot, hasOper, followingOper, spaceTerm, rowFilter;
+    int colStart, binStart, pixStart, compStart;
+
+    /* must have temporary variable for these, in case inputs are NULL */
+    char *infile;
+    char *rowfilter;
+    char *tmpstr;
+
+    if (*status > 0)  /* TODO: verify this can be "!=" instead of ">" */
+        return(*status);
+
+    /* Initialize null strings */
+    if (infilex) *infilex  = '\0';
+    if (urltype) *urltype = '\0';
+    if (outfile) *outfile = '\0';
+    if (extspec) *extspec = '\0';
+    if (binspec) *binspec = '\0';
+    if (colspec) *colspec = '\0';
+    if (rowfilterx) *rowfilterx = '\0';
+    if (pixfilter) *pixfilter = '\0';
+    if (compspec) *compspec = '\0';
+    slen = strlen(url);
+
+    if (slen == 0)       /* blank filename ?? */
+        return(*status);
+
+    /* allocate memory for 3 strings, each as long as the input url */
+    infile = (char *) calloc(3,  slen + 1);
+    if (!infile)
+       return(*status = MEMORY_ALLOCATION);
+
+    rowfilter = &infile[slen + 1];
+    tmpstr = &rowfilter[slen + 1];
+
+	ptr1 = url;
+	if( 0 != (*status = get_urltype(&ptr1, urltype))) {
+		return *status;
+	}
+
 
     /* ----------------------------------------------------------
        If this is a http:// type file, then the cgi file name could
