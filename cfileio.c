@@ -7454,7 +7454,7 @@ int fits_get_token(char **ptr,
     return(slen);
 }
 /*--------------------------------------------------------------------------*/
-int fits_get_token2(char **ptr,
+int fits_get_token2(char **pptr,
                    char *delimiter,
                    char **token,
                    int *isanumber,  /* O - is this token a number? */
@@ -7468,16 +7468,17 @@ int fits_get_token2(char **ptr,
    This routine allocates the *token string;  the calling routine must free it
 */
 {
+    const char *ptr = *pptr;
     char *loc, tval[73];
     int slen;
 
     if (*status)
         return(0);
 
-    while (**ptr == ' ')  /* skip over leading blanks */
-        (*ptr)++;
+    while (*ptr == ' ')
+        ptr += 1;
 
-    slen = strcspn(*ptr, delimiter);  /* length of next token */
+    slen = strcspn(ptr, delimiter);  /* length of next token */
     if (slen)
     {
 	*token = (char *) calloc(slen + 1, 1);
@@ -7487,8 +7488,8 @@ int fits_get_token2(char **ptr,
 	  return(0);
         }
 
-        strncat(*token, *ptr, slen);       /* copy token */
-        (*ptr) += slen;                   /* skip over the token */
+        strncat(*token, ptr, slen);       /* copy token */
+        ptr += slen;                   /* skip over the token */
 
         if (isanumber)  /* check if token is a number */
         {
@@ -7511,6 +7512,7 @@ int fits_get_token2(char **ptr,
 	    if (errno == ERANGE) *isanumber = 0;
         }
     }
+    *pptr += ptr - *pptr;
 
     return(slen);
 }
