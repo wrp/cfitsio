@@ -7469,7 +7469,6 @@ int fits_get_token2(char **pptr,
 */
 {
     const char *ptr = *pptr;
-    char *loc, tval[73];
     int slen;
 
     if (*status)
@@ -7493,6 +7492,7 @@ int fits_get_token2(char **pptr,
 
         if (isanumber)  /* check if token is a number */
         {
+            char *loc, tval[73];
             *isanumber = 1;
 
 	    if (strchr(*token, 'D'))  {
