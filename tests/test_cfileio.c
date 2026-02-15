@@ -3010,6 +3010,39 @@ test_ffomem_leading_whitespace(void)
 	free(buffer);
 }
 
+/*
+ * Test ffiurl with stdin URL variants
+ */
+static void
+test_ffiurl_stdin_variants(void)
+{
+	int status = 0;
+	char urltype[80];
+	char infile[FLEN_FILENAME];
+	char outfile[FLEN_FILENAME];
+	char extspec[FLEN_FILENAME];
+	char rowfilter[FLEN_FILENAME];
+	char binspec[FLEN_FILENAME];
+	char colspec[FLEN_FILENAME];
+
+	/* Test "-[extname]" syntax for stdin with extension */
+	call_08(ffiurl, "-[EVENTS]", urltype, infile,
+		outfile, extspec, rowfilter, binspec, colspec);
+	fail_if(strcmp(urltype, "stdin://") != 0);
+	fail_if(strcmp(extspec, "EVENTS") != 0);
+
+	/* Test "-(outfile)" syntax for stdin with output file */
+	call_08(ffiurl, "-(out.fits)", urltype, infile,
+		outfile, extspec, rowfilter, binspec, colspec);
+	fail_if(strcmp(urltype, "stdin://") != 0);
+	fail_if(strcmp(outfile, "out.fits") != 0);
+
+	/* Test "stdin" literal URL type */
+	call_08(ffiurl, "stdin", urltype, infile,
+		outfile, extspec, rowfilter, binspec, colspec);
+	fail_if(strcmp(urltype, "stdin://") != 0);
+}
+
 int
 main(void)
 {
@@ -3137,6 +3170,7 @@ main(void)
 	test_ffiurl_parens_whitespace();
 	test_ffopen_leading_whitespace();
 	test_ffomem_leading_whitespace();
+	test_ffiurl_stdin_variants();
 
 	/* Input URL parsing */
 	test_ffifile();
