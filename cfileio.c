@@ -5514,9 +5514,7 @@ ffifile2(
     /*  get urltype (e.g., file://, ftp://, http://, etc.)  */
     /* --------------------------------------------------------- */
 
-    if (*ptr1 == '-' && ( *(ptr1 +1) ==  0   || *(ptr1 +1) == ' '  ||
-                          *(ptr1 +1) == '['  || *(ptr1 +1) == '(' ) )
-    {
+    if (*ptr1 == '-' && strchr(" [(", ptr1[1])) {
         /* "-" means read file from stdin. Also support "- ",        */
         /* "-[extname]" and '-(outfile.fits)" but exclude disk file  */
         /* names that begin with a minus sign, e.g., "-55d33m.fits"  */
