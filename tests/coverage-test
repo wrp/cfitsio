@@ -46,7 +46,7 @@ while read file threshold reentrant_threshold; do
 	esac
 done << EOF
 	buffers 90.93
-	cfileio 45.80 45.73
+	cfileio 45.80 52.63
 	checksum 90.43
 	drvrfile 43.03
 	drvrsmem 78.98

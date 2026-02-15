@@ -2695,6 +2695,321 @@ test_ffflmd_readwrite(void)
 	call_01(ffclos, f);
 }
 
+/*
+ * Test fits_split_names with leading whitespace
+ */
+static void
+test_fits_split_names_whitespace(void)
+{
+	char list[] = "  name1,   name2,name3";
+	char *name;
+
+	/* First name has leading spaces in original string */
+	name = fits_split_names(list);
+	fail_if(name == NULL);
+	fail_if(strcmp(name, "name1") != 0);
+
+	/* Second name has leading spaces after comma */
+	name = fits_split_names(NULL);
+	fail_if(name == NULL);
+	fail_if(strcmp(name, "name2") != 0);
+
+	name = fits_split_names(NULL);
+	fail_if(name == NULL);
+	fail_if(strcmp(name, "name3") != 0);
+
+	name = fits_split_names(NULL);
+	fail_if(name != NULL);
+}
+
+/*
+ * Test ffparsecompspec with leading whitespace
+ */
+static void
+test_ffparsecompspec_whitespace(void)
+{
+	fitsfile *f;
+	int status = 0;
+	long naxes[] = { 10, 10 };
+
+	/* Create a FITS file to test with */
+	call_02(ffinit, &f, "!" test_path);
+	call_04(ffphps, f, SHORT_IMG, 2, naxes);
+
+	/* Test with leading spaces before "compress" */
+	status = 0;
+	ffparsecompspec(f, "  compress", &status);
+	fail_if(status != 0);
+
+	/* Test with leading spaces and compression type */
+	status = 0;
+	ffparsecompspec(f, "   compress GZIP", &status);
+	fail_if(status != 0);
+
+	/* Test with tile dimensions (spaces around numbers) */
+	status = 0;
+	ffparsecompspec(f, "  compress RICE  100,  100", &status);
+	fail_if(status != 0);
+
+	/* Test with semicolon parameters (scale, quantize) with whitespace */
+	status = 0;
+	ffparsecompspec(f, "  compress HCOMPRESS  ; s  2.5 , q  4", &status);
+	fail_if(status != 0);
+
+	call_01(ffclos, f);
+}
+
+/*
+ * Test ffourl with leading spaces in compress spec
+ */
+static void
+test_ffourl_compress_whitespace(void)
+{
+	int status = 0;
+	char urltype[80];
+	char outfile[FLEN_FILENAME];
+	char tpltfile[FLEN_FILENAME];
+	char compspec[FLEN_FILENAME];
+
+	call_05(ffourl, "output.fits[  compress]", urltype, outfile,
+		tpltfile, compspec);
+	fail_if(strcmp(outfile, "output.fits") != 0);
+	fail_if(strcmp(compspec, "  compress") != 0);
+}
+
+/*
+ * Test ffiurl with http:// URL containing parentheses and trailing blanks
+ */
+static void
+test_ffiurl_http_trailing_blanks(void)
+{
+	int status = 0;
+	char urltype[80];
+	char infile[FLEN_FILENAME];
+	char outfile[FLEN_FILENAME];
+	char extspec[FLEN_FILENAME];
+	char rowfilter[FLEN_FILENAME];
+	char binspec[FLEN_FILENAME];
+	char colspec[FLEN_FILENAME];
+
+	/* HTTP URL with parentheses - should not be parsed as extended syntax */
+	/* The trailing blanks before bracket should be handled */
+	call_08(ffiurl, "http://example.com/data(1).fits   [1]", urltype, infile,
+		outfile, extspec, rowfilter, binspec, colspec);
+	fail_if(strcmp(urltype, "http://") != 0);
+}
+
+/*
+ * Test ffedit_columns with leading whitespace in column expressions
+ */
+static void
+test_ffedit_columns_whitespace(void)
+{
+	fitsfile *f;
+	int status = 0;
+	int ncols;
+	char *ttype[] = { "X", "Y", "Z" };
+	char *tform[] = { "1J", "1J", "1J" };
+
+	/* Create a table with 3 columns */
+	call_02(ffinit, &f, "!" test_path);
+	call_04(ffphps, f, BYTE_IMG, 0, NULL);
+	call_08(ffcrtb, f, BINARY_TBL, 10, 3, ttype, tform, NULL, "DATA");
+	call_01(ffclos, f);
+
+	/* Open with colspec that has leading whitespace after "col " */
+	/* This should select only column X */
+	call_03(ffopen, &f, test_path "[DATA][col    X]", READWRITE);
+	ffgncl(f, &ncols, &status);
+	fail_if(status != 0);
+	fail_if(ncols != 1);
+	call_01(ffclos, f);
+}
+
+/*
+ * Test ffedit_columns with @filename import containing leading whitespace
+ */
+static void
+test_ffedit_columns_at_import(void)
+{
+	fitsfile *f;
+	int status = 0;
+	int ncols;
+	char *ttype[] = { "A", "B", "C" };
+	char *tform[] = { "1J", "1J", "1J" };
+	FILE *fp;
+
+	/* Create a file containing a column expression with leading whitespace */
+	fp = fopen("test_colexpr.txt", "w");
+	fail_if(fp == NULL);
+	fprintf(fp, "   A");  /* leading whitespace before column name */
+	fclose(fp);
+
+	/* Create a table with 3 columns */
+	call_02(ffinit, &f, "!" test_path);
+	call_04(ffphps, f, BYTE_IMG, 0, NULL);
+	call_08(ffcrtb, f, BINARY_TBL, 10, 3, ttype, tform, NULL, "DATA");
+	call_01(ffclos, f);
+
+	/* Open with @filename syntax - should import and handle leading whitespace */
+	call_03(ffopen, &f, test_path "[DATA][col @test_colexpr.txt]", READWRITE);
+	ffgncl(f, &ncols, &status);
+	fail_if(status != 0);
+	fail_if(ncols != 1);
+	call_01(ffclos, f);
+
+	remove("test_colexpr.txt");
+}
+
+/*
+ * Test ffedit_columns with wildcard column deletion (COL_NOT_UNIQUE)
+ */
+static void
+test_ffedit_columns_wildcard(void)
+{
+	fitsfile *f;
+	int status = 0;
+	int ncols;
+	char *ttype[] = { "COL1", "COL2", "COL3", "OTHER" };
+	char *tform[] = { "1J", "1J", "1J", "1J" };
+
+	/* Create a table with columns matching a pattern */
+	call_02(ffinit, &f, "!" test_path);
+	call_04(ffphps, f, BYTE_IMG, 0, NULL);
+	call_08(ffcrtb, f, BINARY_TBL, 10, 4, ttype, tform, NULL, "DATA");
+	call_01(ffclos, f);
+
+	/* Open with wildcard column deletion: -COL*+ should delete COL1, COL2, COL3 */
+	/* The trailing + means "delete 0 or more matching columns" */
+	call_03(ffopen, &f, test_path "[DATA][col -COL*+]", READWRITE);
+	ffgncl(f, &ncols, &status);
+	fail_if(status != 0);
+	fail_if(ncols != 1);  /* only OTHER should remain */
+	call_01(ffclos, f);
+}
+
+/*
+ * Test ffiurl with multiple row filter expressions with whitespace
+ */
+static void
+test_ffiurl_multi_rowfilter_whitespace(void)
+{
+	int status = 0;
+	char urltype[80];
+	char infile[FLEN_FILENAME];
+	char outfile[FLEN_FILENAME];
+	char extspec[FLEN_FILENAME];
+	char rowfilter[FLEN_FILENAME];
+	char binspec[FLEN_FILENAME];
+	char colspec[FLEN_FILENAME];
+
+	/* Multiple row filters with leading whitespace inside brackets */
+	call_08(ffiurl, "file.fits[  X>1][  Y<10]", urltype, infile,
+		outfile, extspec, rowfilter, binspec, colspec);
+	fail_if(strcmp(infile, "file.fits") != 0);
+	/* The row filter should contain both expressions */
+	fail_if(strstr(rowfilter, "X>1") == NULL);
+	fail_if(strstr(rowfilter, "Y<10") == NULL);
+}
+
+/*
+ * Test ffifile2 with pixfilter containing trailing whitespace
+ */
+static void
+test_ffifile2_pixfilter_whitespace(void)
+{
+	int status = 0;
+	char urltype[80];
+	char infile[FLEN_FILENAME];
+	char outfile[FLEN_FILENAME];
+	char extspec[FLEN_FILENAME];
+	char rowfilter[FLEN_FILENAME];
+	char binspec[FLEN_FILENAME];
+	char colspec[FLEN_FILENAME];
+	char pixfilter[FLEN_FILENAME];
+	char compspec[FLEN_FILENAME];
+
+	/* Pixel filter with trailing whitespace before closing bracket */
+	ffifile2("file.fits[pix X*2   ]", urltype, infile, outfile,
+		extspec, rowfilter, binspec, colspec, pixfilter, compspec, &status);
+	fail_if(status != 0);
+	fail_if(strcmp(infile, "file.fits") != 0);
+	/* pixfilter includes the "pix " prefix; trailing whitespace should be stripped */
+	fail_if(strcmp(pixfilter, "pix X*2") != 0);
+}
+
+/*
+ * Test ffiurl with filename containing parentheses and trailing whitespace
+ */
+static void
+test_ffiurl_parens_whitespace(void)
+{
+	int status = 0;
+	char urltype[80];
+	char infile[FLEN_FILENAME];
+	char outfile[FLEN_FILENAME];
+	char extspec[FLEN_FILENAME];
+	char rowfilter[FLEN_FILENAME];
+	char binspec[FLEN_FILENAME];
+	char colspec[FLEN_FILENAME];
+
+	/* Filename with parentheses followed by spaces before extension spec */
+	call_08(ffiurl, "file(1).fits   [1]", urltype, infile,
+		outfile, extspec, rowfilter, binspec, colspec);
+	fail_if(strcmp(infile, "file(1).fits") != 0);
+	fail_if(strcmp(extspec, "1") != 0);
+}
+
+/*
+ * Test ffopen with leading whitespace in filename
+ */
+static void
+test_ffopen_leading_whitespace(void)
+{
+	fitsfile *f;
+	int status = 0;
+	long naxes[] = { 10 };
+
+	/* First create a test file */
+	call_02(ffinit, &f, "!" test_path);
+	call_04(ffphps, f, BYTE_IMG, 1, naxes);
+	call_01(ffclos, f);
+
+	/* Open with leading whitespace in filename */
+	call_03(ffopen, &f, "   " test_path, READONLY);
+	call_01(ffclos, f);
+}
+
+/*
+ * Test ffomem with leading whitespace in name
+ */
+static void
+test_ffomem_leading_whitespace(void)
+{
+	fitsfile *f;
+	int status = 0;
+	size_t bufsize = 2880;  /* minimum FITS block size */
+	void *buffer;
+
+	/* Create a minimal valid FITS header in memory */
+	buffer = calloc(1, bufsize);
+	fail_if(buffer == NULL);
+
+	/* Write a minimal FITS primary header */
+	memset(buffer, ' ', bufsize);
+	memcpy(buffer, "SIMPLE  =                    T", 30);
+	memcpy((char*)buffer + 80, "BITPIX  =                    8", 30);
+	memcpy((char*)buffer + 160, "NAXIS   =                    0", 30);
+	memcpy((char*)buffer + 240, "END", 3);
+
+	/* Open with leading whitespace in name using ffomem */
+	ffomem(&f, "   mem_test", READONLY, &buffer, &bufsize, 0, NULL, &status);
+	fail_if(status != 0);
+	call_01(ffclos, f);
+
+	free(buffer);
+}
+
 int
 main(void)
 {
@@ -2805,9 +3120,23 @@ main(void)
 	/* Output URL parsing */
 	test_ffourl_template();
 	test_ffourl_compress();
+	test_ffourl_compress_whitespace();
 	test_ffourl_gzip();
 	test_ffourl_stdout();
 	test_ffourl_explicit_urltype();
+
+	/* Whitespace handling tests */
+	test_fits_split_names_whitespace();
+	test_ffparsecompspec_whitespace();
+	test_ffedit_columns_whitespace();
+	test_ffedit_columns_at_import();
+	test_ffedit_columns_wildcard();
+	test_ffiurl_http_trailing_blanks();
+	test_ffiurl_multi_rowfilter_whitespace();
+	test_ffifile2_pixfilter_whitespace();
+	test_ffiurl_parens_whitespace();
+	test_ffopen_leading_whitespace();
+	test_ffomem_leading_whitespace();
 
 	/* Input URL parsing */
 	test_ffifile();
