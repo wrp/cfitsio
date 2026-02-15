@@ -5456,7 +5456,6 @@ static int
 get_urltype(char **pptr1, char *urltype)
 {
 	char *ptr1 = *pptr1, *ptr2, *ptr3;
-	char *infile = NULL;
 	int status[0];
 
     /* -------------------------------------------------------- */
@@ -5494,7 +5493,6 @@ get_urltype(char **pptr1, char *urltype)
         {
             if (ptr2-ptr1+3 >= MAX_PREFIX_LEN)
             {
-               free(infile);
                ffpmsg("Name of urltype is too long.");
                return(*status = URL_PARSE_ERROR);
             }
@@ -5596,18 +5594,17 @@ ffifile2(
     if (slen == 0)       /* blank filename ?? */
         return(*status);
 
-    /* allocate memory for 3 strings, each as long as the input url */
-    infile = (char *) calloc(3,  slen + 1);
-    if (!infile)
-       return(*status = MEMORY_ALLOCATION);
-
-    rowfilter = &infile[slen + 1];
-    tmpstr = &rowfilter[slen + 1];
-
 	ptr1 = url;
 	if( 0 != (*status = get_urltype(&ptr1, urltype))) {
 		return *status;
 	}
+
+	infile = calloc(3,  slen + 1);
+	if (!infile)
+		return *status = MEMORY_ALLOCATION;
+
+	rowfilter = infile + slen + 1;
+	tmpstr = rowfilter + slen + 1;
 
 
     /* ----------------------------------------------------------
