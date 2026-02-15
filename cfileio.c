@@ -5451,7 +5451,12 @@ int ffifile(char *url,       /* input filename */
                extspec, rowfilterx, binspec, colspec, pixfilter, 0, status);
 
 }
-/*--------------------------------------------------------------------------*/
+
+
+/*
+ * parse the input URL into its basic components.
+ * This routine is big and ugly and should be redesigned someday!
+ */
 int ffifile2(char *url,       /* input filename */
            char *urltype,    /* e.g., 'file://', 'http://', 'mem://' */
            char *infilex,    /* root filename (may be complete path) */
@@ -5463,11 +5468,6 @@ int ffifile2(char *url,       /* input filename */
            char *pixfilter,  /* pixel filter expression */
            char *compspec,   /* image compression specification */
            int *status)
-/*
-   fits_parse_input_filename
-   parse the input URL into its basic components.
-   This routine is big and ugly and should be redesigned someday!
-*/
 {
     int ii, jj, slen, infilelen, plus_ext = 0, collen;
     char *ptr1, *ptr2, *ptr3, *ptr4, *tmptr;
