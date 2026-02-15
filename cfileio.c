@@ -5459,17 +5459,17 @@ int ffifile(char *url,       /* input filename */
  */
 int
 ffifile2(
-	char *url,       /* input filename */
-	char *urltype,    /* e.g., 'file://', 'http://', 'mem://' */
-	char *infilex,    /* root filename (may be complete path) */
-	char *outfile,    /* optional output file name            */
-	char *extspec,    /* extension spec: +n or [extname, extver]  */
-	char *rowfilterx, /* boolean row filter expression */
-	char *binspec,    /* histogram binning specifier   */
-	char *colspec,    /* column or keyword modifier expression */
-	char *pixfilter,  /* pixel filter expression */
-	char *compspec,   /* image compression specification */
-	int *status
+	char *url,        /* IO filename */
+	char *urltype,    /* O  eg: 'file://', 'http://', 'mem://' */
+	char *infilex,    /* O root filename (may be complete path) */
+	char *outfile,    /* O optional output file name            */
+	char *extspec,    /* O extension spec: +n or [extname, extver]  */
+	char *rowfilterx, /* O boolean row filter expression */
+	char *binspec,    /* O histogram binning specifier   */
+	char *colspec,    /* O column or keyword modifier expression */
+	char *pixfilter,  /* O pixel filter expression */
+	char *compspec,   /* O image compression specification */
+	int *status       /* IO */
 )
 {
     int ii, jj, slen, infilelen, plus_ext = 0, collen;
