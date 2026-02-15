@@ -5482,7 +5482,7 @@ ffifile2(
     char *rowfilter;
     char *tmpstr;
 
-    if (*status > 0)
+    if (*status > 0)  /* TODO: verify this can be "!=" instead of ">" */
         return(*status);
 
     /* Initialize null strings */
