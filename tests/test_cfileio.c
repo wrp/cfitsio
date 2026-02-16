@@ -2800,6 +2800,47 @@ test_ffiurl_http_trailing_blanks(void)
 }
 
 /*
+ * Test is_unmatched_http: HTTP URLs with CGI-style brackets that should
+ * not be parsed as extended filename syntax.
+ */
+static void
+test_is_unmatched_http(void)
+{
+	int status = 0;
+	char urltype[80];
+	char infile[FLEN_FILENAME];
+	char outfile[FLEN_FILENAME];
+	char extspec[FLEN_FILENAME];
+	char rowfilter[FLEN_FILENAME];
+	char binspec[FLEN_FILENAME];
+	char colspec[FLEN_FILENAME];
+
+	/* CGI URL with bracket that does NOT end with ] or ) */
+	/* This triggers the is_unmatched_http return 1 path */
+	call_08(ffiurl, "http://example.com/cgi?data[1]=value", urltype, infile,
+		outfile, extspec, rowfilter, binspec, colspec);
+	fail_if(strcmp(urltype, "http://") != 0);
+	/* The whole URL after http:// should be treated as the filename */
+	fail_if(strcmp(infile, "example.com/cgi?data[1]=value") != 0);
+	/* Extended syntax fields should be empty */
+	fail_if(extspec[0] != '\0');
+	fail_if(rowfilter[0] != '\0');
+
+	/* CGI URL with parenthesis that does NOT end with ] or ) */
+	call_08(ffiurl, "http://example.com/cgi?func(x)=5", urltype, infile,
+		outfile, extspec, rowfilter, binspec, colspec);
+	fail_if(strcmp(urltype, "http://") != 0);
+	fail_if(strcmp(infile, "example.com/cgi?func(x)=5") != 0);
+
+	/* HTTP URL with bracket and trailing blanks (tests ptr3-- loop) */
+	call_08(ffiurl, "http://example.com/cgi?arr[0]=1   ", urltype, infile,
+		outfile, extspec, rowfilter, binspec, colspec);
+	fail_if(strcmp(urltype, "http://") != 0);
+	/* Trailing blanks should be preserved in the filename */
+	fail_if(strcmp(infile, "example.com/cgi?arr[0]=1   ") != 0);
+}
+
+/*
  * Test ffedit_columns with leading whitespace in column expressions
  */
 static void
@@ -3165,6 +3206,7 @@ main(void)
 	test_ffedit_columns_at_import();
 	test_ffedit_columns_wildcard();
 	test_ffiurl_http_trailing_blanks();
+	test_is_unmatched_http();
 	test_ffiurl_multi_rowfilter_whitespace();
 	test_ffifile2_pixfilter_whitespace();
 	test_ffiurl_parens_whitespace();
