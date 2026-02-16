@@ -5591,6 +5591,39 @@ is_unmatched_http(const char *urltype, const char *ptr1, char *infilex,
     return 0;
 }
 
+
+static const char *
+get_start_of_name_vms(const char *ptr1, const char *url)
+{
+    /* ----------------------------------------------------------
+       Look for VMS style filenames like:
+            disk:[directory.subdirectory]filename.ext, or
+                 [directory.subdirectory]filename.ext
+
+       Check if the first character is a '[' and urltype != stdin
+       or if there is a ':[' string in the remaining url string. If
+       so, then need to move past this bracket character before
+       search for the opening bracket of a filter specification.
+     ----------------------------------------------------------- */
+
+    const char *tmptr = ptr1;
+    if (*ptr1 == '[')
+    {
+      if (*url != '-')
+        tmptr = ptr1 + 1; /* this bracket encloses a VMS directory name */
+    }
+    else
+    {
+       tmptr = strstr(ptr1, ":[");
+       if (tmptr) /* these 2 chars are part of the VMS disk and directory */
+          tmptr += 2;
+       else
+          tmptr = ptr1;
+    }
+    return tmptr;
+}
+
+
 /*
  * parse the input URL into its basic components.
  * This routine is big and ugly and should be redesigned someday!
@@ -5656,32 +5689,7 @@ ffifile2(
 	rowfilter = infile + slen + 1;
 	tmpstr = rowfilter + slen + 1;
 
-
-    /* ----------------------------------------------------------
-       Look for VMS style filenames like:
-            disk:[directory.subdirectory]filename.ext, or
-                 [directory.subdirectory]filename.ext
-
-       Check if the first character is a '[' and urltype != stdin
-       or if there is a ':[' string in the remaining url string. If
-       so, then need to move past this bracket character before
-       search for the opening bracket of a filter specification.
-     ----------------------------------------------------------- */
-
-    tmptr = ptr1;
-    if (*ptr1 == '[')
-    {
-      if (*url != '-')
-        tmptr = ptr1 + 1; /* this bracket encloses a VMS directory name */
-    }
-    else
-    {
-       tmptr = strstr(ptr1, ":[");
-       if (tmptr) /* these 2 chars are part of the VMS disk and directory */
-          tmptr += 2;
-       else
-          tmptr = ptr1;
-    }
+	tmptr = get_start_of_name_vms(ptr1, url);
 
     /* ------------------------ */
     /*  get the input file name */
