@@ -5612,7 +5612,8 @@ ffifile2(
 {
     int ii, jj, slen, infilelen, plus_ext = 0, collen;
 
-    char *ptr1, *ptr2, *ptr3, *ptr4, *tmptr;
+    char *ptr1, *ptr2, *ptr3, *ptr4;
+    const char *tmptr;
     int hasAt, hasDot, hasOper, followingOper, spaceTerm, rowFilter;
     int colStart, binStart, pixStart, compStart;
 
@@ -5940,7 +5941,7 @@ ffifile2(
                /* copy any remaining characters into rowfilterx  */
                if (tmptr && rowfilterx)
                {
-
+                 char *bracket;
 
 	         if (strlen(rowfilterx) + strlen(tmptr + 1) > FLEN_FILENAME -1)
 	         {
@@ -5950,9 +5951,9 @@ ffifile2(
 
                  strcat(rowfilterx, tmptr + 1);
 
-                 tmptr = strchr(rowfilterx, ']' );   /* search for closing ] */
-                 if (tmptr)
-                   *tmptr = '\0'; /* overwrite the ] with null terminator */
+                 bracket = strchr(rowfilterx, ']' );   /* search for closing ] */
+                 if (bracket)
+                   *bracket = '\0'; /* overwrite the ] with null terminator */
                }
 
                free(infile);        /* finished parsing, so return */
