@@ -5559,7 +5559,6 @@ is_unmatched_http(const char *urltype, const char *ptr1, char *infilex,
        and do not attempt to interprete the name using the extended
        filename syntax.
      ----------------------------------------------------------- */
-     char *infile = NULL;
 
     if (urltype && !strncmp(urltype, "http://", 7) )
     {
@@ -5578,7 +5577,6 @@ is_unmatched_http(const char *urltype, const char *ptr1, char *infilex,
                 if (infilex) {
 
                     if (strlen(ptr1) > FLEN_FILENAME - 1) {
-                        free(infile);
                         ffpmsg("Name of file is too long.");
                         return(*status = URL_PARSE_ERROR);
                     }
@@ -5586,7 +5584,6 @@ is_unmatched_http(const char *urltype, const char *ptr1, char *infilex,
                     strcpy(infilex, ptr1);
                 }
 
-                free(infile);
                 return 1;
             }
         }
@@ -5646,6 +5643,10 @@ ffifile2(
 	if( 0 != (*status = get_urltype(&ptr1, urltype))) {
 		return *status;
 	}
+	if (is_unmatched_http(urltype, ptr1, infilex, status)) {
+		return *status;
+	}
+
 
 	infile = calloc(3,  slen + 1);
 	if (!infile)
@@ -5654,11 +5655,6 @@ ffifile2(
 	rowfilter = infile + slen + 1;
 	tmpstr = rowfilter + slen + 1;
 
-
-	if (is_unmatched_http(urltype, ptr1, infilex, status)) {
-		free(infile);
-		return *status;
-	}
 
     /* ----------------------------------------------------------
        Look for VMS style filenames like:
