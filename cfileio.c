@@ -5546,6 +5546,54 @@ get_urltype(char **pptr1, char *urltype)
 	return 0;
 }
 
+static int
+is_unmatched_http(const char *urltype, const char *ptr1, char *infilex,
+	int *status)
+{
+    /* ----------------------------------------------------------
+       If this is a http:// type file, then the cgi file name could
+       include the '[' character, which should not be interpreted
+       as part of CFITSIO's Extended File Name Syntax.  Test for this
+       case by seeing if the last character is a ']' or ')'.  If it
+       is not, then just treat the whole input string as the file name
+       and do not attempt to interprete the name using the extended
+       filename syntax.
+     ----------------------------------------------------------- */
+     char *infile = NULL;
+
+    if (urltype && !strncmp(urltype, "http://", 7) )
+    {
+        /* test for opening parenthesis or bracket in the file name */
+        if( strchr(ptr1, '(' ) || strchr(ptr1, '[' ) )
+        {
+            int slen = strlen(ptr1);
+            const char *ptr3 = ptr1 + slen - 1;
+            while (*ptr3 == ' ')    /* ignore trailing blanks */
+                ptr3--;
+
+            if (*ptr3 != ']' && *ptr3 != ')' )
+            {
+                /* name doesn't end with a ']' or ')' so don't try */
+                /* to parse this unusual string (may be cgi string)  */
+                if (infilex) {
+
+                    if (strlen(ptr1) > FLEN_FILENAME - 1) {
+                        free(infile);
+                        ffpmsg("Name of file is too long.");
+                        return(*status = URL_PARSE_ERROR);
+                    }
+
+                    strcpy(infilex, ptr1);
+                }
+
+                free(infile);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 /*
  * parse the input URL into its basic components.
  * This routine is big and ugly and should be redesigned someday!
@@ -5607,46 +5655,10 @@ ffifile2(
 	tmpstr = rowfilter + slen + 1;
 
 
-    /* ----------------------------------------------------------
-       If this is a http:// type file, then the cgi file name could
-       include the '[' character, which should not be interpreted
-       as part of CFITSIO's Extended File Name Syntax.  Test for this
-       case by seeing if the last character is a ']' or ')'.  If it
-       is not, then just treat the whole input string as the file name
-       and do not attempt to interprete the name using the extended
-       filename syntax.
-     ----------------------------------------------------------- */
-
-    if (urltype && !strncmp(urltype, "http://", 7) )
-    {
-        /* test for opening parenthesis or bracket in the file name */
-        if( strchr(ptr1, '(' ) || strchr(ptr1, '[' ) )
-        {
-            slen = strlen(ptr1);
-            ptr3 = ptr1 + slen - 1;
-            while (*ptr3 == ' ')    /* ignore trailing blanks */
-                ptr3--;
-
-            if (*ptr3 != ']' && *ptr3 != ')' )
-            {
-                /* name doesn't end with a ']' or ')' so don't try */
-                /* to parse this unusual string (may be cgi string)  */
-                if (infilex) {
-
-                    if (strlen(ptr1) > FLEN_FILENAME - 1) {
-                        free(infile);
-                        ffpmsg("Name of file is too long.");
-                        return(*status = URL_PARSE_ERROR);
-                    }
-
-                    strcpy(infilex, ptr1);
-                }
-
-                free(infile);
-                return(*status);
-            }
-        }
-    }
+	if (is_unmatched_http(urltype, ptr1, infilex, status)) {
+		free(infile);
+		return *status;
+	}
 
     /* ----------------------------------------------------------
        Look for VMS style filenames like:
