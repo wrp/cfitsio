@@ -5744,7 +5744,7 @@ ffifile2(
 {
     int ii, jj, slen, infilelen, plus_ext = 0, collen;
 
-    char *ptr1, *ptr2, *ptr3, *ptr4;
+    char *ptr1, *ptr2, *ptr3;
     const char *tmptr;
     int hasAt, hasDot, hasOper, followingOper, spaceTerm, rowFilter;
     int colStart, binStart, pixStart, compStart;
