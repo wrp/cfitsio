@@ -6,6 +6,19 @@
 
 #ifdef HAVE_SHMEM_SERVICES
 
+/*
+ * Clean up any stale shared memory segments from previous test runs.
+ * Without this, tests fail if segments h0-h14 already exist.
+ */
+static void
+cleanup_stale_segments(void)
+{
+	smem_init();
+	shared_uncond_delete(-1);
+	smem_shutdown();
+}
+
+
 static void
 test_create_shmem_file(void)
 {
@@ -360,6 +373,7 @@ int
 main(void)
 {
 #ifdef HAVE_SHMEM_SERVICES
+	cleanup_stale_segments();
 	test_create_shmem_file();
 	test_open_and_read_shmem();
 	test_shmem_keywords();
