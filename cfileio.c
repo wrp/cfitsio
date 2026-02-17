@@ -5624,72 +5624,12 @@ get_start_of_name_vms(const char *ptr1, const char *url)
 }
 
 
-/*
- * parse the input URL into its basic components.
- * This routine is big and ugly and should be redesigned someday!
- */
-int
-ffifile2(
-	char *url,        /* IO filename */
-	char *urltype,    /* O  eg: 'file://', 'http://', 'mem://' */
-	char *infilex,    /* O root filename (may be complete path) */
-	char *outfile,    /* O optional output file name            */
-	char *extspec,    /* O extension spec: +n or [extname, extver]  */
-	char *rowfilterx, /* O boolean row filter expression */
-	char *binspec,    /* O histogram binning specifier   */
-	char *colspec,    /* O column or keyword modifier expression */
-	char *pixfilter,  /* O pixel filter expression */
-	char *compspec,   /* O image compression specification */
-	int *status       /* IO */
-)
+static int
+get_input_file_name(char *infile, const char *tmptr, const char *ptr1,
+	char *outfile, char **pptr3, int *status)
 {
-    int ii, jj, slen, infilelen, plus_ext = 0, collen;
-
-    char *ptr1, *ptr2, *ptr3, *ptr4;
-    const char *tmptr;
-    int hasAt, hasDot, hasOper, followingOper, spaceTerm, rowFilter;
-    int colStart, binStart, pixStart, compStart;
-
-    /* must have temporary variable for these, in case inputs are NULL */
-    char *infile;
-    char *rowfilter;
-    char *tmpstr;
-
-    if (*status > 0)  /* TODO: verify this can be "!=" instead of ">" */
-        return(*status);
-
-    /* Initialize null strings */
-    if (infilex) *infilex  = '\0';
-    if (urltype) *urltype = '\0';
-    if (outfile) *outfile = '\0';
-    if (extspec) *extspec = '\0';
-    if (binspec) *binspec = '\0';
-    if (colspec) *colspec = '\0';
-    if (rowfilterx) *rowfilterx = '\0';
-    if (pixfilter) *pixfilter = '\0';
-    if (compspec) *compspec = '\0';
-    slen = strlen(url);
-
-    if (slen == 0)       /* blank filename ?? */
-        return(*status);
-
-	ptr1 = url;
-	if( 0 != (*status = get_urltype(&ptr1, urltype))) {
-		return *status;
-	}
-	if (is_unmatched_http(urltype, ptr1, infilex, status)) {
-		return *status;
-	}
-
-
-	infile = calloc(3,  slen + 1);
-	if (!infile)
-		return *status = MEMORY_ALLOCATION;
-
-	rowfilter = infile + slen + 1;
-	tmpstr = rowfilter + slen + 1;
-
-	tmptr = get_start_of_name_vms(ptr1, url);
+	char *ptr2, *ptr3, *ptr4;
+	int slen;
 
     /* ------------------------ */
     /*  get the input file name */
@@ -5763,6 +5703,82 @@ ffifile2(
         while ( (--slen) > 0  && outfile[slen] == ' ')
             outfile[slen] = '\0';
     }
+    *pptr3 = ptr3;
+    return 0;
+}
+
+
+/*
+ * parse the input URL into its basic components.
+ * This routine is big and ugly and should be redesigned someday!
+ */
+int
+ffifile2(
+	char *url,        /* IO filename */
+	char *urltype,    /* O  eg: 'file://', 'http://', 'mem://' */
+	char *infilex,    /* O root filename (may be complete path) */
+	char *outfile,    /* O optional output file name            */
+	char *extspec,    /* O extension spec: +n or [extname, extver]  */
+	char *rowfilterx, /* O boolean row filter expression */
+	char *binspec,    /* O histogram binning specifier   */
+	char *colspec,    /* O column or keyword modifier expression */
+	char *pixfilter,  /* O pixel filter expression */
+	char *compspec,   /* O image compression specification */
+	int *status       /* IO */
+)
+{
+    int ii, jj, slen, infilelen, plus_ext = 0, collen;
+
+    char *ptr1, *ptr2, *ptr3, *ptr4;
+    const char *tmptr;
+    int hasAt, hasDot, hasOper, followingOper, spaceTerm, rowFilter;
+    int colStart, binStart, pixStart, compStart;
+
+    /* must have temporary variable for these, in case inputs are NULL */
+    char *infile;
+    char *rowfilter;
+    char *tmpstr;
+
+    if (*status > 0)  /* TODO: verify this can be "!=" instead of ">" */
+        return(*status);
+
+    /* Initialize null strings */
+    if (infilex) *infilex  = '\0';
+    if (urltype) *urltype = '\0';
+    if (outfile) *outfile = '\0';
+    if (extspec) *extspec = '\0';
+    if (binspec) *binspec = '\0';
+    if (colspec) *colspec = '\0';
+    if (rowfilterx) *rowfilterx = '\0';
+    if (pixfilter) *pixfilter = '\0';
+    if (compspec) *compspec = '\0';
+    slen = strlen(url);
+
+    if (slen == 0)       /* blank filename ?? */
+        return(*status);
+
+	ptr1 = url;
+	if( 0 != (*status = get_urltype(&ptr1, urltype))) {
+		return *status;
+	}
+	if (is_unmatched_http(urltype, ptr1, infilex, status)) {
+		return *status;
+	}
+
+	tmptr = get_start_of_name_vms(ptr1, url);
+
+	infile = calloc(3,  slen + 1);
+	if (!infile)
+		return *status = MEMORY_ALLOCATION;
+
+	rowfilter = infile + slen + 1;
+	tmpstr = rowfilter + slen + 1;
+
+	if( get_input_file_name(infile, tmptr, ptr1, outfile, &ptr3, status)) {
+		return *status;
+	}
+
+
 
     /* --------------------------------------------- */
     /* check if this is an IRAF file (.imh extension */
