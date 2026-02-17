@@ -5624,6 +5624,22 @@ get_start_of_name_vms(const char *ptr1, const char *url)
     return tmptr;
 }
 
+/* Compute the length of s and find the first '(' and '[' */
+static void
+find_braces_and_length(const char *s, char **paren, char **bracket, int *len)
+{
+	*len = 0;
+	*paren = *bracket = NULL;
+	while(*s) {
+		if( *s == '(' && *paren == NULL ) {
+			*paren = (char *)s;
+		}
+		if( *s == '[' && *bracket == NULL ) {
+			*bracket = (char *)s;
+		}
+		*len += 1;
+	}
+}
 
 static int
 get_input_file_name(char *infile, const char *tmptr, const char *ptr1,
@@ -5636,8 +5652,7 @@ get_input_file_name(char *infile, const char *tmptr, const char *ptr1,
     /*  get the input file name */
     /* ------------------------ */
 
-    ptr2 = strchr(tmptr, '(');   /* search for opening parenthesis ( */
-    ptr3 = strchr(tmptr, '[');   /* search for opening bracket [ */
+	find_braces_and_length(tmptr, &ptr2, &ptr3, &slen);
     if (ptr2)
     {
        ptr4 = strchr(ptr2, ')'); /* search for closing parenthesis ) */
@@ -5656,7 +5671,6 @@ get_input_file_name(char *infile, const char *tmptr, const char *ptr1,
     if (ptr2 == ptr3)  /* simple case: no [ or ( in the file name */
     {
         strncat(infile, ptr1, FLEN_FILENAME - 1);
-        slen = strlen(infile);
     }
     else if (!ptr3 ||         /* no bracket, so () enclose output file name */
          (ptr2 && (ptr2 < ptr3)) ) /* () enclose output name before bracket */
