@@ -5656,6 +5656,7 @@ get_input_file_name(char *infile, const char *tmptr, const char *ptr1,
     if (ptr2 == ptr3)  /* simple case: no [ or ( in the file name */
     {
         strncat(infile, ptr1, FLEN_FILENAME - 1);
+        slen = strlen(infile);
     }
     else if (!ptr3 ||         /* no bracket, so () enclose output file name */
          (ptr2 && (ptr2 < ptr3)) ) /* () enclose output name before bracket */
@@ -5665,6 +5666,9 @@ get_input_file_name(char *infile, const char *tmptr, const char *ptr1,
             return *status = URL_PARSE_ERROR;
         }
         strncat(infile, ptr1, ptr2 - ptr1);
+        slen = ptr2 - ptr1;
+        assert(slen == strlen(infile));
+
         ptr2++;
 
         ptr1 = strchr(ptr2, ')' );   /* search for closing ) */
@@ -5691,12 +5695,15 @@ get_input_file_name(char *infile, const char *tmptr, const char *ptr1,
     }
     else    /*   bracket comes first, so there is no output name */
     {
+        if (ptr3 - ptr1 > FLEN_FILENAME - 1) {
+            return *status = URL_PARSE_ERROR;
+        }
         strncat(infile, ptr1, ptr3 - ptr1);
+        slen = ptr3 - ptr1;
+        assert(slen == strlen(infile));
     }
 
    /* strip off any trailing blanks in the names */
-
-    slen = strlen(infile);
     while ( (--slen) > 0  && infile[slen] == ' ')
          infile[slen] = '\0';
 
