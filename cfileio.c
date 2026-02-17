@@ -5722,6 +5722,60 @@ is_iraf_file(const char *infile)
     return ptr4 && (*(ptr4 + 4) == '\0');
 }
 
+static int
+check_hdu_spec(char *infile, char *extspec, int *pplus_ext, int *status)
+{
+	int infilelen;
+	const char *ptr1;
+	int ii, jj;
+	int plus_ext = 0;
+    /* --------------------------------------------- */
+    /* check if the 'filename+n' convention has been */
+    /* used to specifiy which HDU number to open     */
+    /* --------------------------------------------- */
+
+    jj = strlen(infile);
+
+    for (ii = jj - 1; ii >= 0; ii--)
+    {
+        if (infile[ii] == '+')    /* search backwards for '+' sign */
+            break;
+    }
+
+    if (ii > 0 && (jj - ii) < 7)  /* limit extension numbers to 5 digits */
+    {
+        infilelen = ii;
+        ii++;
+        ptr1 = infile+ii;   /* pointer to start of sequence */
+
+        for (; ii < jj; ii++)
+        {
+            if (!isdigit((int) infile[ii] ) ) /* are all the chars digits? */
+                break;
+        }
+
+        if (ii == jj)
+        {
+             /* yes, the '+n' convention was used.  Copy */
+             /* the digits to the output extspec string. */
+             plus_ext = 1;
+
+             if (extspec) {
+	         if (jj - infilelen > FLEN_FILENAME - 1)
+	         {
+                     free(infile);
+                     return(*status = URL_PARSE_ERROR);
+                 }
+
+                 strncpy(extspec, ptr1, jj - infilelen);
+             }
+
+             infile[infilelen] = '\0'; /* delete the extension number */
+        }
+    }
+    *pplus_ext = plus_ext;
+    return 0;
+}
 
 /*
  * parse the input URL into its basic components.
@@ -5742,7 +5796,7 @@ ffifile2(
 	int *status       /* IO */
 )
 {
-    int ii, jj, slen, infilelen, plus_ext = 0, collen;
+    int ii, jj, slen, plus_ext = 0, collen;
 
     char *ptr1, *ptr2, *ptr3;
     const char *tmptr;
@@ -5797,50 +5851,10 @@ ffifile2(
             strcpy(urltype, "irafmem://");
 	}
 
-    /* --------------------------------------------- */
-    /* check if the 'filename+n' convention has been */
-    /* used to specifiy which HDU number to open     */
-    /* --------------------------------------------- */
+	if (check_hdu_spec(infile, extspec, &plus_ext, status)) {
+		return *status;
+	}
 
-    jj = strlen(infile);
-
-    for (ii = jj - 1; ii >= 0; ii--)
-    {
-        if (infile[ii] == '+')    /* search backwards for '+' sign */
-            break;
-    }
-
-    if (ii > 0 && (jj - ii) < 7)  /* limit extension numbers to 5 digits */
-    {
-        infilelen = ii;
-        ii++;
-        ptr1 = infile+ii;   /* pointer to start of sequence */
-
-        for (; ii < jj; ii++)
-        {
-            if (!isdigit((int) infile[ii] ) ) /* are all the chars digits? */
-                break;
-        }
-
-        if (ii == jj)
-        {
-             /* yes, the '+n' convention was used.  Copy */
-             /* the digits to the output extspec string. */
-             plus_ext = 1;
-
-             if (extspec) {
-	         if (jj - infilelen > FLEN_FILENAME - 1)
-	         {
-                     free(infile);
-                     return(*status = URL_PARSE_ERROR);
-                 }
-
-                 strncpy(extspec, ptr1, jj - infilelen);
-             }
-
-             infile[infilelen] = '\0'; /* delete the extension number */
-        }
-    }
 
     /* -------------------------------------------------------------------- */
     /* if '*' was given for the output name expand it to the root file name */
