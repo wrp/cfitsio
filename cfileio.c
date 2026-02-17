@@ -5827,7 +5827,7 @@ ffifile2(
 	int *status       /* IO */
 )
 {
-    int ii, jj, slen, plus_ext = 0, collen;
+    int ii, slen, plus_ext = 0, collen;
 
     char *ptr1, *ptr2, *ptr3;
     const char *tmptr;
