@@ -5777,6 +5777,37 @@ check_hdu_spec(char *infile, char *extspec, int *pplus_ext, int *status)
     return 0;
 }
 
+
+static int
+expand_outfile_glob(const char *infile, char *outfile, int *status)
+{
+    /* -------------------------------------------------------------------- */
+    /* if '*' was given for the output name expand it to the root file name */
+    /* -------------------------------------------------------------------- */
+	int ii;
+	int jj = strlen(infile);
+
+    if (outfile && outfile[0] == '*')
+    {
+        /* scan input name backwards to the first '/' character */
+        for (ii = jj - 1; ii >= 0; ii--)
+        {
+            if (infile[ii] == '/' || ii == 0)
+            {
+	      if (strlen(&infile[ii + 1]) > FLEN_FILENAME - 1)
+	      {
+                 return(*status = URL_PARSE_ERROR);
+              }
+
+                strcpy(outfile, &infile[ii + 1]);
+                break;
+            }
+        }
+    }
+    return 0;
+}
+
+
 /*
  * parse the input URL into its basic components.
  * This routine is big and ugly and should be redesigned someday!
@@ -5855,29 +5886,11 @@ ffifile2(
 		return *status;
 	}
 
+	if (expand_outfile_glob(infile, outfile, status)) {
+		free(infile);
+		return *status;
+	}
 
-    /* -------------------------------------------------------------------- */
-    /* if '*' was given for the output name expand it to the root file name */
-    /* -------------------------------------------------------------------- */
-
-    if (outfile && outfile[0] == '*')
-    {
-        /* scan input name backwards to the first '/' character */
-        for (ii = jj - 1; ii >= 0; ii--)
-        {
-            if (infile[ii] == '/' || ii == 0)
-            {
-	      if (strlen(&infile[ii + 1]) > FLEN_FILENAME - 1)
-	      {
-                 free(infile);
-                 return(*status = URL_PARSE_ERROR);
-              }
-
-                strcpy(outfile, &infile[ii + 1]);
-                break;
-            }
-        }
-    }
 
     /* ------------------------------------------ */
     /* copy strings from local copy to the output */
