@@ -5,6 +5,7 @@
  *  Goddard Space Flight Center.
  */
 
+#include <assert.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
@@ -5654,18 +5655,21 @@ get_input_file_name(char *infile, const char *tmptr, const char *ptr1,
 
     if (ptr2 == ptr3)  /* simple case: no [ or ( in the file name */
     {
-        strcat(infile, ptr1);
+        strncat(infile, ptr1, FLEN_FILENAME - 1);
     }
     else if (!ptr3 ||         /* no bracket, so () enclose output file name */
          (ptr2 && (ptr2 < ptr3)) ) /* () enclose output name before bracket */
     {
+        assert(ptr2 != NULL);
+        if (ptr2 - ptr1 > FLEN_FILENAME - 1) {
+            return *status = URL_PARSE_ERROR;
+        }
         strncat(infile, ptr1, ptr2 - ptr1);
         ptr2++;
 
         ptr1 = strchr(ptr2, ')' );   /* search for closing ) */
         if (!ptr1)
         {
-            free(infile);
             return(*status = URL_PARSE_ERROR);  /* error, no closing ) */
         }
 
@@ -5673,7 +5677,6 @@ get_input_file_name(char *infile, const char *tmptr, const char *ptr1,
 
 	    if (ptr1 - ptr2 > FLEN_FILENAME - 1)
 	    {
-                 free(infile);
                  return(*status = URL_PARSE_ERROR);
             }
 
@@ -5875,6 +5878,7 @@ ffifile2(
 	tmpstr = rowfilter + slen + 1;
 
 	if( get_input_file_name(infile, tmptr, ptr1, outfile, &ptr3, status)) {
+		free(infile);
 		return *status;
 	}
 
