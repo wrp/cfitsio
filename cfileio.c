@@ -5707,6 +5707,21 @@ get_input_file_name(char *infile, const char *tmptr, const char *ptr1,
     return 0;
 }
 
+static int
+is_iraf_file(const char *infile)
+{
+	char *ptr4;
+
+    /* --------------------------------------------- */
+    /* check if this is an IRAF file (.imh extension */
+    /* --------------------------------------------- */
+
+    ptr4 = strstr(infile, ".imh");
+
+    /* did the infile name end with ".imh" ? */
+    return ptr4 && (*(ptr4 + 4) == '\0');
+}
+
 
 /*
  * parse the input URL into its basic components.
@@ -5778,20 +5793,9 @@ ffifile2(
 		return *status;
 	}
 
-
-
-    /* --------------------------------------------- */
-    /* check if this is an IRAF file (.imh extension */
-    /* --------------------------------------------- */
-
-    ptr4 = strstr(infile, ".imh");
-
-    /* did the infile name end with ".imh" ? */
-    if (ptr4 && (*(ptr4 + 4) == '\0'))
-    {
-        if (urltype)
+	if (urltype != NULL && is_iraf_file(infile)) {
             strcpy(urltype, "irafmem://");
-    }
+	}
 
     /* --------------------------------------------- */
     /* check if the 'filename+n' convention has been */
