@@ -5808,23 +5808,23 @@ ffifile2(
     char *rowfilter;
     char *tmpstr;
 
-    if (*status > 0)  /* TODO: verify this can be "!=" instead of ">" */
-        return(*status);
+	if (*status > 0)  /* TODO: verify this can be "!=" instead of ">" */
+	return(*status);
 
-    /* Initialize null strings */
-    if (infilex) *infilex  = '\0';
-    if (urltype) *urltype = '\0';
-    if (outfile) *outfile = '\0';
-    if (extspec) *extspec = '\0';
-    if (binspec) *binspec = '\0';
-    if (colspec) *colspec = '\0';
-    if (rowfilterx) *rowfilterx = '\0';
-    if (pixfilter) *pixfilter = '\0';
-    if (compspec) *compspec = '\0';
-    slen = strlen(url);
+	/* Initialize null strings */
+	if (infilex) *infilex  = '\0';
+	if (urltype) *urltype = '\0';
+	if (outfile) *outfile = '\0';
+	if (extspec) *extspec = '\0';
+	if (binspec) *binspec = '\0';
+	if (colspec) *colspec = '\0';
+	if (rowfilterx) *rowfilterx = '\0';
+	if (pixfilter) *pixfilter = '\0';
+	if (compspec) *compspec = '\0';
+	slen = strlen(url);
 
-    if (slen == 0)       /* blank filename ?? */
-        return(*status);
+	if (slen == 0)       /* blank filename ?? */
+		return(*status);
 
 	ptr1 = url;
 	if( 0 != (*status = get_urltype(&ptr1, urltype))) {
