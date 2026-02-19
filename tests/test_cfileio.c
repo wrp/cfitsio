@@ -2523,6 +2523,125 @@ test_ffiurl_outfile_urltype(void)
 }
 
 /*
+ * Test expand_outfile_glob to exercise the '*' glob expansion with a
+ * directory prefix in the input path.
+ */
+static void
+test_expand_outfile_glob_dir(void)
+{
+	int status = 0;
+	char urltype[80];
+	char infile[FLEN_FILENAME];
+	char outfile[FLEN_FILENAME];
+	char extspec[FLEN_FILENAME];
+	char rowfilter[FLEN_FILENAME];
+	char binspec[FLEN_FILENAME];
+	char colspec[FLEN_FILENAME];
+	char pixfilter[FLEN_FILENAME];
+	char compspec[FLEN_FILENAME];
+
+	/* '*' in outfile should expand to the basename of the infile. */
+	ffifile2("dir/file.fits(*)", urltype, infile, outfile,
+		extspec, rowfilter, binspec, colspec, pixfilter, compspec,
+		&status);
+	fail_if(status != 0);
+	fail_if(strcmp(infile, "dir/file.fits") != 0);
+	fail_if(strcmp(outfile, "file.fits") != 0);
+}
+
+/*
+ * Test expand_outfile_glob to exercise the ii==0 path when no slash
+ * appears in the input filename.
+ */
+static void
+test_expand_outfile_glob_no_dir(void)
+{
+	int status = 0;
+	char urltype[80];
+	char infile[FLEN_FILENAME];
+	char outfile[FLEN_FILENAME];
+	char extspec[FLEN_FILENAME];
+	char rowfilter[FLEN_FILENAME];
+	char binspec[FLEN_FILENAME];
+	char colspec[FLEN_FILENAME];
+	char pixfilter[FLEN_FILENAME];
+	char compspec[FLEN_FILENAME];
+
+	/*
+	** When there is no '/' in the input name, the loop exits at
+	** ii==0 and copies &infile[1], dropping the first character.
+	*/
+	ffifile2("file.fits(*)", urltype, infile, outfile,
+		extspec, rowfilter, binspec, colspec, pixfilter, compspec,
+		&status);
+	fail_if(status != 0);
+	fail_if(strcmp(infile, "file.fits") != 0);
+	fail_if(strcmp(outfile, "ile.fits") != 0);
+}
+
+/*
+ * Test expand_outfile_glob to exercise the URL_PARSE_ERROR path when
+ * the basename portion of infile exceeds FLEN_FILENAME-1 bytes.
+ */
+static void
+test_expand_outfile_glob_too_long(void)
+{
+	int status = 0;
+	char urltype[80];
+	char infile[FLEN_FILENAME];
+	char outfile[FLEN_FILENAME];
+	char extspec[FLEN_FILENAME];
+	char rowfilter[FLEN_FILENAME];
+	char binspec[FLEN_FILENAME];
+	char colspec[FLEN_FILENAME];
+	char pixfilter[FLEN_FILENAME];
+	char compspec[FLEN_FILENAME];
+	/* Build "a/" + 1025 * 'x' + "(*)" to make the basename too long. */
+	char url[2 + 1025 + 3 + 1];
+	int i;
+
+	url[0] = 'a';
+	url[1] = '/';
+	for (i = 2; i < 2 + 1025; i += 1) {
+		url[i] = 'x';
+	}
+	url[2 + 1025] = '(';
+	url[2 + 1025 + 1] = '*';
+	url[2 + 1025 + 2] = ')';
+	url[2 + 1025 + 3] = '\0';
+
+	/* The basename is 1025 bytes, exceeding FLEN_FILENAME-1 (1024). */
+	ffifile2(url, urltype, infile, outfile,
+		extspec, rowfilter, binspec, colspec, pixfilter, compspec,
+		&status);
+	fail_if(status != URL_PARSE_ERROR);
+}
+
+/*
+ * Test expand_outfile_glob to exercise the NULL outfile path.
+ */
+static void
+test_expand_outfile_glob_null_outfile(void)
+{
+	int status = 0;
+	char urltype[80];
+	char infile[FLEN_FILENAME];
+	char extspec[FLEN_FILENAME];
+	char rowfilter[FLEN_FILENAME];
+	char binspec[FLEN_FILENAME];
+	char colspec[FLEN_FILENAME];
+	char pixfilter[FLEN_FILENAME];
+	char compspec[FLEN_FILENAME];
+
+	/* NULL outfile must not crash and should leave status at 0. */
+	ffifile2("dir/file.fits", urltype, infile, NULL,
+		extspec, rowfilter, binspec, colspec, pixfilter, compspec,
+		&status);
+	fail_if(status != 0);
+	fail_if(strcmp(infile, "dir/file.fits") != 0);
+}
+
+/*
  * Test ffgabc - get ASCII table column parameters.
  */
 static void
@@ -3241,6 +3360,10 @@ main(void)
 	test_ffiurl_urltype_no_slashes();
 	test_ffiurl_urltype_too_long();
 	test_ffiurl_outfile_urltype();
+	test_expand_outfile_glob_dir();
+	test_expand_outfile_glob_no_dir();
+	test_expand_outfile_glob_too_long();
+	test_expand_outfile_glob_null_outfile();
 
 	/* Table functions */
 	test_ffgncl();
