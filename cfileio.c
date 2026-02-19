@@ -5899,6 +5899,10 @@ ffifile2(
 
 	tmptr = get_start_of_name_vms(ptr1, url);
 
+/* TODO: I am nearly certain that all 3 of these variables (infile,
+ * rowfilter, and tmpstr) need no more than FLEN_FILENAME and so
+ * can be on the stack.  Need to verify.
+ */
 	infile = calloc(3,  slen + 1);
 	if (!infile)
 		return *status = MEMORY_ALLOCATION;
