@@ -5628,17 +5628,25 @@ get_start_of_name_vms(const char *ptr1, const char *url)
 static void
 find_braces_and_length(const char *s, char **paren, char **bracket, int *len)
 {
-	*len = 0;
-	*paren = *bracket = NULL;
-	while(*s) {
-		if( *s == '(' && *paren == NULL ) {
-			*paren = (char *)s;
+	const char *start = s;
+	char need = 0;
+	for(*paren = *bracket = NULL; *s; s += 1) {
+		if (*s == '(' || *s == '[') {
+			*( *s == '(' ? paren : bracket ) = (char *)s;
+			need = *s == '(' ? '[' : '(';
+			break;
 		}
-		if( *s == '[' && *bracket == NULL ) {
-			*bracket = (char *)s;
-		}
-		*len += 1;
 	}
+	for( ; *s; s += 1) {
+		if (*s == need) {
+			*(need == '(' ? paren : bracket) = (char *)s;
+			break;
+		}
+	}
+	while(*s++) {
+		;
+	}
+	*len = s - start;
 }
 
 static int
